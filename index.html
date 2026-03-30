@@ -5,127 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CyberGraphix ⚡ Polaroides</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Exo+2:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js">
-// ─── LIGHTBOX ───────────────────────────────────────────
-let _lbImgs = [];
-let _lbIdx  = 0;
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
-function openLightbox(imgs, startIdx) {
-  _lbImgs = imgs;
-  _lbIdx  = startIdx || 0;
-  renderLightbox();
-  document.getElementById('lightboxOverlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-
-function closeLightbox() {
-  document.getElementById('lightboxOverlay').classList.remove('open');
-  document.body.style.overflow = '';
-}
-
-function lightboxBgClick(e) {
-  if (e.target === document.getElementById('lightboxOverlay')) closeLightbox();
-}
-
-function lightboxNav(dir) {
-  _lbIdx = (_lbIdx + dir + _lbImgs.length) % _lbImgs.length;
-  renderLightbox();
-}
-
-function renderLightbox() {
-  const img = document.getElementById('lightboxImg');
-  img.src = _lbImgs[_lbIdx];
-  img.style.opacity = '0';
-  img.onload = () => { img.style.transition = 'opacity .25s'; img.style.opacity = '1'; };
-  document.getElementById('lightboxCounter').textContent =
-    (_lbIdx + 1) + ' / ' + _lbImgs.length;
-  // hide nav if only 1 image
-  const navs = document.querySelectorAll('.lightbox-nav');
-  navs.forEach(n => n.style.display = _lbImgs.length > 1 ? 'flex' : 'none');
-}
-
-function lightboxOpenNative() {
-  const img = document.getElementById('lightboxImg');
-  if (img.requestFullscreen) img.requestFullscreen();
-  else if (img.webkitRequestFullscreen) img.webkitRequestFullscreen();
-}
-
-// keyboard nav
-document.addEventListener('keydown', e => {
-  const lb = document.getElementById('lightboxOverlay');
-  if (!lb.classList.contains('open')) return;
-  if (e.key === 'ArrowRight') lightboxNav(1);
-  if (e.key === 'ArrowLeft')  lightboxNav(-1);
-  if (e.key === 'Escape')     closeLightbox();
-});
-
-
-// ─── BACKUP / RESTORE CONFIG ─────────────────────────────
-function exportConfig() {
-  // Collect all image data from localStorage
-  const productIds = ['mini','media','grande','custom','tf','tk_','tp'];
-  const config = {
-    version: 1,
-    exported: new Date().toISOString(),
-    images: {}
-  };
-  productIds.forEach(id => {
-    const imgs = LS.get('cgx_imgs_' + id);
-    if (imgs && imgs.length) config.images[id] = imgs;
-  });
-
-  const total = Object.values(config.images).reduce((s,arr) => s + arr.length, 0);
-  if (!total) { showToast('⚠ Nenhuma foto cadastrada para exportar!'); return; }
-
-  const blob = new Blob([JSON.stringify(config, null, 2)], {type:'application/json'});
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  a.href     = url;
-  a.download = 'cybergraphix_fotos_' + new Date().toISOString().slice(0,10) + '.json';
-  a.click();
-  URL.revokeObjectURL(url);
-
-  const fb = document.getElementById('backupFeedback');
-  if (fb) { fb.style.color = 'var(--grn)'; fb.textContent = '✓ Exportado! ' + total + ' foto(s) em ' + Object.keys(config.images).length + ' produto(s).'; }
-  showToast('✓ CONFIG EXPORTADA!', true);
-}
-
-function importConfig(input) {
-  const file = input.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    try {
-      const config = JSON.parse(e.target.result);
-      if (!config.images) throw new Error('Arquivo inválido — estrutura não reconhecida.');
-
-      let total = 0;
-      Object.entries(config.images).forEach(([id, imgs]) => {
-        if (Array.isArray(imgs) && imgs.length) {
-          // Merge: keep existing + add new (avoid duplicate fileIds)
-          const existing = LS.get('cgx_imgs_' + id) || [];
-          const existingIds = new Set(existing.map(i => i.fileId).filter(Boolean));
-          const toAdd = imgs.filter(i => !existingIds.has(i.fileId));
-          LS.set('cgx_imgs_' + id, [...existing, ...toAdd]);
-          total += toAdd.length;
-        }
-      });
-
-      input.value = '';
-      renderAdminImgGrid();
-      const fb = document.getElementById('backupFeedback');
-      if (fb) { fb.style.color = 'var(--grn)'; fb.textContent = '✓ Importado! ' + total + ' foto(s) restaurada(s).'; }
-      showToast('✓ CONFIG IMPORTADA! ' + total + ' foto(s)', true);
-    } catch(err) {
-      const fb = document.getElementById('backupFeedback');
-      if (fb) { fb.style.color = 'var(--mag)'; fb.textContent = '⚠ Erro: ' + err.message; }
-      showToast('⚠ ARQUIVO INVÁLIDO!');
-    }
-  };
-  reader.readAsText(file);
-}
-
-</script>
 <style>
 /* ─── TOKENS ─────────────────────────────────────────── */
 :root{
@@ -417,6 +298,74 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
 .social-cta{font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--dim);}
 .social-arrow{font-family:'Orbitron',monospace;font-size:1.2rem;color:var(--dim);transition:transform .2s;}
 .social-card:hover .social-arrow{transform:translateX(4px);color:var(--cyan);}
+
+/* ─── AUTH BAR ─────────────────────────────────────── */
+.auth-bar{display:flex;align-items:center;gap:10px;}
+.auth-bar .user-name{font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--cyan);letter-spacing:.05em;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.btn-auth{font-family:'Share Tech Mono',monospace;font-size:.65rem;border:1px solid var(--bc);color:var(--dim);background:transparent;padding:5px 12px;cursor:pointer;letter-spacing:.08em;transition:all .2s;}
+.btn-auth:hover{border-color:var(--cyan);color:var(--cyan);}
+.btn-auth.logout{border-color:var(--bm);color:var(--mag);}
+.btn-auth.logout:hover{background:var(--mag);color:var(--bg);}
+.btn-auth.meus-pedidos{border-color:rgba(0,255,136,.3);color:var(--grn);}
+.btn-auth.meus-pedidos:hover{background:var(--grn);color:var(--bg);}
+
+/* ─── AUTH MODAL ────────────────────────────────────── */
+.auth-tabs{display:flex;gap:0;margin-bottom:24px;border-bottom:1px solid var(--bc);}
+.auth-tab{font-family:'Orbitron',monospace;font-size:.72rem;font-weight:700;letter-spacing:.1em;padding:10px 20px;cursor:pointer;background:none;border:none;color:var(--dim);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s;}
+.auth-tab.active{color:var(--cyan);border-bottom-color:var(--cyan);}
+.auth-form{display:flex;flex-direction:column;gap:12px;}
+.auth-form input{background:rgba(0,0,0,.45);border:1px solid var(--bc);color:var(--w);padding:11px 14px;font-family:'Share Tech Mono',monospace;font-size:.88rem;width:100%;}
+.auth-form input:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 12px rgba(0,245,255,.15);}
+.auth-form input::placeholder{color:rgba(74,96,128,.5);}
+.auth-error{font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--mag);min-height:18px;text-align:center;}
+.auth-success{font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--grn);min-height:18px;text-align:center;}
+
+/* ─── MEUS PEDIDOS PAGE ─────────────────────────────── */
+.page-overlay{position:fixed;inset:0;background:var(--bg);z-index:3000;display:none;overflow-y:auto;padding-top:70px;}
+.page-overlay.open{display:block;}
+.page-header{background:var(--bg2);border-bottom:1px solid var(--bc);padding:20px 24px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:10;}
+.page-back{background:none;border:1px solid var(--bc);color:var(--cyan);padding:8px 16px;font-family:'Share Tech Mono',monospace;font-size:.72rem;cursor:pointer;letter-spacing:.1em;transition:all .2s;}
+.page-back:hover{background:var(--cyan);color:var(--bg);}
+.page-title{font-family:'Orbitron',monospace;font-size:1.1rem;font-weight:700;background:linear-gradient(90deg,var(--w),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.pedidos-list{max-width:700px;margin:32px auto;padding:0 20px;}
+.pedido-card{background:var(--gb);border:1px solid var(--bc);padding:20px;margin-bottom:16px;position:relative;}
+.pedido-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(to bottom,var(--cyan),var(--purp));}
+.pedido-topo{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;gap:12px;flex-wrap:wrap;}
+.pedido-num{font-family:'Orbitron',monospace;font-size:.72rem;color:var(--cyan);letter-spacing:.1em;}
+.pedido-data{font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--dim);}
+.pedido-status{font-family:'Share Tech Mono',monospace;font-size:.65rem;padding:3px 10px;border-radius:2px;letter-spacing:.08em;}
+.pedido-status.aguardando{background:rgba(255,234,0,.1);border:1px solid rgba(255,234,0,.3);color:var(--yel);}
+.pedido-status.confirmado{background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.3);color:var(--grn);}
+.pedido-status.pronto{background:rgba(0,245,255,.1);border:1px solid var(--bc);color:var(--cyan);}
+.pedido-itens{font-family:'Share Tech Mono',monospace;font-size:.78rem;color:rgba(232,244,255,.75);line-height:1.8;margin-bottom:10px;}
+.pedido-total{font-family:'Orbitron',monospace;font-size:1.1rem;font-weight:700;color:var(--yel);text-shadow:0 0 12px rgba(255,234,0,.4);}
+.pedido-entrega{font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--dim);margin-top:6px;}
+.no-pedidos{text-align:center;padding:60px 20px;font-family:'Share Tech Mono',monospace;font-size:.85rem;color:var(--dim);line-height:2;}
+
+/* ─── REVIEWS with login ────────────────────────────── */
+.review-login-notice{background:rgba(0,245,255,.04);border:1px solid var(--bc);padding:20px;text-align:center;font-family:'Share Tech Mono',monospace;font-size:.8rem;color:var(--dim);line-height:1.8;margin-bottom:24px;}
+.review-login-notice strong{color:var(--cyan);}
+.review-login-notice button{font-family:'Orbitron',monospace;font-size:.72rem;color:var(--bg);background:var(--cyan);border:none;padding:8px 20px;cursor:pointer;margin-top:10px;font-weight:700;letter-spacing:.1em;transition:all .2s;}
+.review-login-notice button:hover{box-shadow:0 0 20px rgba(0,245,255,.4);}
+/* reviews section restored */
+#reviews{background:var(--bg2);}
+.avg-rating{display:flex;align-items:center;gap:16px;margin-bottom:36px;background:var(--gb);border:1px solid var(--bc);padding:20px;}
+.avg-num{font-family:'Orbitron',monospace;font-size:2.8rem;font-weight:900;color:var(--yel);text-shadow:0 0 24px rgba(255,234,0,.5);}
+.avg-info{display:flex;flex-direction:column;gap:4px;}
+.avg-stars{color:var(--yel);font-size:1.2rem;}
+.avg-count{font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--dim);}
+.reviews-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-top:32px;}
+.review-card{background:var(--gb);border:1px solid var(--bc);padding:20px;position:relative;}
+.review-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--mag),transparent);}
+.rev-stars{color:var(--yel);font-size:1rem;margin-bottom:8px;}
+.rev-text{font-size:.88rem;color:rgba(232,244,255,.75);line-height:1.6;margin-bottom:10px;font-style:italic;}
+.rev-author{font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--dim);}
+.rev-date{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--dim2);margin-top:4px;}
+.stars-input{display:flex;gap:8px;margin-bottom:4px;}
+.star-btn{font-size:1.6rem;background:none;border:none;cursor:pointer;color:var(--dim2);transition:color .15s;}
+.star-btn.active,.star-btn:hover{color:var(--yel);}
+.no-reviews{text-align:center;font-family:'Share Tech Mono',monospace;font-size:.82rem;color:var(--dim);padding:32px 0;}
+
 </style>
 </head>
 <body>
@@ -428,6 +377,11 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
     <a href="#calculator">Pedido</a>
     <a href="#delivery">Entrega</a>
     <a href="#social">Redes</a>
+    <!-- Auth bar — updated by JS -->
+    <div class="auth-bar" id="authBar">
+      <button class="btn-auth" onclick="openAuthModal('login')">ENTRAR</button>
+      <button class="btn-auth" onclick="openAuthModal('cadastro')">CADASTRAR</button>
+    </div>
     <button class="nav-admin-btn" onclick="openLogin()">⚙ ADMIN</button>
   </div>
 </nav>
@@ -494,9 +448,53 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
 </section>
 
 <!-- ═══════════ DADOS / CONTATO ═══════════ -->
+
+<!-- ═══════════ AVALIAÇÕES ═══════════ -->
+<section id="reviews">
+  <div class="container">
+    <p class="sec-eye">// módulo 03 — login necessario</p>
+    <h2 class="sec-title">Avaliações dos Clientes</h2>
+    <div class="divider"><span>◈ só quem tem cadastro pode avaliar ◈</span></div>
+    <div class="avg-rating" id="avgRating" style="display:none">
+      <div class="avg-num" id="avgNum">0.0</div>
+      <div class="avg-info">
+        <div class="avg-stars" id="avgStars"></div>
+        <div class="avg-count" id="avgCount"></div>
+      </div>
+    </div>
+    <div id="reviewFormBox" style="display:none;margin-bottom:32px">
+      <div class="form-box">
+        <p class="form-head">DEIXAR AVALIACAO <span class="opt-badge">logado</span></p>
+        <div class="fg">
+          <div class="field">
+            <label>nota</label>
+            <div class="stars-input" id="starsInput">
+              <button class="star-btn" onclick="setStar(1)">★</button>
+              <button class="star-btn" onclick="setStar(2)">★</button>
+              <button class="star-btn" onclick="setStar(3)">★</button>
+              <button class="star-btn" onclick="setStar(4)">★</button>
+              <button class="star-btn" onclick="setStar(5)">★</button>
+            </div>
+          </div>
+          <div class="field">
+            <label>comentario</label>
+            <textarea id="revText" rows="3" placeholder="conte como foi..."></textarea>
+          </div>
+          <button class="btn-primary" style="animation:none;width:100%;margin-top:4px" onclick="submitReview()">PUBLICAR AVALIACAO</button>
+        </div>
+      </div>
+    </div>
+    <div id="reviewLoginNotice" class="review-login-notice">
+      <strong>Quer deixar uma avaliacao?</strong><br>
+      Cadastre-se ou faca login para compartilhar sua experiencia.<br>
+      <button onclick="openAuthModal('login')">ENTRAR / CADASTRAR</button>
+    </div>
+    <div class="reviews-grid" id="reviewsGrid"></div>
+  </div>
+</section>
 <section id="contact">
   <div class="container">
-    <p class="sec-eye">// módulo 03</p>
+    <p class="sec-eye">// módulo 04</p>
     <h2 class="sec-title">Seus Dados</h2>
     <div class="divider"><span>◈ opcional — preencha o que quiser ◈</span></div>
     <div class="form-box">
@@ -548,7 +546,7 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
 <!-- ═══════════ REDES SOCIAIS ═══════════ -->
 <section id="social" style="background:var(--bg2);padding:56px 20px;">
   <div class="container">
-    <p class="sec-eye">// módulo 04</p>
+    <p class="sec-eye">// módulo 05</p>
     <h2 class="sec-title">Redes Sociais</h2>
     <div class="divider"><span>◈ siga, fale e se conecte ◈</span></div>
     <div class="social-grid">
@@ -763,7 +761,8 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
   </div>
 </div>
 
-<script>
+
+<script type="module">
 // ═══════════════════════════════════════════════════════
 // ESTADO GLOBAL — tudo salvo no localStorage
 // ═══════════════════════════════════════════════════════
@@ -1095,6 +1094,11 @@ function sendWpp() {
   updStats();
   window.open(`https://wa.me/5592994120494?text=${encodeURIComponent(lines.join('\n'))}`,'_blank');
   showToast('✓ PEDIDO ENVIADO!', true);
+  // Save to Firestore if user is logged in
+  if (currentUser) {
+    savePedidoFirestore(items, grand, delMode, v('nome'), v('insta'), v('ende'), v('obs'))
+      .then(id => { if (id) showToast('✓ PEDIDO SALVO NA SUA CONTA!', true); });
+  }
 }
 function v(id) { const el=document.getElementById(id); return el ? el.value.trim() : ''; }
 
@@ -1112,10 +1116,10 @@ function checkLogin() {
     closeModal('loginModal');
     document.getElementById('adminPass').value = '';
     openModal('adminModal');
-    renderAdminReviews();
     document.getElementById('aStat1').textContent = LS.get('cgx_pedidos') || 0;
-    document.getElementById('aStat2').textContent = (LS.get('cgx_reviews') || []).length;
     loadConfigFromDrive();
+    renderAdminPedidos();
+    renderAdminUsers();
   } else {
     showToast('⚠ SENHA INCORRETA!');
     document.getElementById('adminPass').value = '';
@@ -1502,11 +1506,514 @@ window.addEventListener('scroll', () => {
   document.getElementById('scrollTop').classList.toggle('vis', window.scrollY > 400);
 });
 
+// ─── LIGHTBOX ───────────────────────────────────────────
+let _lbImgs = [];
+let _lbIdx  = 0;
+
+function openLightbox(imgs, startIdx) {
+  _lbImgs = imgs;
+  _lbIdx  = startIdx || 0;
+  renderLightbox();
+  document.getElementById('lightboxOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+  document.getElementById('lightboxOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function lightboxBgClick(e) {
+  if (e.target === document.getElementById('lightboxOverlay')) closeLightbox();
+}
+
+function lightboxNav(dir) {
+  _lbIdx = (_lbIdx + dir + _lbImgs.length) % _lbImgs.length;
+  renderLightbox();
+}
+
+function renderLightbox() {
+  const img = document.getElementById('lightboxImg');
+  img.src = _lbImgs[_lbIdx];
+  img.style.opacity = '0';
+  img.onload = () => { img.style.transition = 'opacity .25s'; img.style.opacity = '1'; };
+  document.getElementById('lightboxCounter').textContent =
+    (_lbIdx + 1) + ' / ' + _lbImgs.length;
+  // hide nav if only 1 image
+  const navs = document.querySelectorAll('.lightbox-nav');
+  navs.forEach(n => n.style.display = _lbImgs.length > 1 ? 'flex' : 'none');
+}
+
+function lightboxOpenNative() {
+  const img = document.getElementById('lightboxImg');
+  if (img.requestFullscreen) img.requestFullscreen();
+  else if (img.webkitRequestFullscreen) img.webkitRequestFullscreen();
+}
+
+// keyboard nav
+document.addEventListener('keydown', e => {
+  const lb = document.getElementById('lightboxOverlay');
+  if (!lb.classList.contains('open')) return;
+  if (e.key === 'ArrowRight') lightboxNav(1);
+  if (e.key === 'ArrowLeft')  lightboxNav(-1);
+  if (e.key === 'Escape')     closeLightbox();
+});
+
+
+// ─── BACKUP / RESTORE CONFIG ─────────────────────────────
+function exportConfig() {
+  // Collect all image data from localStorage
+  const productIds = ['mini','media','grande','custom','tf','tk_','tp'];
+  const config = {
+    version: 1,
+    exported: new Date().toISOString(),
+    images: {}
+  };
+  productIds.forEach(id => {
+    const imgs = LS.get('cgx_imgs_' + id);
+    if (imgs && imgs.length) config.images[id] = imgs;
+  });
+
+  const total = Object.values(config.images).reduce((s,arr) => s + arr.length, 0);
+  if (!total) { showToast('⚠ Nenhuma foto cadastrada para exportar!'); return; }
+
+  const blob = new Blob([JSON.stringify(config, null, 2)], {type:'application/json'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = 'cybergraphix_fotos_' + new Date().toISOString().slice(0,10) + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+
+  const fb = document.getElementById('backupFeedback');
+  if (fb) { fb.style.color = 'var(--grn)'; fb.textContent = '✓ Exportado! ' + total + ' foto(s) em ' + Object.keys(config.images).length + ' produto(s).'; }
+  showToast('✓ CONFIG EXPORTADA!', true);
+}
+
+function importConfig(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const config = JSON.parse(e.target.result);
+      if (!config.images) throw new Error('Arquivo inválido — estrutura não reconhecida.');
+
+      let total = 0;
+      Object.entries(config.images).forEach(([id, imgs]) => {
+        if (Array.isArray(imgs) && imgs.length) {
+          // Merge: keep existing + add new (avoid duplicate fileIds)
+          const existing = LS.get('cgx_imgs_' + id) || [];
+          const existingIds = new Set(existing.map(i => i.fileId).filter(Boolean));
+          const toAdd = imgs.filter(i => !existingIds.has(i.fileId));
+          LS.set('cgx_imgs_' + id, [...existing, ...toAdd]);
+          total += toAdd.length;
+        }
+      });
+
+      input.value = '';
+      renderAdminImgGrid();
+      const fb = document.getElementById('backupFeedback');
+      if (fb) { fb.style.color = 'var(--grn)'; fb.textContent = '✓ Importado! ' + total + ' foto(s) restaurada(s).'; }
+      showToast('✓ CONFIG IMPORTADA! ' + total + ' foto(s)', true);
+    } catch(err) {
+      const fb = document.getElementById('backupFeedback');
+      if (fb) { fb.style.color = 'var(--mag)'; fb.textContent = '⚠ Erro: ' + err.message; }
+      showToast('⚠ ARQUIVO INVÁLIDO!');
+    }
+  };
+  reader.readAsText(file);
+}
+
+
+// ═══════════════════════════════════════════════════════
+// FIREBASE CONFIG
+// ═══════════════════════════════════════════════════════
+const FB_CONFIG = {
+  apiKey:            "AIzaSyANv1LjE3CLLt_1p1-T4PkfGHxQAOHGlT4",
+  authDomain:        "cybergraphix-polos.firebaseapp.com",
+  projectId:         "cybergraphix-polos",
+  storageBucket:     "cybergraphix-polos.firebasestorage.app",
+  messagingSenderId: "524731216431",
+  appId:             "1:524731216431:web:b54afc73bda3b2b7cb8cda"
+};
+
+let FB = null;
+let currentUser = null;
+let curStar = 0;
+
+async function fbInit() {
+  if (FB) return FB;
+  const [appMod, authMod, dbMod] = await Promise.all([
+    import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js'),
+    import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js'),
+    import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js'),
+  ]);
+  const app  = appMod.initializeApp(FB_CONFIG);
+  const auth = authMod.getAuth(app);
+  const db   = dbMod.getFirestore(app);
+  FB = {
+    auth, db,
+    // auth helpers
+    createUser:    (e,p) => authMod.createUserWithEmailAndPassword(auth,e,p),
+    signIn:        (e,p) => authMod.signInWithEmailAndPassword(auth,e,p),
+    signOut:       ()    => authMod.signOut(auth),
+    onAuth:        cb    => authMod.onAuthStateChanged(auth, cb),
+    updateProfile: (u,d) => authMod.updateProfile(u,d),
+    // firestore helpers
+    col:  (...a) => dbMod.collection(db,...a),
+    doc:  (...a) => dbMod.doc(db,...a),
+    setDoc:   dbMod.setDoc,
+    getDoc:   dbMod.getDoc,
+    getDocs:  dbMod.getDocs,
+    addDoc:   dbMod.addDoc,
+    query:    dbMod.query,
+    where:    dbMod.where,
+    orderBy:  dbMod.orderBy,
+    deleteDoc:dbMod.deleteDoc,
+    ts:       dbMod.serverTimestamp,
+  };
+  return FB;
+}
+
+// ─── AUTH STATE ──────────────────────────────────────
+async function initAuth() {
+  const fb = await fbInit();
+  fb.onAuth(user => {
+    currentUser = user;
+    renderAuthBar();
+    renderReviewForm();
+    renderReviews();
+  });
+}
+
+function renderAuthBar() {
+  const bar = document.getElementById('authBar');
+  if (!bar) return;
+  if (currentUser) {
+    const name = currentUser.displayName || currentUser.email.split('@')[0];
+    bar.innerHTML = `
+      <span class="user-name">Ola, ${name}</span>
+      <button class="btn-auth meus-pedidos" onclick="openPedidosPage()">MEUS PEDIDOS</button>
+      <button class="btn-auth logout" onclick="doLogout()">SAIR</button>`;
+  } else {
+    bar.innerHTML = `
+      <button class="btn-auth" onclick="openAuthModal('login')">ENTRAR</button>
+      <button class="btn-auth" onclick="openAuthModal('cadastro')">CADASTRAR</button>`;
+  }
+}
+
+// ─── AUTH MODAL ──────────────────────────────────────
+function openAuthModal(tab) {
+  openModal('authModal');
+  switchAuthTab(tab || 'login');
+  setTimeout(() => {
+    const el = document.getElementById(tab === 'cadastro' ? 'cadNome' : 'loginEmail');
+    if (el) el.focus();
+  }, 150);
+}
+
+function switchAuthTab(tab) {
+  document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
+  document.getElementById('tabCadastro').classList.toggle('active', tab === 'cadastro');
+  document.getElementById('formLogin').style.display    = tab === 'login'    ? 'flex' : 'none';
+  document.getElementById('formCadastro').style.display = tab === 'cadastro' ? 'flex' : 'none';
+}
+
+async function doLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass  = document.getElementById('loginPass').value;
+  const err   = document.getElementById('loginError');
+  err.textContent = '';
+  if (!email || !pass) { err.textContent = 'Preencha e-mail e senha.'; return; }
+  try {
+    const fb = await fbInit();
+    await fb.signIn(email, pass);
+    closeModal('authModal');
+    showToast('✓ BEM-VINDO DE VOLTA!', true);
+  } catch(e) {
+    err.textContent = fbErrMsg(e.code);
+  }
+}
+
+async function doCadastro() {
+  const nome  = document.getElementById('cadNome').value.trim();
+  const email = document.getElementById('cadEmail').value.trim();
+  const pass  = document.getElementById('cadPass').value;
+  const err   = document.getElementById('cadError');
+  const suc   = document.getElementById('cadSuccess');
+  err.textContent = ''; suc.textContent = '';
+  if (!nome || !email || !pass) { err.textContent = 'Preencha todos os campos.'; return; }
+  if (pass.length < 6) { err.textContent = 'Senha deve ter ao menos 6 caracteres.'; return; }
+  try {
+    const fb   = await fbInit();
+    const cred = await fb.createUser(email, pass);
+    await fb.updateProfile(cred.user, { displayName: nome });
+    // Save user profile to Firestore
+    await fb.setDoc(fb.doc('usuarios', cred.user.uid), {
+      nome, email,
+      criadoEm: fb.ts(),
+    });
+    closeModal('authModal');
+    showToast('✓ CONTA CRIADA! BEM-VINDO!', true);
+  } catch(e) {
+    err.textContent = fbErrMsg(e.code);
+  }
+}
+
+async function doLogout() {
+  const fb = await fbInit();
+  await fb.signOut();
+  showToast('Ate mais!', false);
+}
+
+function fbErrMsg(code) {
+  const msgs = {
+    'auth/email-already-in-use':  'Este e-mail ja esta cadastrado.',
+    'auth/invalid-email':         'E-mail invalido.',
+    'auth/weak-password':         'Senha muito fraca.',
+    'auth/user-not-found':        'E-mail nao encontrado.',
+    'auth/wrong-password':        'Senha incorreta.',
+    'auth/invalid-credential':    'E-mail ou senha incorretos.',
+    'auth/too-many-requests':     'Muitas tentativas. Tente mais tarde.',
+  };
+  return msgs[code] || 'Erro: ' + code;
+}
+
+// ─── SAVE PEDIDO TO FIRESTORE ────────────────────────
+async function savePedidoFirestore(items, grand, delMode, nome, insta, ende, obs) {
+  if (!currentUser) return null;
+  try {
+    const fb = await fbInit();
+    const pedidoData = {
+      userId:    currentUser.uid,
+      userName:  currentUser.displayName || currentUser.email,
+      itens: items.map(p => ({
+        nome:  p.full,
+        qtd:   qty[p.id],
+        preco: getPrice(p, qty[p.id]),
+        sub:   getPrice(p, qty[p.id]) * qty[p.id],
+      })),
+      total:    grand,
+      entrega:  delMode || 'nao informado',
+      endereco: ende || '',
+      instagram:insta || '',
+      obs:      obs || '',
+      status:   'aguardando',
+      criadoEm: fb.ts(),
+    };
+    const ref = await fb.addDoc(fb.col('pedidos'), pedidoData);
+    return ref.id;
+  } catch(e) {
+    console.warn('savePedido error:', e);
+    return null;
+  }
+}
+
+// ─── MEUS PEDIDOS PAGE ───────────────────────────────
+async function openPedidosPage() {
+  if (!currentUser) { openAuthModal('login'); return; }
+  document.getElementById('pedidosPage').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  renderPedidosList();
+}
+
+function closePedidosPage() {
+  document.getElementById('pedidosPage').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+async function renderPedidosList() {
+  const el = document.getElementById('pedidosList');
+  el.innerHTML = '<div class="no-pedidos">Carregando...</div>';
+  try {
+    const fb = await fbInit();
+    const q  = fb.query(
+      fb.col('pedidos'),
+      fb.where('userId', '==', currentUser.uid),
+      fb.orderBy('criadoEm', 'desc')
+    );
+    const snap = await fb.getDocs(q);
+    if (snap.empty) {
+      el.innerHTML = '<div class="no-pedidos">Voce ainda nao tem pedidos registrados.<br><span style="color:rgba(0,245,255,.4)">Monte um pedido e envie pelo WhatsApp para comecar!</span></div>';
+      return;
+    }
+    el.innerHTML = '';
+    snap.forEach((docSnap, i) => {
+      const p   = docSnap.data();
+      const dt  = p.criadoEm?.toDate?.() ?? new Date();
+      const dtStr = dt.toLocaleDateString('pt-BR') + ' ' + dt.toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'});
+      const statusLabels = {aguardando:'AGUARDANDO PIX', confirmado:'CONFIRMADO', pronto:'PRONTO P/ ENTREGA'};
+      const statusCls    = {aguardando:'aguardando', confirmado:'confirmado', pronto:'pronto'};
+      const itensHtml = (p.itens||[]).map(it =>
+        `${it.nome}: ${it.qtd} un x ${fmt(it.preco)} = ${fmt(it.sub)}`
+      ).join('<br>');
+      el.innerHTML += `<div class="pedido-card">
+        <div class="pedido-topo">
+          <div>
+            <div class="pedido-num">PEDIDO #${docSnap.id.slice(-6).toUpperCase()}</div>
+            <div class="pedido-data">${dtStr}</div>
+          </div>
+          <span class="pedido-status ${statusCls[p.status]||'aguardando'}">${statusLabels[p.status]||'AGUARDANDO PIX'}</span>
+        </div>
+        <div class="pedido-itens">${itensHtml}</div>
+        <div class="pedido-total">${fmt(p.total)}</div>
+        ${p.entrega ? `<div class="pedido-entrega">Entrega: ${p.entrega}${p.endereco ? ' — '+p.endereco : ''}</div>` : ''}
+      </div>`;
+    });
+  } catch(e) {
+    el.innerHTML = `<div class="no-pedidos" style="color:var(--mag)">Erro ao carregar pedidos: ${e.message}</div>`;
+  }
+}
+
+// ─── REVIEWS ─────────────────────────────────────────
+function setStar(n) {
+  curStar = n;
+  document.querySelectorAll('#starsInput .star-btn').forEach((b,i) => b.classList.toggle('active', i < n));
+}
+
+function renderReviewForm() {
+  const formBox = document.getElementById('reviewFormBox');
+  const notice  = document.getElementById('reviewLoginNotice');
+  if (!formBox || !notice) return;
+  if (currentUser) {
+    formBox.style.display  = 'block';
+    notice.style.display   = 'none';
+  } else {
+    formBox.style.display  = 'none';
+    notice.style.display   = 'block';
+  }
+}
+
+async function submitReview() {
+  if (!currentUser) { openAuthModal('login'); return; }
+  const text = (document.getElementById('revText')?.value || '').trim();
+  if (!curStar) { showToast('Selecione uma nota!'); return; }
+  if (!text)    { showToast('Escreva um comentario!'); return; }
+  try {
+    const fb = await fbInit();
+    await fb.addDoc(fb.col('avaliacoes'), {
+      userId:    currentUser.uid,
+      userName:  currentUser.displayName || currentUser.email.split('@')[0],
+      rating:    curStar,
+      text,
+      criadoEm:  fb.ts(),
+    });
+    document.getElementById('revText').value = '';
+    setStar(0);
+    renderReviews();
+    showToast('✓ AVALIACAO PUBLICADA!', true);
+  } catch(e) {
+    showToast('Erro: ' + e.message);
+  }
+}
+
+async function renderReviews() {
+  const grid = document.getElementById('reviewsGrid');
+  const avg  = document.getElementById('avgRating');
+  if (!grid) return;
+  try {
+    const fb   = await fbInit();
+    const snap = await fb.getDocs(fb.query(fb.col('avaliacoes'), fb.orderBy('criadoEm','desc')));
+    if (snap.empty) {
+      grid.innerHTML = '<p class="no-reviews" style="grid-column:1/-1">Nenhuma avaliacao ainda. Seja o primeiro!</p>';
+      if (avg) avg.style.display = 'none';
+      return;
+    }
+    const reviews = [];
+    snap.forEach(d => reviews.push(d.data()));
+    const mean = reviews.reduce((s,r) => s+r.rating, 0) / reviews.length;
+    if (avg) {
+      avg.style.display = 'flex';
+      document.getElementById('avgNum').textContent   = mean.toFixed(1);
+      document.getElementById('avgStars').textContent = '★'.repeat(Math.round(mean)) + '☆'.repeat(5-Math.round(mean));
+      document.getElementById('avgCount').textContent = reviews.length + ' avaliacao(oes)';
+    }
+    grid.innerHTML = reviews.map(r => {
+      const dt = r.criadoEm?.toDate?.() ?? new Date();
+      return `<div class="review-card">
+        <div class="rev-stars">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div>
+        <p class="rev-text">"${r.text}"</p>
+        <div class="rev-author">${r.userName}</div>
+        <div class="rev-date">${dt.toLocaleDateString('pt-BR')}</div>
+      </div>`;
+    }).join('');
+  } catch(e) {
+    grid.innerHTML = '<p class="no-reviews" style="grid-column:1/-1;color:var(--mag)">Erro ao carregar avaliacoes.</p>';
+  }
+}
+
+// ─── ADMIN: view all pedidos ──────────────────────────
+async function renderAdminPedidos() {
+  const el = document.getElementById('adminPedidosList');
+  if (!el) return;
+  el.innerHTML = `<p style="font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--dim)">Carregando...</p>`;
+  try {
+    const fb   = await fbInit();
+    const snap = await fb.getDocs(fb.query(fb.col('pedidos'), fb.orderBy('criadoEm','desc')));
+    if (snap.empty) { el.innerHTML = `<p style="font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--dim)">Nenhum pedido ainda.</p>`; return; }
+    el.innerHTML = '';
+    snap.forEach(d => {
+      const p  = d.data();
+      const dt = p.criadoEm?.toDate?.() ?? new Date();
+      el.innerHTML += `<div style="background:var(--gb);border:1px solid var(--bc);padding:12px;margin-bottom:8px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px;">
+          <span style="font-family:'Orbitron',monospace;font-size:.7rem;color:var(--cyan);">#${d.id.slice(-6).toUpperCase()} — ${p.userName}</span>
+          <span style="font-family:'Orbitron',monospace;font-size:.8rem;color:var(--yel);">${fmt(p.total)}</span>
+        </div>
+        <div style="font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--dim);margin-bottom:6px;">${dt.toLocaleDateString('pt-BR')} ${dt.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})} — Entrega: ${p.entrega}</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          ${['aguardando','confirmado','pronto'].map(s =>
+            `<button onclick="updatePedidoStatus('${d.id}','${s}',this)"
+              style="font-family:'Share Tech Mono',monospace;font-size:.62rem;padding:3px 10px;cursor:pointer;border:1px solid var(--bc);background:${p.status===s?'var(--cyan)':'transparent'};color:${p.status===s?'var(--bg)':'var(--dim)'};"
+            >${s.toUpperCase()}</button>`
+          ).join('')}
+        </div>
+      </div>`;
+    });
+  } catch(e) {
+    el.innerHTML = `<p style="color:var(--mag);font-family:'Share Tech Mono',monospace;font-size:.72rem;">Erro: ${e.message}</p>`;
+  }
+}
+
+async function updatePedidoStatus(id, status, btn) {
+  try {
+    const fb = await fbInit();
+    await fb.setDoc(fb.doc('pedidos', id), { status }, { merge: true });
+    renderAdminPedidos();
+    showToast('✓ STATUS ATUALIZADO!', true);
+  } catch(e) { showToast('Erro: ' + e.message); }
+}
+
+async function renderAdminUsers() {
+  const el = document.getElementById('adminUsersList');
+  if (!el) return;
+  el.innerHTML = `<p style="font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--dim)">Carregando...</p>`;
+  try {
+    const fb   = await fbInit();
+    const snap = await fb.getDocs(fb.col('usuarios'));
+    if (snap.empty) { el.innerHTML = `<p style="font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--dim)">Nenhum usuario cadastrado.</p>`; return; }
+    el.innerHTML = '';
+    snap.forEach(d => {
+      const u = d.data();
+      const dt = u.criadoEm?.toDate?.() ?? new Date();
+      el.innerHTML += `<div style="background:var(--gb);border:1px solid var(--bc);padding:10px 12px;margin-bottom:8px;font-family:'Share Tech Mono',monospace;font-size:.74rem;">
+        <div style="color:var(--cyan);margin-bottom:2px;">${u.nome} — ${u.email}</div>
+        <div style="color:var(--dim);">Cadastro: ${dt.toLocaleDateString('pt-BR')}</div>
+      </div>`;
+    });
+  } catch(e) {
+    el.innerHTML = `<p style="color:var(--mag);font-family:'Share Tech Mono',monospace;font-size:.72rem;">Erro: ${e.message}</p>`;
+  }
+}
+
 // ─── INIT ────────────────────────────────────────────
 renderProducts();
 updStats();
-autoLoadConfig(); // silently load photo config from Drive on every page open
+autoLoadConfig();
+initAuth(); // Firebase auth listener
 </script>
+
 
 <!-- ═══════════ LIGHTBOX ═══════════ -->
 <div class="lightbox-overlay" id="lightboxOverlay" onclick="lightboxBgClick(event)">
@@ -1518,6 +2025,45 @@ autoLoadConfig(); // silently load photo config from Drive on every page open
   </div>
   <button class="lightbox-nav lightbox-next" onclick="lightboxNav(1)">›</button>
   <div class="lightbox-counter" id="lightboxCounter"></div>
+</div>
+
+
+<!-- ═══════════ MODAL: AUTH ═══════════ -->
+<div class="modal-overlay" id="authModal">
+  <div class="modal" style="max-width:420px">
+    <button class="modal-close" onclick="closeModal('authModal')">✕</button>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">ENTRAR</button>
+      <button class="auth-tab" id="tabCadastro" onclick="switchAuthTab('cadastro')">CADASTRAR</button>
+    </div>
+    <!-- Login form -->
+    <div id="formLogin" class="auth-form">
+      <input type="email" id="loginEmail" placeholder="seu e-mail" autocomplete="email">
+      <input type="password" id="loginPass" placeholder="senha" autocomplete="current-password">
+      <div class="auth-error" id="loginError"></div>
+      <button class="btn-primary" style="animation:none;width:100%" onclick="doLogin()">▶ ENTRAR</button>
+    </div>
+    <!-- Cadastro form -->
+    <div id="formCadastro" class="auth-form" style="display:none">
+      <input type="text" id="cadNome" placeholder="seu nome" autocomplete="name">
+      <input type="email" id="cadEmail" placeholder="seu e-mail" autocomplete="email">
+      <input type="password" id="cadPass" placeholder="senha (min. 6 caracteres)" autocomplete="new-password">
+      <div class="auth-error" id="cadError"></div>
+      <div class="auth-success" id="cadSuccess"></div>
+      <button class="btn-primary" style="animation:none;width:100%" onclick="doCadastro()">▶ CRIAR CONTA</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ PAGE: MEUS PEDIDOS ═══════════ -->
+<div class="page-overlay" id="pedidosPage">
+  <div class="page-header">
+    <button class="page-back" onclick="closePedidosPage()">← VOLTAR</button>
+    <span class="page-title">MEUS PEDIDOS</span>
+  </div>
+  <div class="pedidos-list" id="pedidosList">
+    <div class="no-pedidos">Carregando pedidos...</div>
+  </div>
 </div>
 
 </body>
