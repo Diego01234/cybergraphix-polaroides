@@ -376,7 +376,7 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
   <div class="nav-links">
     <a href="#calculator">Pedido</a>
     <a href="#delivery">Entrega</a>
-    <a href="#social">Redes Sociais</a>
+    <a href="#social">Redes</a>
     <!-- Auth bar — updated by JS -->
     <div class="auth-bar" id="authBar">
       <button class="btn-auth" onclick="openAuthModal('login')">ENTRAR</button>
@@ -402,7 +402,7 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
     <div class="hero-badge hero-badge--mag"><span>📸 IMPRESSÕES FOTOGRÁFICAS EM FORMATO POLAROID</span></div>
     <div class="hero-badge hero-badge--warn"><span>🔒 CONFECÇÃO SOMENTE APÓS PAGAMENTO 100% VIA PIX</span></div>
   </div>
-  <p class="hero-desc">Impressões polaroide de alta qualidade. Monte seu pedido, veja o preço cair em tempo real e envie direto pelo WhatsApp.</p>
+  <p class="hero-desc">Impressões polaroid de alta qualidade. Monte seu pedido, veja o preço cair em tempo real e envie direto pelo WhatsApp.</p>
   <button class="btn-primary" onclick="document.getElementById('calculator').scrollIntoView({behavior:'smooth'})">▶ MONTAR MEU PEDIDO</button>
   <p class="scroll-hint">↓ role para montar seu pedido ↓</p>
   <div class="stats-bar" id="statsBar">
@@ -630,9 +630,17 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
     <button class="modal-close" onclick="closeModal('loginModal')">✕</button>
     <p class="modal-title">⚙ ACESSO ADMINISTRATIVO</p>
     <div class="login-box">
-      <p style="font-family:'Share Tech Mono',monospace;font-size:.78rem;color:var(--dim);margin-bottom:8px;">Digite a senha de administrador:</p>
-      <input type="password" id="adminPass" placeholder="senha..." onkeydown="if(event.key==='Enter')checkLogin()">
-      <button class="btn-primary" style="animation:none;margin-top:8px" onclick="checkLogin()">▶ ENTRAR</button>
+      <p style="font-family:'Share Tech Mono',monospace;font-size:.78rem;color:var(--dim);margin-bottom:8px;">Acesso administrativo:</p>
+      <input type="password" id="adminPass" placeholder="senha do painel..." onkeydown="if(event.key==='Enter')checkLogin()">
+      <input type="email" id="adminFirebaseEmail" placeholder="e-mail Firebase do admin" autocomplete="off"
+        style="margin-top:8px;background:rgba(0,0,0,.45);border:1px solid var(--bc);color:var(--w);padding:11px 14px;font-family:'Share Tech Mono',monospace;font-size:.88rem;width:100%;">
+      <input type="password" id="adminFirebasePass" placeholder="senha Firebase do admin" autocomplete="off"
+        style="margin-top:8px;background:rgba(0,0,0,.45);border:1px solid var(--bc);color:var(--w);padding:11px 14px;font-family:'Share Tech Mono',monospace;font-size:.88rem;width:100%;">
+      <div style="font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--dim);margin-top:6px;line-height:1.5;">
+        Use o e-mail e senha da conta admin criada no Firebase Authentication.
+      </div>
+      <div id="adminLoginError" style="font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--mag);min-height:16px;margin-top:4px;"></div>
+      <button class="btn-primary" style="animation:none;margin-top:12px" onclick="checkLogin()">▶ ENTRAR NO PAINEL</button>
     </div>
   </div>
 </div>
@@ -726,7 +734,7 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
       <p class="admin-section-title">📈 ESTATÍSTICAS</p>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-family:'Share Tech Mono',monospace;font-size:.78rem;">
         <div style="background:var(--gb);border:1px solid var(--bc);padding:12px;">
-          <div style="color:var(--dim);margin-bottom:4px;">pedidos enviados</div>
+          <div style="color:var(--dim);margin-bottom:4px;">pedidos via whatsapp</div>
           <div style="color:var(--cyan);font-size:1.4rem;font-family:'Orbitron',monospace;" id="aStat1">0</div>
         </div>
         <div style="background:var(--gb);border:1px solid var(--bc);padding:12px;">
@@ -737,6 +745,16 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
     </div>
 
 
+
+    <!-- AVALIACOES -->
+    <div class="admin-section">
+      <p class="admin-section-title">⭐ AVALIAÇÕES DOS CLIENTES</p>
+      <p style="font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--dim);margin-bottom:14px;line-height:1.5;">
+        Monitore e remova avaliações ofensivas. Clique em ✕ para excluir.
+      </p>
+      <div id="adminReviewsList" style="display:grid;gap:8px;max-height:300px;overflow-y:auto;"></div>
+      <button class="btn-admin btn-danger" style="margin-top:12px" onclick="adminClearAllReviews()">🗑 EXCLUIR TODAS AS AVALIAÇÕES</button>
+    </div>
 
     <!-- SENHA -->
     <div class="admin-section">
@@ -945,13 +963,13 @@ const DEFAULT_PRICING = {
 let PRICING = LS.get('cgx_pricing') || JSON.parse(JSON.stringify(DEFAULT_PRICING));
 
 const PRODUCTS = [
-  {id:'mini',    name:'MINI',            full:'Polaroide Mini',            size:'Tamanho: 5×7cm · foto 4,2×5cm',      icon:'📷',tk:'mini',         min:16},
-  {id:'media',   name:'MÉDIA',           full:'Polaroide Média',           size:'Tamanho: 6×8,6cm · foto 5,1×6,2cm',  icon:'🖼️',tk:'media',        min:9 },
-  {id:'grande',  name:'INSTA X',         full:'Polaroide Insta X',         size:'Tamanho: 7×10cm · foto 6×7cm',        icon:'✨',tk:'grande',       min:8 },
-  {id:'custom',  name:'PERSONALIZADA',   full:'Polaroide Personalizada',   size:'Tamanho: 6,5×9cm · foto 5,6×6,4cm',  icon:'🎨',tk:'personalizada',min:6 },
-  {id:'tf',      name:'TIRINHA C/ FRASES',     full:'Tirinhas — Frases',         size:'Tamanho: 5×15cm',                    icon:'💬',tk:'tf',           min:1 },
-  {id:'tk_',     name:'TIRINHA KODAK',      full:'Tirinhas — Estilo Kodak',   size:'Tamanho: 4×14cm',                    icon:'🎞️',tk:'tk',           min:1 },
-  {id:'tp',      name:'TIRINHA POLAROIDE',  full:'Tirinhas — Polaroide 4×14', size:'Tamanho: 4×14cm',                    icon:'📸',tk:'tp',           min:1 },
+  {id:'mini',    name:'MINI',            full:'Polaroide Mini',            size:'5×7cm · foto 4,2×5cm',      icon:'📷',tk:'mini',         min:16},
+  {id:'media',   name:'MÉDIA',           full:'Polaroide Média',           size:'6×8,6cm · foto 5,1×6,2cm',  icon:'🖼️',tk:'media',        min:9 },
+  {id:'grande',  name:'INSTA X',         full:'Polaroide Insta X',         size:'7×10cm · foto 6×7cm',        icon:'✨',tk:'grande',       min:8 },
+  {id:'custom',  name:'PERSONALIZADA',   full:'Polaroide Personalizada',   size:'6,5×9cm · foto 5,6×6,4cm',  icon:'🎨',tk:'personalizada',min:6 },
+  {id:'tf',      name:'TIRA FRASES',     full:'Tirinhas — Frases',         size:'5×15cm',                    icon:'💬',tk:'tf',           min:1 },
+  {id:'tk_',     name:'TIRA KODAK',      full:'Tirinhas — Estilo Kodak',   size:'4×14cm',                    icon:'🎞️',tk:'tk',           min:1 },
+  {id:'tp',      name:'TIRA POLAROIDE',  full:'Tirinhas — Polaroide 4×14', size:'4×14cm',                    icon:'📸',tk:'tp',           min:1 },
 ];
 
 const qty = {};
@@ -1109,21 +1127,63 @@ function v(id) { const el=document.getElementById(id); return el ? el.value.trim
 // ─── ADMIN ───────────────────────────────────────────
 function openLogin() { openModal('loginModal'); setTimeout(()=>document.getElementById('adminPass').focus(),100); }
 
-function checkLogin() {
-  const pass = document.getElementById('adminPass').value;
+async function checkLogin() {
+  const pass  = document.getElementById('adminPass').value;
+  const email = document.getElementById('adminFirebaseEmail').value.trim();
+  const fpass = document.getElementById('adminFirebasePass').value;
+  const errEl = document.getElementById('adminLoginError');
+  errEl.textContent = '';
+
+  // 1. Verify panel password
   const stored = LS.get(ADMIN_HASH_KEY);
-  if (simpleHash(pass) === stored) {
-    closeModal('loginModal');
-    document.getElementById('adminPass').value = '';
-    openModal('adminModal');
-    document.getElementById('aStat1').textContent = LS.get('cgx_pedidos') || 0;
-    loadConfigFromDrive();
-    renderAdminPedidos();
-    renderAdminUsers();
-  } else {
+  if (simpleHash(pass) !== stored) {
     showToast('⚠ SENHA INCORRETA!');
     document.getElementById('adminPass').value = '';
+    return;
   }
+
+  // 2. If already signed in as admin, skip Firebase login
+  if (currentUser && currentUser.uid === ADMIN_UID) {
+    openAdminPanel();
+    return;
+  }
+
+  // 3. Sign into Firebase with admin credentials
+  if (email && fpass) {
+    try {
+      const fb = await fbInit();
+      await fb.signIn(email, fpass);
+      // Verify it's actually the admin account
+      if (fb.auth.currentUser?.uid !== ADMIN_UID) {
+        await fb.signOut();
+        errEl.textContent = 'Essa conta Firebase não é a conta admin.';
+        return;
+      }
+      LS.set('cgx_admin_fb_email', email);
+    } catch(e) {
+      errEl.textContent = 'Firebase: ' + fbErrMsg(e.code);
+      return;
+    }
+  } else {
+    // Pre-fill remembered email and prompt
+    const saved = LS.get('cgx_admin_fb_email');
+    if (saved) document.getElementById('adminFirebaseEmail').value = saved;
+    errEl.textContent = 'Digite o e-mail e senha Firebase do admin para continuar.';
+    return;
+  }
+
+  openAdminPanel();
+}
+
+function openAdminPanel() {
+  closeModal('loginModal');
+  document.getElementById('adminPass').value = '';
+  openModal('adminModal');
+  document.getElementById('aStat1').textContent = LS.get('cgx_pedidos') || 0;
+  loadConfigFromDrive();
+  renderAdminReviews();
+  renderAdminPedidos();
+  renderAdminUsers();
 }
 
 function changePass() {
@@ -1629,6 +1689,9 @@ function importConfig(input) {
 // ═══════════════════════════════════════════════════════
 // FIREBASE CONFIG
 // ═══════════════════════════════════════════════════════
+// ── ADMIN UID (Firebase Authentication)
+const ADMIN_UID = 'gQUGL2PuqFSUUO1kEIK5RwLWSOv2';
+
 const FB_CONFIG = {
   apiKey:            "AIzaSyANv1LjE3CLLt_1p1-T4PkfGHxQAOHGlT4",
   authDomain:        "cybergraphix-polos.firebaseapp.com",
@@ -1944,6 +2007,79 @@ async function renderReviews() {
 }
 
 // ─── ADMIN: view all pedidos ──────────────────────────
+async function renderAdminReviews() {
+  const el = document.getElementById('adminReviewsList');
+  if (!el) return;
+  el.innerHTML = `<p style="font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--dim)">Carregando...</p>`;
+  try {
+    const fb   = await fbInit();
+    const snap = await fb.getDocs(fb.query(fb.col('avaliacoes'), fb.orderBy('criadoEm','desc')));
+    // Update stats count
+    const s2 = document.getElementById('aStat2');
+    if (s2) s2.textContent = snap.size;
+    if (snap.empty) {
+      el.innerHTML = `<p style="font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--dim)">Nenhuma avaliação ainda.</p>`;
+      return;
+    }
+    el.innerHTML = '';
+    snap.forEach(d => {
+      const r  = d.data();
+      const dt = r.criadoEm?.toDate?.() ?? new Date();
+      el.innerHTML += `<div style="background:var(--gb);border:1px solid var(--bc);padding:12px;display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
+        <div style="flex:1;min-width:0;">
+          <div style="font-family:'Orbitron',monospace;font-size:.68rem;color:var(--cyan);margin-bottom:3px;">
+            ${r.userName} · ${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)} · ${dt.toLocaleDateString('pt-BR')}
+          </div>
+          <div style="font-family:'Share Tech Mono',monospace;font-size:.74rem;color:rgba(232,244,255,.75);line-height:1.5;word-break:break-word;">"${r.text}"</div>
+        </div>
+        <button onclick="adminDeleteReview('${d.id}')"
+          style="background:none;border:1px solid var(--bm);color:var(--mag);font-family:'Share Tech Mono',monospace;font-size:.65rem;padding:4px 10px;cursor:pointer;white-space:nowrap;flex-shrink:0;">
+          ✕ DEL
+        </button>
+      </div>`;
+    });
+  } catch(e) {
+    el.innerHTML = `<p style="font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--mag);">Erro: ${e.message}</p>`;
+  }
+}
+
+async function adminDeleteReview(id) {
+  if (!currentUser || currentUser.uid !== ADMIN_UID) {
+    showToast('⚠ Faça login como admin primeiro!');
+    return;
+  }
+  if (!confirm('Excluir esta avaliação?')) return;
+  try {
+    const fb = await fbInit();
+    await fb.deleteDoc(fb.doc('avaliacoes', id));
+    renderAdminReviews();
+    renderReviews(); // refresh public list too
+    showToast('✓ AVALIAÇÃO REMOVIDA!', true);
+  } catch(e) {
+    showToast('Erro: ' + e.message);
+  }
+}
+
+async function adminClearAllReviews() {
+  if (!currentUser || currentUser.uid !== ADMIN_UID) {
+    showToast('⚠ Faça login como admin primeiro!');
+    return;
+  }
+  if (!confirm('Excluir TODAS as avaliações? Esta ação não pode ser desfeita.')) return;
+  try {
+    const fb   = await fbInit();
+    const snap = await fb.getDocs(fb.col('avaliacoes'));
+    const dels = [];
+    snap.forEach(d => dels.push(fb.deleteDoc(fb.doc('avaliacoes', d.id))));
+    await Promise.all(dels);
+    renderAdminReviews();
+    renderReviews();
+    showToast('✓ TODAS AS AVALIAÇÕES REMOVIDAS!', true);
+  } catch(e) {
+    showToast('Erro: ' + e.message);
+  }
+}
+
 async function renderAdminPedidos() {
   const el = document.getElementById('adminPedidosList');
   if (!el) return;
@@ -1977,6 +2113,10 @@ async function renderAdminPedidos() {
 }
 
 async function updatePedidoStatus(id, status, btn) {
+  if (!currentUser || currentUser.uid !== ADMIN_UID) {
+    showToast('⚠ Faça login como admin primeiro!');
+    return;
+  }
   try {
     const fb = await fbInit();
     await fb.setDoc(fb.doc('pedidos', id), { status }, { merge: true });
