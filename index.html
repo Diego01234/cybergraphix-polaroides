@@ -1329,7 +1329,7 @@ function updPrice(id) {
   // ── Hint de desconto progressivo ──
   // Ativo apenas para Mini, Média e Insta X (que têm tabela progressiva)
   // ↓ Para adicionar/remover produtos com hint, edite este array:
-  const showDiscount = ['mini', 'media', 'grande'].includes(id);
+  const showDiscount = ['mini', 'media', 'grande', 'custom'].includes(id);
   if (!dh || !showDiscount) return;
 
   const next = getNextTier(p, q);
