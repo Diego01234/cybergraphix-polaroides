@@ -27,7 +27,40 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
 body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,245,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,245,255,.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
 
 /* ─── NAV ─────────────────────────────────────────────── */
-nav{position:fixed;top:0;left:0;right:0;z-index:500;background:rgba(5,8,16,.9);backdrop-filter:blur(16px);border-bottom:1px solid rgba(0,245,255,.1);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;}
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:500;
+  background:rgba(5,8,16,.9);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(0,245,255,.1);
+  /* ↓ PADDING INTERNO DA BARRA DE NAVEGAÇÃO */
+  padding:12px 24px;
+  display:grid;
+  /* 3 colunas: esquerda | centro(logo) | direita */
+  grid-template-columns: 1fr auto 1fr;
+  align-items:center;
+  gap:12px;
+}
+/* ↓ ESQUERDA DO NAV — links para outras páginas */
+.nav-left{
+  display:flex;
+  align-items:center;
+  gap:16px;
+}
+/* ↓ ESTILO DOS LINKS EXTERNOS (lado esquerdo) */
+.nav-ext-link{
+  font-family:'Share Tech Mono',monospace;
+  font-size:.68rem;    /* ↓ TAMANHO DO TEXTO DOS LINKS EXTERNOS */
+  color:var(--mag);    /* ↓ COR DOS LINKS EXTERNOS (magenta) */
+  text-decoration:none;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  border:1px solid var(--bm);
+  padding:4px 10px;
+  transition:all .2s;
+}
+.nav-ext-link:hover{background:var(--mag);color:var(--bg);}
+/* ↓ DIREITA DO NAV — links internos + auth + admin */
+.nav-links{justify-content:flex-end;}
 .nav-brand{font-family:'Orbitron',monospace;font-size:.9rem;font-weight:900;background:linear-gradient(90deg,var(--cyan),var(--mag));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 .nav-links{display:flex;gap:20px;align-items:center;}
 .nav-links a{font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--dim);text-decoration:none;letter-spacing:.15em;text-transform:uppercase;transition:color .2s;}
@@ -448,18 +481,78 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
 .star-btn.active,.star-btn:hover{color:var(--yel);}
 .no-reviews{text-align:center;font-family:'Share Tech Mono',monospace;font-size:.82rem;color:var(--dim);padding:32px 0;}
 
+
+/* ════════════════════════════════════════════════════════
+   DESCONTO PROGRESSIVO — hint exibido abaixo do preço
+   quando há um nível mais barato disponível.
+   ════════════════════════════════════════════════════════ */
+.discount-hint {
+  margin-top: 8px;
+  padding: 8px 10px;
+  /* ↓ COR DE FUNDO DO HINT — gradiente sutil amarelo/ciano */
+  background: linear-gradient(135deg, rgba(255,234,0,.08), rgba(0,245,255,.05));
+  /* ↓ BORDA DO HINT */
+  border: 1px solid rgba(255,234,0,.35);
+  border-left: 3px solid var(--yel);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .72rem;       /* ↓ TAMANHO DO TEXTO PRINCIPAL DO HINT */
+  line-height: 1.6;
+  color: rgba(232,244,255,.85);
+  display: none;
+  animation: hintIn .25s ease;
+}
+.discount-hint strong {
+  color: var(--yel);       /* ↓ COR DOS VALORES EM DESTAQUE (R$) */
+  font-size: .78rem;       /* ↓ TAMANHO DOS VALORES EM DESTAQUE */
+}
+.discount-hint .save-line {
+  color: var(--grn);       /* ↓ COR DA LINHA "VOCÊ ECONOMIZA" */
+  font-size: .7rem;        /* ↓ TAMANHO DA LINHA "VOCÊ ECONOMIZA" */
+  margin-top: 4px;
+  display: block;
+}
+.discount-hint .best-price {
+  color: var(--grn);       /* ↓ COR DA MENSAGEM "MELHOR PREÇO" */
+  font-size: .7rem;
+}
+@keyframes hintIn {
+  from { opacity:0; transform:translateY(-4px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
 </style>
 </head>
 <body>
 
 <!-- NAV -->
 <nav>
+  <!-- ════════════════════════════════════════════════════
+       NAV — estrutura de 3 colunas:
+         .nav-left   → links para OUTRAS páginas (ex: Impressões Apostilas)
+         .nav-brand  → logo CyberGraphix (centro)
+         .nav-links  → links INTERNOS + auth + admin (direita)
+
+       Para adicionar links à ESQUERDA (outras páginas):
+         edite a div.nav-left abaixo.
+       Para adicionar links à DIREITA (seções desta página):
+         edite a div.nav-links abaixo.
+       ════════════════════════════════════════════════════ -->
+
+  <!-- ESQUERDA: links para outras páginas do site -->
+  <div class="nav-left">
+    <!-- ↓ LINK PARA OUTRAS PÁGINAS — adicione <a> aqui para colocar mais links à esquerda -->
+    <a href="https://diego01234.github.io/cybergraphix-polaroides/" class="nav-ext-link">Impressões Apostilas</a>
+  </div>
+
+  <!-- CENTRO: logo da marca -->
   <div class="nav-brand">CYBER<span style="color:var(--mag)">GRAPHIX</span></div>
+
+  <!-- DIREITA: navegação interna + auth + admin -->
   <div class="nav-links">
+    <!-- ↓ LINKS INTERNOS — seções desta página (Pedido, Entrega, Redes) -->
     <a href="#calculator">Pedido</a>
     <a href="#delivery">Entrega</a>
     <a href="#social">Redes</a>
-    <a href="https://diego01234.github.io/cybergraphix-polaroides/">Impressões Apostilas</a>
     <!-- Auth bar — updated by JS -->
     <div class="auth-bar" id="authBar">
       <button class="btn-auth" onclick="openAuthModal('login')">ENTRAR</button>
@@ -1041,13 +1134,72 @@ async function loadConfigFromDrive() {
 // TABELAS DE PREÇO (fallback — valores da planilha)
 // ═══════════════════════════════════════════════════════
 const DEFAULT_PRICING = {
-  mini:          [{q:16,u:1.00},{q:20,u:0.90},{q:32,u:0.8125},{q:37,u:0.811},{q:48,u:0.729},{q:64,u:0.702},{q:80,u:0.686},{q:96,u:0.676}],
-  media:         [{q:9,u:1.667},{q:15,u:1.333},{q:24,u:1.167},{q:30,u:1.067},{q:36,u:1.00},{q:45,u:0.998},{q:54,u:0.95},{q:72,u:0.90},{q:90,u:0.89}],
-  grande:        [{q:8,u:2.25},{q:16,u:1.625},{q:20,u:1.60},{q:24,u:1.458},{q:32,u:1.3125},{q:40,u:1.3725},{q:48,u:1.373},{q:64,u:1.389},{q:80,u:1.399}],
-  personalizada: [{q:6,u:2.50},{q:9,u:2.222},{q:18,u:1.778},{q:27,u:1.481},{q:36,u:1.444},{q:45,u:1.378},{q:54,u:1.333},{q:63,u:1.302},{q:72,u:1.278},{q:90,u:1.221},{q:108,u:1.203}],
-  tf:            [{q:1,u:7.00}],
-  tk:            [{q:1,u:6.00}],
-  tp:            [{q:1,u:5.00}]
+  // ════════════════════════════════════════════════════
+  // TABELAS DE PREÇO — Desconto Progressivo
+  // Fonte: planilha "Polaroides Valor Atual"
+  //
+  // Formato de cada faixa: {q: QTDE_MINIMA, u: PRECO_POR_UNIDADE}
+  // Para alterar um preço: edite o valor "u" da faixa correspondente.
+  // Para adicionar uma faixa nova: insira {q:QTDE, u:PRECO} na ordem crescente de q.
+  // ════════════════════════════════════════════════════
+
+  // ─── MINI: Polaroide Mini 5×7cm ─────────────────────
+  mini: [
+    {q:16, u:1.5000},   // 16–19 un  → R$ 1,50/un
+    {q:20, u:1.0000},   // 20–31 un  → R$ 1,00/un
+    {q:32, u:0.9031},   // 32–36 un  → R$ 0,90/un
+    {q:37, u:0.8108},   // 37–47 un  → R$ 0,81/un
+    {q:48, u:0.8108},   // 48–63 un  → R$ 0,81/un
+    {q:64, u:0.7172},   // 64–79 un  → R$ 0,72/un
+    {q:80, u:0.7000},   // 80–95 un  → R$ 0,70/un
+    {q:96, u:0.6865},   // 96+ un    → R$ 0,69/un  ← MELHOR PREÇO
+  ],
+
+  // ─── MÉDIA: Polaroide Média 6×8,6cm ─────────────────
+  media: [
+    {q:9,  u:2.0000},   // 9–14  un  → R$ 2,00/un
+    {q:15, u:1.6667},   // 15–23 un  → R$ 1,67/un
+    {q:24, u:1.3333},   // 24–29 un  → R$ 1,33/un
+    {q:30, u:1.1667},   // 30–35 un  → R$ 1,17/un
+    {q:36, u:1.0667},   // 36–44 un  → R$ 1,07/un
+    {q:45, u:1.0000},   // 45–53 un  → R$ 1,00/un
+    {q:54, u:0.9978},   // 54–71 un  → R$ 1,00/un
+    {q:72, u:0.9500},   // 72–89 un  → R$ 0,95/un
+    {q:90, u:0.9000},   // 90+ un    → R$ 0,90/un  ← MELHOR PREÇO
+  ],
+
+  // ─── GRANDE / INSTA X: 7×10cm ───────────────────────
+  grande: [
+    {q:8,  u:2.5000},   // 8–15  un  → R$ 2,50/un
+    {q:16, u:2.0000},   // 16–19 un  → R$ 2,00/un
+    {q:20, u:1.9000},   // 20–23 un  → R$ 1,90/un
+    {q:24, u:1.7500},   // 24–31 un  → R$ 1,75/un
+    {q:32, u:1.4375},   // 32–39 un  → R$ 1,44/un
+    {q:40, u:1.3125},   // 40–47 un  → R$ 1,31/un  ← MELHOR PREÇO
+    {q:48, u:1.3725},   // 48–63 un  → R$ 1,37/un
+    {q:64, u:1.3729},   // 64–79 un  → R$ 1,37/un
+    {q:80, u:1.3891},   // 80+ un    → R$ 1,39/un
+  ],
+
+  // ─── PERSONALIZADA: 6,5×9cm ─────────────────────────
+  personalizada: [
+    {q:6,   u:3.0000},
+    {q:9,   u:2.5000},
+    {q:18,  u:2.2222},
+    {q:27,  u:1.7778},
+    {q:36,  u:1.4815},
+    {q:45,  u:1.4444},
+    {q:54,  u:1.3778},
+    {q:63,  u:1.3333},
+    {q:72,  u:1.3016},
+    {q:90,  u:1.2778},
+    {q:108, u:1.2211},
+  ],
+
+  // ─── TIRINHAS — preço fixo por unidade ──────────────
+  tf: [{q:1, u:7.00}],   // Frases 5×15cm
+  tk: [{q:1, u:6.00}],   // Estilo Kodak 4×14cm
+  tp: [{q:1, u:5.00}],   // Polaroide 4×14cm
 };
 
 let PRICING = LS.get('cgx_pricing') || JSON.parse(JSON.stringify(DEFAULT_PRICING));
@@ -1090,6 +1242,8 @@ function renderProducts() {
         <button class="qty-btn" onclick="chg('${p.id}',1)">+</button>
       </div>
       <div class="u-price" id="up-${p.id}"><span class="tier-note">${mn}</span></div>
+      <!-- ↓ Hint de desconto progressivo — controlado por updPrice() -->
+      <div class="discount-hint" id="dh-${p.id}"></div>
       <button class="price-table-btn" onclick="showPriceTable('${p.id}')">ver tabela de preços ↗</button>
       <button class="model-btn" onclick="showModelo('${p.id}')">ver modelos de foto ↗</button>
     </div>`;
@@ -1118,14 +1272,88 @@ function setQ(id, v) {
   }
   qty[id] = v; updPrice(id); updSummary();
 }
+// ════════════════════════════════════════════════════════
+// getNextTier — encontra o próximo nível de desconto
+// disponível acima da quantidade atual.
+// Retorna objeto com dados do próximo tier, ou null se já
+// está no melhor preço (ou se não há próximo tier).
+// ════════════════════════════════════════════════════════
+function getNextTier(p, q) {
+  const t = PRICING[p.tk];
+  if (!t || t.length < 2) return null;
+  // Acha o índice do tier atual
+  let curIdx = 0;
+  for (let i = 0; i < t.length; i++) {
+    if (q >= t[i].q) curIdx = i;
+  }
+  const nextIdx = curIdx + 1;
+  if (nextIdx >= t.length) return null; // já no último tier
+  return {
+    qty:       t[nextIdx].q,             // quantidade mínima do próximo tier
+    unitPrice: t[nextIdx].u,             // preço/un no próximo tier
+    curPrice:  t[curIdx].u,              // preço/un atual
+    need:      t[nextIdx].q - q,         // unidades que faltam para atingir
+  };
+}
+
+// ════════════════════════════════════════════════════════
+// updPrice — atualiza o display de preço e o hint de
+// desconto progressivo de um card de produto.
+// Chamada sempre que a quantidade de um produto muda.
+// ════════════════════════════════════════════════════════
 function updPrice(id) {
-  const p = PRODUCTS.find(x => x.id === id);
-  const q = qty[id];
+  const p  = PRODUCTS.find(x => x.id === id);
+  const q  = qty[id];
   const el = document.getElementById('up-' + id);
-  if (!q) { el.innerHTML = `<span class="tier-note">mín. ${p.min} un</span>`; return; }
+  // ↓ div do hint de desconto progressivo (pode ser null em produtos sem desconto)
+  const dh = document.getElementById('dh-' + id);
+
+  // ── Sem quantidade selecionada: exibe quantidade mínima ──
+  if (!q) {
+    el.innerHTML = `<span class="tier-note">mín. ${p.min} un</span>`;
+    if (dh) dh.style.display = 'none';
+    return;
+  }
+
   const pr = getPrice(p, q);
-  if (!pr) { el.innerHTML = `<span class="tier-note">preço não disponível</span>`; return; }
+  if (!pr) {
+    el.innerHTML = `<span class="tier-note">preço não disponível</span>`;
+    if (dh) dh.style.display = 'none';
+    return;
+  }
+
+  // ── Exibe preço/un e subtotal atual ──
+  // ↓ Para mudar o texto do preço exibido, edite o template abaixo
   el.innerHTML = `<strong>${fmt(pr)}</strong>/un → subtotal <strong>${fmt(pr * q)}</strong>`;
+
+  // ── Hint de desconto progressivo ──
+  // Ativo apenas para Mini, Média e Insta X (que têm tabela progressiva)
+  // ↓ Para adicionar/remover produtos com hint, edite este array:
+  const showDiscount = ['mini', 'media', 'grande'].includes(id);
+  if (!dh || !showDiscount) return;
+
+  const next = getNextTier(p, q);
+
+  if (!next) {
+    // Já no melhor preço disponível
+    dh.innerHTML = `<span class="best-price">✓ Você já está no melhor preço!</span>`;
+    dh.style.display = 'block';
+    return;
+  }
+
+  // Calcula quanto o cliente pagaria com next.qty unidades
+  // no preço atual vs no próximo nível
+  const totalAtual = pr * next.qty;            // custo com preço atual p/ next.qty un
+  const totalNext  = next.unitPrice * next.qty; // custo no próximo nível p/ next.qty un
+  const economia   = totalAtual - totalNext;    // diferença = economia
+
+  // ↓ Para alterar o texto do hint, edite o template abaixo:
+  dh.innerHTML = `
+    Adicionando <strong>mais ${next.need} un</strong> (total ${next.qty}),
+    em vez de <strong>${fmt(totalAtual)}</strong> você paga apenas
+    <strong>${fmt(totalNext)}</strong> com nosso desconto progressivo.
+    <span class="save-line">💰 Economia de ${fmt(economia)} nessa compra!</span>`;
+  dh.style.display = 'block';
 }
 function updSummary() {
   const items = PRODUCTS.filter(p => qty[p.id] > 0);
