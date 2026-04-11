@@ -598,7 +598,7 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
       <p class="sum-title">▶ RESUMO DO PEDIDO</p>
       <div id="sumItems"><p class="empty-msg">&gt; aguardando seleção de itens...</p></div>
       <div id="sumTotal" style="display:none" class="sum-total">
-        <span class="tot-lbl">// TOTAL ESTIMADO</span>
+        <span class="tot-lbl">// TOTAL FINAL</span>
         <span class="tot-val" id="totVal">R$ 0,00</span>
       </div>
     </div>
@@ -1406,24 +1406,24 @@ function sendWpp() {
   const items = PRODUCTS.filter(p => qty[p.id] > 0);
   if (!items.length) { showToast('⚠ ERRO: adicione pelo menos 1 item!'); return; }
   let grand = 0;
-  let lines = ['*PEDIDO - CyberGraphix Polaroides*', '', '*ITENS:*'];
+  let lines = ['*PEDIDO - Cyber Graphix Polaroides*', '', '*ITENS:*'];
   items.forEach(p => {
     const q = qty[p.id], pr = getPrice(p, q), sub = pr * q;
     grand += sub;
     lines.push(`- ${p.full}: ${q} un x ${fmt(pr)} = *${fmt(sub)}*`);
   });
-  lines.push('', `*TOTAL ESTIMADO: ${fmt(grand)}*`);
+  lines.push('', `*TOTAL FINAL: ${fmt(grand)}*`);
   if (delMode) lines.push('', `*ENTREGA:* ${delMode === 'entrega' ? 'Receber em casa' : 'Retirada'}`);
   const n=v('nome'),w=v('wpp'),ig=v('insta'),e=v('ende'),o=v('obs');
   if (n||w||ig||e||o) {
-    lines.push('','*DADOS DO CLIENTE:*');
+    lines.push('','*DADOS DO (A) CLIENTE:*');
     if(n) lines.push(`- Nome: ${n}`);
     if(w) lines.push(`- WhatsApp: ${w}`);
     if(ig) lines.push(`- Instagram: ${ig}`);
     if(e) lines.push(`- Endereco: ${e}`);
     if(o) lines.push(`- Obs: ${o}`);
   }
-  lines.push('','_Pedido via CyberGraphix Polaroides_');
+  lines.push('','_Pedido via Cyber Graphix Polaroides_');
   // increment pedidos counter
   const cnt = (LS.get('cgx_pedidos') || 0) + 1;
   LS.set('cgx_pedidos', cnt);
