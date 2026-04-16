@@ -5,38 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CyberGraphix ⚡ Polaroides</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Exo+2:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js">
-// ─── POPUP DE INFORMAÇÕES ────────────────────────────────
-// Exibido automaticamente na primeira visita e a cada nova
-// sessão (não usa localStorage — aparece sempre ao carregar).
-// Para desativar, comente a chamada openPopupOnLoad() acima.
-function openPopupOnLoad() {
-  const el = document.getElementById('infoPopup');
-  if (el) {
-    el.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-  }
-}
-
-function closeInfoPopup() {
-  const el = document.getElementById('infoPopup');
-  if (el) {
-    el.style.opacity = '0';
-    el.style.transition = 'opacity .25s';
-    setTimeout(() => {
-      el.style.display = 'none';
-      document.body.style.overflow = '';
-    }, 250);
-  }
-}
-
-// Fecha o popup ao clicar fora da caixa
-document.addEventListener('click', function(e) {
-  const overlay = document.getElementById('infoPopup');
-  if (overlay && e.target === overlay) closeInfoPopup();
-});
-
-</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 <style>
 /* ─── TOKENS ─────────────────────────────────────────── */
@@ -2647,6 +2616,36 @@ updStats();
 autoLoadConfig();
 openPopupOnLoad();
 initAuth(); // Firebase auth listener
+
+// ─── POPUP DE INFORMAÇÕES ────────────────────────────────
+// Exibido automaticamente na primeira visita e a cada nova
+// sessão (não usa localStorage — aparece sempre ao carregar).
+// Para desativar, comente a chamada openPopupOnLoad() acima.
+function openPopupOnLoad() {
+  const el = document.getElementById('infoPopup');
+  if (el) {
+    el.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function closeInfoPopup() {
+  const el = document.getElementById('infoPopup');
+  if (el) {
+    el.style.opacity = '0';
+    el.style.transition = 'opacity .25s';
+    setTimeout(() => {
+      el.style.display = 'none';
+      document.body.style.overflow = '';
+    }, 250);
+  }
+}
+
+// Fecha o popup ao clicar fora da caixa
+document.addEventListener('click', function(e) {
+  const overlay = document.getElementById('infoPopup');
+  if (overlay && e.target === overlay) closeInfoPopup();
+});
 </script>
 
 
