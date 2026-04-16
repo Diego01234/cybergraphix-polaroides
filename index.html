@@ -5,7 +5,38 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CyberGraphix ⚡ Polaroides</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Exo+2:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js">
+// ─── POPUP DE INFORMAÇÕES ────────────────────────────────
+// Exibido automaticamente na primeira visita e a cada nova
+// sessão (não usa localStorage — aparece sempre ao carregar).
+// Para desativar, comente a chamada openPopupOnLoad() acima.
+function openPopupOnLoad() {
+  const el = document.getElementById('infoPopup');
+  if (el) {
+    el.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function closeInfoPopup() {
+  const el = document.getElementById('infoPopup');
+  if (el) {
+    el.style.opacity = '0';
+    el.style.transition = 'opacity .25s';
+    setTimeout(() => {
+      el.style.display = 'none';
+      document.body.style.overflow = '';
+    }, 250);
+  }
+}
+
+// Fecha o popup ao clicar fora da caixa
+document.addEventListener('click', function(e) {
+  const overlay = document.getElementById('infoPopup');
+  if (overlay && e.target === overlay) closeInfoPopup();
+});
+
+</script>
 
 <style>
 /* ─── TOKENS ─────────────────────────────────────────── */
@@ -520,6 +551,130 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
   to   { opacity:1; transform:translateY(0); }
 }
 
+
+/* ═══════════════════════════════════════════════════════
+   POPUP DE AVISO — exibido automaticamente ao carregar
+   ═══════════════════════════════════════════════════════ */
+.popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.82);
+  z-index: 8000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: popupFadeIn .35s ease;
+}
+@keyframes popupFadeIn {
+  from { opacity:0; }
+  to   { opacity:1; }
+}
+.popup-box {
+  background: var(--bg2);
+  border: 1px solid var(--bc);
+  padding: 32px 28px 28px;
+  max-width: 420px;
+  width: 100%;
+  position: relative;
+  animation: popupSlideIn .35s ease;
+}
+@keyframes popupSlideIn {
+  from { opacity:0; transform: translateY(20px); }
+  to   { opacity:1; transform: translateY(0); }
+}
+.popup-box::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--cyan), var(--mag));
+}
+.popup-title {
+  font-family: 'Orbitron', monospace;
+  font-size: .85rem;
+  font-weight: 700;
+  color: var(--cyan);
+  letter-spacing: .12em;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+}
+.popup-close {
+  position: absolute;
+  top: 12px; right: 14px;
+  background: none;
+  border: none;
+  color: var(--dim);
+  font-size: 1.3rem;
+  cursor: pointer;
+  font-family: 'Share Tech Mono', monospace;
+  line-height: 1;
+  transition: color .2s;
+}
+.popup-close:hover { color: var(--mag); }
+.popup-items {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.popup-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: rgba(0,245,255,.04);
+  border: 1px solid rgba(0,245,255,.14);
+  border-left: 3px solid var(--cyan);
+  padding: 12px 14px;
+}
+.popup-item:nth-child(2) {
+  border-left-color: var(--mag);
+  background: rgba(255,0,170,.04);
+  border-color: rgba(255,0,170,.18);
+  border-left-color: var(--mag);
+}
+.popup-item:nth-child(3) {
+  border-left-color: var(--yel);
+  background: rgba(255,234,0,.04);
+  border-color: rgba(255,234,0,.18);
+  border-left-color: var(--yel);
+}
+.popup-item-icon {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.popup-item-text {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .8rem;
+  color: rgba(232,244,255,.88);
+  line-height: 1.55;
+  letter-spacing: .02em;
+}
+.popup-item:nth-child(1) .popup-item-text { color: rgba(0,245,255,.95); }
+.popup-item:nth-child(2) .popup-item-text { color: rgba(255,130,200,.95); }
+.popup-item:nth-child(3) .popup-item-text { color: rgba(255,234,0,.95); }
+.popup-btn {
+  margin-top: 22px;
+  width: 100%;
+  font-family: 'Orbitron', monospace;
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--bg);
+  background: linear-gradient(90deg, var(--cyan), var(--mag));
+  border: none;
+  padding: 13px 0;
+  cursor: pointer;
+  clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+  transition: all .2s;
+  box-shadow: 0 0 24px rgba(0,245,255,.3);
+}
+.popup-btn:hover {
+  box-shadow: 0 0 40px rgba(0,245,255,.55);
+  transform: translateY(-2px);
+}
+
 </style>
 </head>
 <body>
@@ -704,7 +859,7 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
             </a>
           </div>
         </div>
-        <div class="field"><label>observações</label><textarea id="obs" rows="3" placeholder="fotos de evento, datas especiais, dúvidas..."></textarea></div>
+        <div class="field"><label>observações</label><textarea id="obs" rows="3" placeholder=""></textarea></div>
       </div>
     </div>
   </div>
@@ -2490,6 +2645,7 @@ async function renderAdminUsers() {
 renderProducts();
 updStats();
 autoLoadConfig();
+openPopupOnLoad();
 initAuth(); // Firebase auth listener
 </script>
 
@@ -2543,6 +2699,33 @@ initAuth(); // Firebase auth listener
   </div>
   <div class="pedidos-list" id="pedidosList">
     <div class="no-pedidos">Carregando pedidos...</div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     POPUP DE AVISO — abre automaticamente ao carregar
+     Para desativar: comente o openPopupOnLoad() no script
+     ═══════════════════════════════════════════════════════ -->
+<div class="popup-overlay" id="infoPopup" style="display:none">
+  <div class="popup-box">
+    <button class="popup-close" onclick="closeInfoPopup()">✕</button>
+    <p class="popup-title">⚡ Informações Importantes</p>
+    <div class="popup-items">
+      <div class="popup-item">
+        <span class="popup-item-icon">🕓</span>
+        <span class="popup-item-text">Nossas entregas são entre as 16h – 17h</span>
+      </div>
+      <div class="popup-item">
+        <span class="popup-item-icon">📅</span>
+        <span class="popup-item-text">Trabalhamos de segunda a sexta somente</span>
+      </div>
+      <div class="popup-item">
+        <span class="popup-item-icon">🔒</span>
+        <span class="popup-item-text">Produção das Polaroides somente após pagamento via PIX no WhatsApp</span>
+      </div>
+    </div>
+    <button class="popup-btn" onclick="closeInfoPopup()">▶ ENTENDIDO</button>
   </div>
 </div>
 
