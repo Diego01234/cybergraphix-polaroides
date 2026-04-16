@@ -2614,7 +2614,6 @@ async function renderAdminUsers() {
 renderProducts();
 updStats();
 autoLoadConfig();
-openPopupOnLoad();
 initAuth(); // Firebase auth listener
 
 // ─── POPUP DE INFORMAÇÕES ────────────────────────────────
@@ -2622,10 +2621,18 @@ initAuth(); // Firebase auth listener
 // sessão (não usa localStorage — aparece sempre ao carregar).
 // Para desativar, comente a chamada openPopupOnLoad() acima.
 function openPopupOnLoad() {
-  const el = document.getElementById('infoPopup');
-  if (el) {
-    el.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
+  // Usa DOMContentLoaded para garantir que o HTML do popup já foi carregado
+  const show = () => {
+    const el = document.getElementById('infoPopup');
+    if (el) {
+      el.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+  };
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', show);
+  } else {
+    show();
   }
 }
 
@@ -2646,6 +2653,9 @@ document.addEventListener('click', function(e) {
   const overlay = document.getElementById('infoPopup');
   if (overlay && e.target === overlay) closeInfoPopup();
 });
+
+// Abre popup ao carregar
+openPopupOnLoad();
 </script>
 
 
