@@ -67,7 +67,7 @@ nav{
 .nav-links a:hover{color:var(--cyan);}
 .nav-admin-btn{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--mag);border:1px solid var(--mag);padding:5px 12px;cursor:pointer;background:transparent;letter-spacing:.1em;transition:all .2s;}
 .nav-admin-btn:hover{background:var(--mag);color:var(--bg);}
-@media(max-width:600px){.nav-links a:not(.nav-admin-btn){display:none;}}
+/* Regra antiga removida — links internos agora ficam no dropdown .nav-menu-dropdown, visível em mobile e desktop */
 
 /* ─── HERO ────────────────────────────────────────────── */
 .hero{min-height:auto;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:110px 20px 56px;position:relative;z-index:1;text-align:center;}
@@ -850,6 +850,119 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
   }
 }
 
+
+/* ═══════════════════════════════════════════════════════
+   MENU DE NAVEGAÇÃO INTERNA — dropdown "Menu"
+   Mesmo padrão visual do "Mais Sites".
+   Funciona em mobile e desktop.
+
+   ► Para mudar a COR do botão: edite --nav-menu-color abaixo
+   ► Para mudar o TAMANHO do texto: edite font-size
+   ► Para mudar largura do dropdown: edite min-width
+   ═══════════════════════════════════════════════════════ */
+
+/* Wrapper posicionado relativamente para o dropdown ficar abaixo */
+.nav-menu-wrap {
+  position: relative;  /* ← necessário para o dropdown se posicionar corretamente */
+}
+
+/* Botão "Menu" que abre o dropdown */
+.nav-menu-btn {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .68rem;         /* ↓ TAMANHO DO TEXTO DO BOTÃO MENU */
+  color: var(--cyan);        /* ↓ COR DO BOTÃO MENU (ciano por padrão) */
+  background: transparent;
+  border: 1px solid var(--bc); /* ↓ COR DA BORDA DO BOTÃO */
+  padding: 5px 10px;
+  cursor: pointer;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  transition: all .2s;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+/* Estado hover e aberto — fundo ciano, texto escuro */
+.nav-menu-btn:hover,
+.nav-menu-btn.open {
+  background: var(--cyan);   /* ↓ COR DE FUNDO AO ABRIR/HOVER */
+  color: var(--bg);
+  border-color: var(--cyan);
+}
+
+/* Seta que rotaciona quando o menu está aberto */
+.nav-menu-arrow {
+  font-size: .6rem;
+  transition: transform .2s;
+}
+.nav-menu-btn.open .nav-menu-arrow {
+  transform: rotate(180deg);  /* ← gira 180° quando aberto */
+}
+
+/* Painel dropdown — oculto por padrão, exibido com .open */
+.nav-menu-dropdown {
+  display: none;               /* ← controlado pelo JS toggleNavMenu() */
+  position: absolute;
+  top: calc(100% + 8px);       /* ↓ distância do botão até o topo do dropdown */
+  right: 0;                    /* ← alinha à direita do botão */
+  min-width: 200px;            /* ↓ LARGURA MÍNIMA DO DROPDOWN */
+  background: var(--bg2);      /* ↓ COR DE FUNDO DO DROPDOWN */
+  border: 1px solid var(--bc);
+  z-index: 600;                /* ← fica acima do conteúdo da página */
+  flex-direction: column;
+  box-shadow: 0 8px 32px rgba(0,0,0,.5);
+}
+/* Linha decorativa no topo do dropdown */
+.nav-menu-dropdown::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--cyan), var(--mag)); /* ↓ GRADIENTE TOPO */
+}
+/* Classe adicionada pelo JS para exibir o dropdown */
+.nav-menu-dropdown.open {
+  display: flex;
+}
+
+/* Cada link dentro do dropdown */
+.nav-menu-item {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .72rem;           /* ↓ TAMANHO DOS LINKS DENTRO DO MENU */
+  color: rgba(232,244,255,.8); /* ↓ COR DO TEXTO DOS LINKS */
+  text-decoration: none;
+  padding: 11px 16px;          /* ↓ ESPAÇAMENTO INTERNO DE CADA LINK */
+  border-bottom: 1px solid rgba(0,245,255,.07);
+  letter-spacing: .06em;
+  transition: all .18s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+/* Remove borda do último item */
+.nav-menu-item:last-child { border-bottom: none; }
+/* Efeito hover: fundo ciano suave + deslocamento */
+.nav-menu-item:hover {
+  background: rgba(0,245,255,.08);  /* ↓ COR DE FUNDO NO HOVER */
+  color: var(--cyan);               /* ↓ COR DO TEXTO NO HOVER */
+  padding-left: 22px;               /* ↓ INDENTAÇÃO NO HOVER */
+}
+
+/* ─── Ajustes mobile (até 480px) ───────────────────────
+   O dropdown já funciona no mobile por padrão.
+   Aqui apenas ajustamos tamanhos para telas pequenas. */
+@media(max-width:480px) {
+  .nav-menu-btn {
+    font-size: .62rem;   /* ↓ TAMANHO DO BOTÃO NO MOBILE */
+    padding: 5px 8px;
+  }
+  .nav-menu-dropdown {
+    min-width: 170px;    /* ↓ LARGURA DO DROPDOWN NO MOBILE */
+    right: 0;            /* mantém alinhado à direita no mobile */
+  }
+}
+
 </style>
 </head>
 <body>
@@ -886,6 +999,7 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
         <a href="https://diego01234.github.io/cyber-impressao/" class="mais-sites-item" target="_blank">
           📄 Impressões Apostilas
         </a>
+
         <a href="https://cybergraphix.meloja.com.br/" class="mais-sites-item" target="_blank">
           🎁 Mais Formas de Presentes
         </a>
@@ -896,20 +1010,67 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
   </div>
 
   <!-- CENTRO: logo da marca -->
-  <div class="nav-brand">CYBER<span style="color:var(--mag)">GRAPHIX</span></div>
+  <div class="nav-brand">CYBER <span style="color:var(--mag)">GRAPHIX</span></div>
 
-  <!-- DIREITA: navegação interna + auth + admin -->
+  <!-- ═══════════════════════════════════════════════════
+       DIREITA: navegação interna + auth + admin
+       Funciona em desktop e mobile via dropdown "Menu".
+
+       ► Para adicionar seções novas ao menu de navegação:
+         copie um <a class="nav-menu-item"> dentro de
+         .nav-menu-dropdown e aponte o href para o id
+         da seção (ex: href="#minhasecao")
+
+       ► O botão ADMIN e a barra de autenticação ficam
+         fora do dropdown — sempre visíveis na nav.
+         Não mova esses elementos para dentro do dropdown.
+       ═══════════════════════════════════════════════════ -->
   <div class="nav-links">
-    <!-- ↓ LINKS INTERNOS — seções desta página (Pedido, Entrega, Redes) -->
-    <a href="#calculator">Pedido</a>
-    <a href="#delivery">Entrega</a>
-    <a href="#social">Redes Sociais</a>
-    <!-- Auth bar — updated by JS -->
+
+    <!-- Dropdown "Menu" com links internos do site -->
+    <!-- Mesma lógica do "Mais Sites" — abre/fecha pelo JS toggleNavMenu() -->
+    <div class="nav-menu-wrap" id="navMenuWrap">
+
+      <!-- Botão que abre o menu de navegação -->
+      <!-- ↓ Para mudar o texto/ícone do botão, edite aqui -->
+      <button class="nav-menu-btn" onclick="toggleNavMenu(event)" aria-expanded="false">
+        Menu <span class="nav-menu-arrow">▾</span>
+      </button>
+
+      <!-- Dropdown com links internos -->
+      <div class="nav-menu-dropdown" id="navMenuDropdown">
+
+        <!-- ════════════════════════════════════════════
+             ↓ LINKS INTERNOS — seções desta página
+             Para adicionar uma seção nova:
+               1. Dê um id único à seção no HTML (ex: id="novaseção")
+               2. Copie o bloco <a> abaixo e mude href e texto
+             ════════════════════════════════════════════ -->
+        <a href="#calculator" class="nav-menu-item" onclick="closeNavMenu()">
+          🛒 Pedido
+        </a>
+        <a href="#delivery" class="nav-menu-item" onclick="closeNavMenu()">
+          🚚 Entrega
+        </a>
+        <a href="#social" class="nav-menu-item" onclick="closeNavMenu()">
+          📱 Redes Sociais
+        </a>
+        <!-- ↑ FIM DOS LINKS INTERNOS — adicione novos antes desta linha -->
+
+      </div>
+    </div>
+
+    <!-- Barra de autenticação — atualizada pelo JS initAuth() -->
+    <!-- ↓ NÃO MOVA este bloco — o JS depende do id="authBar" para funcionar -->
     <div class="auth-bar" id="authBar">
       <button class="btn-auth" onclick="openAuthModal('login')">ENTRAR</button>
       <button class="btn-auth" onclick="openAuthModal('cadastro')">CADASTRAR</button>
     </div>
+
+    <!-- Botão admin — abre o painel administrativo -->
+    <!-- ↓ NÃO MOVA — o onclick="openLogin()" chama a função do painel admin -->
     <button class="nav-admin-btn" onclick="openLogin()">⚙ ADMIN</button>
+
   </div>
 </nav>
 
@@ -1088,7 +1249,7 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
         <div class="social-info">
           <div class="social-label">EMPRESA</div>
           <div class="social-handle">@cybergraphixbvr</div>
-          <div class="social-cta">Siga a Cyber Graphix no Instagram</div>
+          <div class="social-cta">Siga a CyberGraphix no Instagram</div>
         </div>
         <div class="social-arrow">→</div>
       </a>
@@ -2875,6 +3036,46 @@ function closeInfoPopup() {
   }
 }
 
+
+
+// ═══════════════════════════════════════════════════════
+// MENU DE NAVEGAÇÃO INTERNA — toggleNavMenu / closeNavMenu
+//
+// toggleNavMenu(event): abre ou fecha o dropdown ao clicar
+//   no botão. O event.stopPropagation() impede que o clique
+//   se propague para o document e feche imediatamente.
+//
+// closeNavMenu(): fecha o dropdown. Chamado pelo onclick
+//   de cada link interno (para fechar após navegar).
+//
+// O listener no document fecha o dropdown ao clicar fora.
+// ► NÃO altere os IDs navMenuWrap/navMenuDropdown — o JS
+//   depende deles para encontrar os elementos corretos.
+// ═══════════════════════════════════════════════════════
+function toggleNavMenu(e) {
+  e.stopPropagation(); // ← impede fechar imediatamente ao abrir
+  const btn  = document.querySelector('.nav-menu-btn');
+  const drop = document.getElementById('navMenuDropdown');
+  if (!btn || !drop) return;
+  const open = drop.classList.toggle('open');
+  btn.classList.toggle('open', open);
+  btn.setAttribute('aria-expanded', open);
+}
+
+function closeNavMenu() {
+  // Fecha o dropdown de navegação interna
+  // Chamado pelo onclick de cada <a class="nav-menu-item">
+  document.querySelector('.nav-menu-btn')?.classList.remove('open');
+  document.getElementById('navMenuDropdown')?.classList.remove('open');
+}
+
+// Fecha o dropdown de navegação ao clicar fora dele
+// ► Este listener trabalha junto com o listener do "Mais Sites"
+//   — ambos ficam no document e verificam o elemento clicado
+document.addEventListener('click', function(e) {
+  const wrap = document.getElementById('navMenuWrap');
+  if (wrap && !wrap.contains(e.target)) closeNavMenu();
+});
 
 // ─── MENU "MAIS SITES" ───────────────────────────────────
 // Abre/fecha o dropdown ao clicar no botão.
