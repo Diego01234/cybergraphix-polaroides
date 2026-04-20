@@ -734,7 +734,7 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
     font-size: .78rem;
   }
   .nav-left {
-    display: none; /* esconde link de outras paginas em telas muito pequenas */
+    display: flex; /* mantém o menu "Mais Sites" visível no mobile */
   }
 
   /* Secoes gerais */
@@ -755,6 +755,101 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
   html, body { overflow-x: hidden; }
 }
 
+
+/* ═══════════════════════════════════════════════════════
+   MENU "MAIS SITES" — dropdown, funciona em mobile e desktop
+   ═══════════════════════════════════════════════════════ */
+.mais-sites-wrap {
+  position: relative;
+}
+
+/* Botão principal do menu */
+.mais-sites-btn {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .68rem;       /* ↓ TAMANHO DO TEXTO DO BOTÃO */
+  color: var(--mag);       /* ↓ COR DO BOTÃO (magenta) */
+  background: transparent;
+  border: 1px solid var(--bm);
+  padding: 5px 10px;
+  cursor: pointer;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  transition: all .2s;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.mais-sites-btn:hover,
+.mais-sites-btn.open {
+  background: var(--mag);
+  color: var(--bg);
+  border-color: var(--mag);
+}
+.mais-sites-arrow {
+  font-size: .6rem;
+  transition: transform .2s;
+}
+.mais-sites-btn.open .mais-sites-arrow {
+  transform: rotate(180deg);
+}
+
+/* Dropdown — oculto por padrão */
+.mais-sites-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  min-width: 200px;
+  background: var(--bg2);
+  border: 1px solid var(--bm);
+  z-index: 600;
+  flex-direction: column;
+  box-shadow: 0 8px 32px rgba(0,0,0,.5);
+}
+.mais-sites-dropdown::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--mag), var(--cyan));
+}
+.mais-sites-dropdown.open {
+  display: flex;
+}
+
+/* Links dentro do dropdown */
+.mais-sites-item {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .72rem;       /* ↓ TAMANHO DOS LINKS DENTRO DO MENU */
+  color: rgba(232,244,255,.8);
+  text-decoration: none;
+  padding: 11px 16px;
+  border-bottom: 1px solid rgba(0,245,255,.07);
+  letter-spacing: .06em;
+  transition: all .18s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.mais-sites-item:last-child { border-bottom: none; }
+.mais-sites-item:hover {
+  background: rgba(255,0,170,.08);
+  color: var(--mag);
+  padding-left: 22px;      /* ↓ INDENTAÇÃO NO HOVER */
+}
+
+/* Mobile: dropdown abre para baixo normalmente */
+@media(max-width:480px) {
+  .mais-sites-btn {
+    font-size: .62rem;
+    padding: 5px 8px;
+  }
+  .mais-sites-dropdown {
+    min-width: 180px;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -773,10 +868,31 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
          edite a div.nav-links abaixo.
        ════════════════════════════════════════════════════ -->
 
-  <!-- ESQUERDA: links para outras páginas do site -->
+  <!-- ESQUERDA: menu dropdown "Mais Sites" -->
+  <!-- Funciona em desktop e mobile. Para adicionar mais sites:
+       copie um <a class="mais-sites-item"> dentro de .mais-sites-dropdown -->
   <div class="nav-left">
-    <!-- ↓ LINK PARA OUTRAS PÁGINAS — adicione <a> aqui para colocar mais links à esquerda -->
-    <a href="https://diego01234.github.io/cyber-impressao/" class="nav-ext-link">Impressões Apostilas</a>
+    <div class="mais-sites-wrap" id="maisSitesWrap">
+
+      <!-- Botão que abre o menu -->
+      <button class="mais-sites-btn" onclick="toggleMaisSites(event)" aria-expanded="false">
+        Mais Sites <span class="mais-sites-arrow">▾</span>
+      </button>
+
+      <!-- Menu dropdown — adicione <a> aqui para novos sites -->
+      <div class="mais-sites-dropdown" id="maisSitesDropdown">
+
+        <!-- ↓ ADICIONE MAIS LINKS AQUI — copie o bloco abaixo para cada novo site -->
+        <a href="https://diego01234.github.io/cyber-impressao/" class="mais-sites-item" target="_blank">
+          📄 Impressões Apostilas
+        </a>
+        <a href="https://cybergraphix.meloja.com.br/" class="mais-sites-item" target="_blank">
+          🎁 Mais Formas de Presentes
+        </a>
+        <!-- ↑ FIM DOS LINKS — adicione novos sites antes desta linha -->
+
+      </div>
+    </div>
   </div>
 
   <!-- CENTRO: logo da marca -->
@@ -787,7 +903,7 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
     <!-- ↓ LINKS INTERNOS — seções desta página (Pedido, Entrega, Redes) -->
     <a href="#calculator">Pedido</a>
     <a href="#delivery">Entrega</a>
-    <a href="#social">Redes</a>
+    <a href="#social">Redes Sociais</a>
     <!-- Auth bar — updated by JS -->
     <div class="auth-bar" id="authBar">
       <button class="btn-auth" onclick="openAuthModal('login')">ENTRAR</button>
@@ -972,7 +1088,7 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
         <div class="social-info">
           <div class="social-label">EMPRESA</div>
           <div class="social-handle">@cybergraphixbvr</div>
-          <div class="social-cta">Siga a CyberGraphix no Instagram</div>
+          <div class="social-cta">Siga a Cyber Graphix no Instagram</div>
         </div>
         <div class="social-arrow">→</div>
       </a>
@@ -2758,6 +2874,28 @@ function closeInfoPopup() {
     }, 250);
   }
 }
+
+
+// ─── MENU "MAIS SITES" ───────────────────────────────────
+// Abre/fecha o dropdown ao clicar no botão.
+// Fecha automaticamente ao clicar fora.
+function toggleMaisSites(e) {
+  e.stopPropagation();
+  const btn  = document.querySelector('.mais-sites-btn');
+  const drop = document.getElementById('maisSitesDropdown');
+  const open = drop.classList.toggle('open');
+  btn.classList.toggle('open', open);
+  btn.setAttribute('aria-expanded', open);
+}
+
+// Fecha ao clicar em qualquer lugar fora do menu
+document.addEventListener('click', function(e) {
+  const wrap = document.getElementById('maisSitesWrap');
+  if (wrap && !wrap.contains(e.target)) {
+    document.querySelector('.mais-sites-btn')?.classList.remove('open');
+    document.getElementById('maisSitesDropdown')?.classList.remove('open');
+  }
+});
 
 // Fecha o popup ao clicar fora da caixa
 document.addEventListener('click', function(e) {
