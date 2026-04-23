@@ -1397,6 +1397,99 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
   .sim-or { width: 100%; flex-direction: row; }
 }
 
+
+/* ═══════════════════════════════════════════════════════
+   CONTADOR DE ENTREGA — .delivery-timer-box
+   ─────────────────────────────────────────────────────
+   A variável --timer-color é trocada pelo JS conforme
+   o tempo restante:
+     verde  (#00ff88) → mais de 2 horas
+     amarelo(#ffea00) → menos de 2 horas
+     vermelho(#ff4455)→ zerado / fora do prazo
+   ═══════════════════════════════════════════════════════ */
+.delivery-timer-box {
+  --timer-color: #00ff88;          /* ← JS altera esta var */
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: rgba(0,0,0,.35);
+  border: 1px solid var(--bc);
+  border-left: 4px solid var(--timer-color);  /* barra colorida lateral */
+  padding: 18px 22px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color .6s ease;
+}
+/* Brilho de fundo suave com a cor do timer */
+.delivery-timer-box::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at left center,
+    rgba(var(--timer-rgb, 0,255,136), .07) 0%, transparent 70%);
+  pointer-events: none;
+  transition: background .6s ease;
+}
+
+/* Ícone grande à esquerda */
+.dtimer-icon {
+  font-size: 2.2rem;   /* ↓ TAMANHO DO ÍCONE */
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 8px var(--timer-color));
+  transition: filter .6s ease;
+}
+
+/* Coluna de texto */
+.dtimer-content { flex: 1; min-width: 0; }
+
+/* Label superior: "Próxima entrega em:" ou "Pedido recebido!" */
+.dtimer-label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .72rem;        /* ↓ TAMANHO DO LABEL */
+  color: var(--dim);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+/* Valor principal: horas:minutos:segundos ou nome do dia */
+.dtimer-value {
+  font-family: 'Orbitron', monospace;
+  font-size: 1.6rem;        /* ↓ TAMANHO DOS NÚMEROS DO CONTADOR */
+  font-weight: 900;
+  color: var(--timer-color);
+  letter-spacing: .08em;
+  line-height: 1;
+  text-shadow: 0 0 20px var(--timer-color);
+  transition: color .6s ease, text-shadow .6s ease;
+}
+
+/* Linha menor abaixo: data ou mensagem complementar */
+.dtimer-sub {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .7rem;         /* ↓ TAMANHO DO TEXTO COMPLEMENTAR */
+  color: rgba(232,244,255,.55);
+  margin-top: 5px;
+  letter-spacing: .06em;
+}
+
+/* Animação de pulso quando zerado (vermelho) */
+@keyframes timerPulse {
+  0%,100% { opacity: 1; }
+  50%     { opacity: .6; }
+}
+.delivery-timer-box.expired .dtimer-value {
+  animation: timerPulse 1.4s ease-in-out infinite;
+}
+
+/* Mobile: layout um pouco menor */
+@media(max-width:480px) {
+  .delivery-timer-box { padding: 14px 16px; gap: 14px; }
+  .dtimer-icon        { font-size: 1.7rem; }
+  .dtimer-value       { font-size: 1.25rem; }
+}
+
 </style>
 </head>
 <body>
@@ -1528,6 +1621,25 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
     <div class="hero-badge hero-badge--warn"><span>🔒 CONFECÇÃO SOMENTE APÓS PAGAMENTO 100% VIA PIX</span></div>
   </div>
   <p class="hero-desc">Impressões polaroides de alta qualidade. Monte seu pedido, veja o preço cair em tempo real e envie direto pelo WhatsApp.</p>
+<!-- ═══════════════════════════════════════════════════
+         CONTADOR DE ENTREGA
+         Atualizado a cada segundo pelo JS startDeliveryTimer().
+         Regras:
+           • Pedido até 16h → entrega hoje (se dia útil)
+           • Após 16h ou fds → entrega próximo dia útil
+           • Cor: verde (>2h), amarelo (≤2h), vermelho (zerado)
+         Para mudar o horário de corte: edite CUTOFF_HOUR no JS.
+         Para mudar a cor de alerta: edite --timer-color no CSS.
+    ════════════════════════════════════════════════════ -->
+    <div class="delivery-timer-box" id="deliveryTimerBox">
+      <div class="dtimer-icon" id="dtimerIcon">⏱</div>
+      <div class="dtimer-content">
+        <div class="dtimer-label" id="dtimerLabel">Calculando...</div>
+        <div class="dtimer-value" id="dtimerValue"></div>
+        <div class="dtimer-sub"   id="dtimerSub"></div>
+      </div>
+    </div>
+
   <button class="btn-primary" onclick="document.getElementById('calculator').scrollIntoView({behavior:'smooth'})">▶ MONTAR MEU PEDIDO</button>
   <p class="scroll-hint">↓ role para montar seu pedido ↓</p>
   <div class="stats-bar" id="statsBar">
@@ -1672,6 +1784,7 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
     <p class="sec-eye">// módulo 03</p>
     <h2 class="sec-title">Entrega ou Retirada?</h2>
     <div class="divider"><span>◈ informe sua preferência ◈</span></div>
+
     <div class="del-grid">
       <div class="del-card" id="cd-ent" onclick="selDel('entrega')">
         <div class="icon">🚚</div><h3>RECEBER EM CASA</h3><p>informe seu endereço no campo abaixo</p>
@@ -3872,11 +3985,145 @@ function simCartGoToPedido() {
   showToast('✓ ITENS ADICIONADOS AO PEDIDO!', true);
 }
 
+
+// ═══════════════════════════════════════════════════════
+// CONTADOR DE ENTREGA — startDeliveryTimer()
+// ───────────────────────────────────────────────────────
+// Regras de negócio:
+//   • CUTOFF_HOUR = 16 → pedidos até 16h00 são entregues hoje
+//   • Dias úteis: segunda (1) a sexta (5)
+//   • Sábado/domingo: mostra próximo dia útil (segunda)
+//   • Cores: verde >2h | amarelo ≤2h | vermelho = zerado/fora
+//
+// ↓ Para mudar o horário de corte: altere CUTOFF_HOUR
+// ↓ Para mudar o fuso horário: altere o offset TZ_OFFSET_HOURS
+// ═══════════════════════════════════════════════════════
+
+const CUTOFF_HOUR    = 16;   // ← horário limite para entrega no dia (24h)
+const TZ_OFFSET_HOURS = -4;  // ← fuso horário (Manaus = UTC-4)
+
+// Nomes dos dias da semana em português
+const DIAS_SEMANA = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+
+// Cores do timer conforme estado
+// ↓ Para mudar as cores, edite os valores hex abaixo
+const TIMER_COLORS = {
+  green:  { hex: '#00ff88', rgb: '0,255,136'   }, // > 2 horas
+  yellow: { hex: '#ffea00', rgb: '255,234,0'   }, // ≤ 2 horas
+  red:    { hex: '#ff4455', rgb: '255,68,85'   }, // zerado / fora do prazo
+};
+
+// ─── getLocalNow ─────────────────────────────────────
+// Retorna a data/hora atual no fuso configurado.
+function getLocalNow() {
+  const utc = new Date();
+  return new Date(utc.getTime() + TZ_OFFSET_HOURS * 3600000);
+}
+
+// ─── nextBusinessDay ─────────────────────────────────
+// Dado um objeto Date, retorna o próximo dia útil
+// (pula sábado e domingo).
+function nextBusinessDay(from) {
+  const d = new Date(from);
+  do {
+    d.setDate(d.getDate() + 1);
+  } while (d.getDay() === 0 || d.getDay() === 6); // 0=dom, 6=sab
+  return d;
+}
+
+// ─── applyTimerColor ─────────────────────────────────
+// Aplica a cor no elemento da caixa do timer.
+// Troca a CSS custom property --timer-color e --timer-rgb.
+function applyTimerColor(box, colorKey) {
+  const col = TIMER_COLORS[colorKey];
+  box.style.setProperty('--timer-color', col.hex);
+  box.style.setProperty('--timer-rgb',   col.rgb);
+  // Atualiza borda lateral manualmente (CSS var não afeta border-left diretamente)
+  box.style.borderLeftColor = col.hex;
+}
+
+// ─── startDeliveryTimer ──────────────────────────────
+// Função principal. Atualiza o display a cada segundo.
+// Chamada pelo INIT no carregamento da página.
+function startDeliveryTimer() {
+  const box   = document.getElementById('deliveryTimerBox');
+  const icon  = document.getElementById('dtimerIcon');
+  const label = document.getElementById('dtimerLabel');
+  const value = document.getElementById('dtimerValue');
+  const sub   = document.getElementById('dtimerSub');
+  if (!box) return;
+
+  function tick() {
+    const now     = getLocalNow();
+    const weekday = now.getDay();   // 0=dom, 1=seg ... 6=sab
+    const hour    = now.getHours();
+    const minute  = now.getMinutes();
+    const second  = now.getSeconds();
+
+    const isWeekend   = weekday === 0 || weekday === 6;
+    const pastCutoff  = hour >= CUTOFF_HOUR;
+    const isWorkday   = !isWeekend;
+
+    if (isWorkday && !pastCutoff) {
+      // ── Dia útil e ainda dentro do prazo ──────────────
+      // Calcula segundos restantes até CUTOFF_HOUR:00:00
+      const secsLeft = (CUTOFF_HOUR - hour - 1) * 3600
+                     + (59 - minute) * 60
+                     + (59 - second);
+
+      const h = Math.floor(secsLeft / 3600);
+      const m = Math.floor((secsLeft % 3600) / 60);
+      const s = secsLeft % 60;
+      const hStr = String(h).padStart(2, '0');
+      const mStr = String(m).padStart(2, '0');
+      const sStr = String(s).padStart(2, '0');
+
+      // Escolhe cor: verde se > 2h, amarelo se ≤ 2h
+      const colorKey = secsLeft > 7200 ? 'green' : 'yellow';
+      applyTimerColor(box, colorKey);
+      box.classList.remove('expired');
+
+      icon.textContent  = secsLeft > 7200 ? '🟢' : '🟡';
+      label.textContent = 'Próxima entrega em:';
+      value.textContent = `${hStr}:${mStr}:${sStr}`;
+      sub.textContent   = `Peça até as ${CUTOFF_HOUR}h para receber hoje!`;
+
+    } else {
+      // ── Fora do prazo: após 16h, sábado ou domingo ────
+      // Calcula qual o próximo dia útil
+      let nextDay;
+      if (isWeekend || pastCutoff) {
+        nextDay = nextBusinessDay(now);
+      }
+
+      const nomeDia   = DIAS_SEMANA[nextDay.getDay()];
+      const diaNumero = nextDay.getDate();
+      const mes       = nextDay.getMonth() + 1;
+      const dataStr   = `${String(diaNumero).padStart(2,'0')}/${String(mes).padStart(2,'0')}`;
+
+      applyTimerColor(box, 'red');
+      box.classList.add('expired');
+
+      icon.textContent  = '🔴';
+      label.textContent = isWeekend
+        ? 'Final de semana — próxima entrega:'
+        : 'Prazo de hoje encerrado — próxima entrega:';
+
+      value.textContent = `${nomeDia}-feira`;
+      sub.textContent   = `Entrega em ${dataStr} · Pedido pode ser feito agora!`;
+    }
+  }
+
+  tick(); // executa imediatamente ao carregar
+  setInterval(tick, 1000); // atualiza a cada segundo
+}
+
 // ─── INIT ────────────────────────────────────────────
 renderProducts();
 updStats();
 autoLoadConfig();
 initAuth(); // Firebase auth listener
+startDeliveryTimer(); // inicia o contador de entrega
 
 // ─── POPUP DE INFORMAÇÕES ────────────────────────────────
 // Exibido automaticamente na primeira visita e a cada nova
