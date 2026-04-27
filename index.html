@@ -996,7 +996,7 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
 .sim-label {
   font-family: 'Share Tech Mono', monospace;
   font-size: .75rem;        /* ↓ TAMANHO DO TEXTO DO LABEL */
-  color: var(--cyan);
+  color: var(--dim);
   letter-spacing: .08em;
   margin-bottom: 10px;
   display: flex;
@@ -1058,7 +1058,7 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
 .sim-or span {
   font-family: 'Share Tech Mono', monospace;
   font-size: .7rem;
-  color: var(--cyan);
+  color: var(--dim);
   letter-spacing: .1em;
   background: var(--bg2);
   border: 1px solid var(--bc);
@@ -1447,8 +1447,7 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
 .dtimer-label {
   font-family: 'Share Tech Mono', monospace;
   font-size: .72rem;        /* ↓ TAMANHO DO LABEL */
-  color: var(--cyan);
-  text-shadow: 0 0 8px rgba(0,245,255,.4);
+  color: var(--dim);
   letter-spacing: .12em;
   text-transform: uppercase;
   margin-bottom: 4px;
@@ -1673,7 +1672,7 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
       <div class="sim-block">
         <label class="sim-label">
           <span class="sim-label-icon">🔢</span>
-          Quero essa quantidade de fotos:
+          Tenho essa quantidade de fotos:
         </label>
         <div class="sim-input-row">
           <input  type="number" id="simQty" min="1" placeholder="ex: 20"
@@ -3997,11 +3996,14 @@ function simCartGoToPedido() {
 //   • Cores: verde >2h | amarelo ≤2h | vermelho = zerado/fora
 //
 // ↓ Para mudar o horário de corte: altere CUTOFF_HOUR
-// ↓ Para mudar o fuso horário: altere o offset TZ_OFFSET_HOURS
+// ↓ Para mudar o fuso horário: altere a constante MANAUS_TZ no JS
 // ═══════════════════════════════════════════════════════
 
 const CUTOFF_HOUR    = 16;   // ← horário limite para entrega no dia (24h)
-const TZ_OFFSET_HOURS = -4;  // ← fuso horário (Manaus = UTC-4)
+// ↓ Fuso horário de Manaus — não use offset manual pois
+//   o navegador do cliente pode estar em outro fuso.
+//   Usamos Intl.DateTimeFormat com timezone explícito.
+const MANAUS_TZ = 'America/Manaus'; // ← fuso oficial de Manaus
 
 // Nomes dos dias da semana em português
 const DIAS_SEMANA = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
@@ -4015,22 +4017,61 @@ const TIMER_COLORS = {
 };
 
 // ─── getLocalNow ─────────────────────────────────────
-// Retorna a data/hora atual no fuso configurado.
+// Retorna um objeto com hora/minuto/segundo/weekday
+// corretos para o fuso de Manaus (America/Manaus),
+// independente do fuso configurado no dispositivo do cliente.
 function getLocalNow() {
-  const utc = new Date();
-  return new Date(utc.getTime() + TZ_OFFSET_HOURS * 3600000);
+  const now = new Date();
+  // Intl.DateTimeFormat converte para o timezone correto
+  const parts = new Intl.DateTimeFormat('pt-BR', {
+    timeZone: MANAUS_TZ,
+    hour:     'numeric',
+    minute:   'numeric',
+    second:   'numeric',
+    weekday:  'short',
+    day:      'numeric',
+    month:    'numeric',
+    year:     'numeric',
+    hour12:   false,
+  }).formatToParts(now);
+
+  // Monta objeto com os valores extraídos
+  const get = type => parseInt(parts.find(p => p.type === type)?.value || '0');
+  const weekdayStr = parts.find(p => p.type === 'weekday')?.value || '';
+
+  // Mapeia abreviação pt-BR para índice 0=dom..6=sab
+  const wdMap = {
+    'dom':0,'seg':1,'ter':2,'qua':3,'qui':4,'sex':5,'sáb':6,'sab':6
+  };
+  const weekday = wdMap[weekdayStr.toLowerCase().replace('.','').substring(0,3)] ?? now.getDay();
+
+  return {
+    hour:    get('hour'),
+    minute:  get('minute'),
+    second:  get('second'),
+    weekday,
+    day:     get('day'),
+    month:   get('month'),
+    year:    get('year'),
+  };
 }
 
-// ─── nextBusinessDay ─────────────────────────────────
-// Dado um objeto Date, retorna o próximo dia útil
-// (pula sábado e domingo).
-function nextBusinessDay(from) {
-  const d = new Date(from);
+// ─── getNextDeliveryDate ──────────────────────────────
+// Retorna a data do próximo dia útil como objeto Date
+// ajustado para o fuso de Manaus.
+function getNextDeliveryDate() {
+  const d = new Date();
+  // Avança até encontrar um dia útil (seg-sex)
   do {
     d.setDate(d.getDate() + 1);
-  } while (d.getDay() === 0 || d.getDay() === 6); // 0=dom, 6=sab
-  return d;
+    const wd = new Intl.DateTimeFormat('pt-BR', {
+      timeZone: MANAUS_TZ, weekday: 'short'
+    }).format(d).replace('.','').substring(0,3).toLowerCase();
+    if (wd !== 'dom' && wd !== 'sáb' && wd !== 'sab') return d;
+  } while (true);
 }
+
+// nextBusinessDay substituído por getNextDeliveryDate() — usa Intl.DateTimeFormat com fuso Manaus
 
 // ─── applyTimerColor ─────────────────────────────────
 // Aplica a cor no elemento da caixa do timer.
@@ -4055,11 +4096,12 @@ function startDeliveryTimer() {
   if (!box) return;
 
   function tick() {
+    // getLocalNow() retorna objeto com valores de Manaus
     const now     = getLocalNow();
-    const weekday = now.getDay();   // 0=dom, 1=seg ... 6=sab
-    const hour    = now.getHours();
-    const minute  = now.getMinutes();
-    const second  = now.getSeconds();
+    const weekday = now.weekday;
+    const hour    = now.hour;
+    const minute  = now.minute;
+    const second  = now.second;
 
     const isWeekend   = weekday === 0 || weekday === 6;
     const pastCutoff  = hour >= CUTOFF_HOUR;
@@ -4092,14 +4134,15 @@ function startDeliveryTimer() {
     } else {
       // ── Fora do prazo: após 16h, sábado ou domingo ────
       // Calcula qual o próximo dia útil
-      let nextDay;
-      if (isWeekend || pastCutoff) {
-        nextDay = nextBusinessDay(now);
-      }
-
-      const nomeDia   = DIAS_SEMANA[nextDay.getDay()];
-      const diaNumero = nextDay.getDate();
-      const mes       = nextDay.getMonth() + 1;
+      // Usa getNextDeliveryDate() que opera no fuso de Manaus
+      const nextDay = getNextDeliveryDate();
+      const nextParts = new Intl.DateTimeFormat('pt-BR', {
+        timeZone: MANAUS_TZ,
+        weekday: 'long', day: 'numeric', month: 'numeric'
+      }).formatToParts(nextDay);
+      const nomeDia   = nextParts.find(p => p.type === 'weekday')?.value || '';
+      const diaNumero = parseInt(nextParts.find(p => p.type === 'day')?.value || '0');
+      const mes       = parseInt(nextParts.find(p => p.type === 'month')?.value || '0');
       const dataStr   = `${String(diaNumero).padStart(2,'0')}/${String(mes).padStart(2,'0')}`;
 
       applyTimerColor(box, 'red');
@@ -4110,7 +4153,9 @@ function startDeliveryTimer() {
         ? 'Final de semana — próxima entrega:'
         : 'Prazo de hoje encerrado — próxima entrega:';
 
-      value.textContent = `${nomeDia}-feira`;
+      // Capitaliza o nome do dia (Intl retorna minúsculo em pt-BR)
+      const nomeDiaCap = nomeDia.charAt(0).toUpperCase() + nomeDia.slice(1);
+      value.textContent = nomeDiaCap;
       sub.textContent   = `Entrega em ${dataStr} · Pedido pode ser feito agora!`;
     }
   }
