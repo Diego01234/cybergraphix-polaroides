@@ -1589,14 +1589,6 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
 
       </div>
     </div>
-
-    <!-- Barra de autenticação — atualizada pelo JS initAuth() -->
-    <!-- ↓ NÃO MOVA este bloco — o JS depende do id="authBar" para funcionar -->
-    <div class="auth-bar" id="authBar">
-      <button class="btn-auth" onclick="openAuthModal('login')">ENTRAR</button>
-      <button class="btn-auth" onclick="openAuthModal('cadastro')">CADASTRAR</button>
-    </div>
-
     <!-- Botão admin — abre o painel administrativo -->
     <!-- ↓ NÃO MOVA — o onclick="openLogin()" chama a função do painel admin -->
     <button class="nav-admin-btn" onclick="openLogin()">⚙ ADMIN</button>
@@ -1798,49 +1790,7 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
 
 <!-- ═══════════ DADOS / CONTATO ═══════════ -->
 
-<!-- ═══════════ AVALIAÇÕES ═══════════ -->
-<section id="reviews">
-  <div class="container">
-    <p class="sec-eye">// módulo 04 — login necessario</p>
-    <h2 class="sec-title">Avaliações dos Clientes</h2>
-    <div class="divider"><span>◈ só quem tem cadastro pode avaliar ◈</span></div>
-    <div class="avg-rating" id="avgRating" style="display:none">
-      <div class="avg-num" id="avgNum">0.0</div>
-      <div class="avg-info">
-        <div class="avg-stars" id="avgStars"></div>
-        <div class="avg-count" id="avgCount"></div>
-      </div>
-    </div>
-    <div id="reviewFormBox" style="display:none;margin-bottom:32px">
-      <div class="form-box">
-        <p class="form-head">DEIXAR AVALIACAO <span class="opt-badge">logado</span></p>
-        <div class="fg">
-          <div class="field">
-            <label>nota</label>
-            <div class="stars-input" id="starsInput">
-              <button class="star-btn" onclick="setStar(1)">★</button>
-              <button class="star-btn" onclick="setStar(2)">★</button>
-              <button class="star-btn" onclick="setStar(3)">★</button>
-              <button class="star-btn" onclick="setStar(4)">★</button>
-              <button class="star-btn" onclick="setStar(5)">★</button>
-            </div>
-          </div>
-          <div class="field">
-            <label>comentario</label>
-            <textarea id="revText" rows="3" placeholder="conte como foi..."></textarea>
-          </div>
-          <button class="btn-primary" style="animation:none;width:100%;margin-top:4px" onclick="submitReview()">PUBLICAR AVALIACAO</button>
-        </div>
-      </div>
-    </div>
-    <div id="reviewLoginNotice" class="review-login-notice">
-      <strong>Quer deixar uma avaliacao?</strong><br>
-      Cadastre-se ou faca login para compartilhar sua experiencia.<br>
-      <button onclick="openAuthModal('login')">ENTRAR / CADASTRAR</button>
-    </div>
-    <div class="reviews-grid" id="reviewsGrid"></div>
-  </div>
-</section>
+<!-- section#reviews removida -->
 <section id="contact">
   <div class="container">
     <p class="sec-eye">// módulo 05</p>
@@ -1981,14 +1931,9 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
     <div class="login-box">
       <p style="font-family:'Share Tech Mono',monospace;font-size:.78rem;color:var(--dim);margin-bottom:8px;">Acesso administrativo:</p>
       <input type="password" id="adminPass" placeholder="senha do painel..." onkeydown="if(event.key==='Enter')checkLogin()">
-      <input type="email" id="adminFirebaseEmail" placeholder="e-mail Firebase do admin" autocomplete="off"
-        style="margin-top:8px;background:rgba(0,0,0,.45);border:1px solid var(--bc);color:var(--w);padding:11px 14px;font-family:'Share Tech Mono',monospace;font-size:.88rem;width:100%;">
-      <input type="password" id="adminFirebasePass" placeholder="senha Firebase do admin" autocomplete="off"
-        style="margin-top:8px;background:rgba(0,0,0,.45);border:1px solid var(--bc);color:var(--w);padding:11px 14px;font-family:'Share Tech Mono',monospace;font-size:.88rem;width:100%;">
       <div style="font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--dim);margin-top:6px;line-height:1.5;">
         Use o e-mail e senha da conta admin criada no Firebase Authentication.
       </div>
-      <div id="adminLoginError" style="font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--mag);min-height:16px;margin-top:4px;"></div>
       <button class="btn-primary" style="animation:none;margin-top:12px" onclick="checkLogin()">▶ ENTRAR NO PAINEL</button>
     </div>
   </div>
@@ -2092,19 +2037,6 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
         </div>
       </div>
     </div>
-
-
-
-    <!-- AVALIACOES -->
-    <div class="admin-section">
-      <p class="admin-section-title">⭐ AVALIAÇÕES DOS CLIENTES</p>
-      <p style="font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--dim);margin-bottom:14px;line-height:1.5;">
-        Monitore e remova avaliações ofensivas. Clique em ✕ para excluir.
-      </p>
-      <div id="adminReviewsList" style="display:grid;gap:8px;max-height:300px;overflow-y:auto;"></div>
-      <button class="btn-admin btn-danger" style="margin-top:12px" onclick="adminClearAllReviews()">🗑 EXCLUIR TODAS AS AVALIAÇÕES</button>
-    </div>
-
     <!-- SENHA -->
     <div class="admin-section">
       <p class="admin-section-title">🔐 ALTERAR SENHA</p>
@@ -2598,12 +2530,8 @@ function sendWpp() {
   updStats();
   window.open(`https://wa.me/5592994120494?text=${encodeURIComponent(lines.join('\n'))}`,'_blank');
   showToast('✓ PEDIDO ENVIADO!', true);
-  // Save to Firestore if user is logged in
-  if (currentUser) {
-    savePedidoFirestore(items, grand, delMode, v('nome'), v('insta'), v('ende'), v('obs'))
-      .then(id => { if (id) showToast('✓ PEDIDO SALVO NA SUA CONTA!', true); });
-  }
 }
+
 function v(id) { const el=document.getElementById(id); return el ? el.value.trim() : ''; }
 
 // ─── REVIEWS ────────────────────────────────────────
@@ -2613,51 +2541,14 @@ function v(id) { const el=document.getElementById(id); return el ? el.value.trim
 // ─── ADMIN ───────────────────────────────────────────
 function openLogin() { openModal('loginModal'); setTimeout(()=>document.getElementById('adminPass').focus(),100); }
 
-async function checkLogin() {
-  const pass  = document.getElementById('adminPass').value;
-  const email = document.getElementById('adminFirebaseEmail').value.trim();
-  const fpass = document.getElementById('adminFirebasePass').value;
-  const errEl = document.getElementById('adminLoginError');
-  errEl.textContent = '';
-
-  // 1. Verify panel password
+function checkLogin() {
+  const pass   = document.getElementById('adminPass').value;
   const stored = LS.get(ADMIN_HASH_KEY);
   if (simpleHash(pass) !== stored) {
     showToast('⚠ SENHA INCORRETA!');
     document.getElementById('adminPass').value = '';
     return;
   }
-
-  // 2. If already signed in as admin, skip Firebase login
-  if (currentUser && currentUser.uid === ADMIN_UID) {
-    openAdminPanel();
-    return;
-  }
-
-  // 3. Sign into Firebase with admin credentials
-  if (email && fpass) {
-    try {
-      const fb = await fbInit();
-      await fb.signIn(email, fpass);
-      // Verify it's actually the admin account
-      if (fb.auth.currentUser?.uid !== ADMIN_UID) {
-        await fb.signOut();
-        errEl.textContent = 'Essa conta Firebase não é a conta admin.';
-        return;
-      }
-      LS.set('cgx_admin_fb_email', email);
-    } catch(e) {
-      errEl.textContent = 'Firebase: ' + fbErrMsg(e.code);
-      return;
-    }
-  } else {
-    // Pre-fill remembered email and prompt
-    const saved = LS.get('cgx_admin_fb_email');
-    if (saved) document.getElementById('adminFirebaseEmail').value = saved;
-    errEl.textContent = 'Digite o e-mail e senha Firebase do admin para continuar.';
-    return;
-  }
-
   openAdminPanel();
 }
 
@@ -3196,468 +3087,6 @@ function importConfig(input) {
 // ═══════════════════════════════════════════════════════
 // FIREBASE CONFIG
 // ═══════════════════════════════════════════════════════
-// ── ADMIN UID (Firebase Authentication)
-const ADMIN_UID = 'gQUGL2PuqFSUUO1kEIK5RwLWSOv2';
-
-const FB_CONFIG = {
-  apiKey:            "AIzaSyANv1LjE3CLLt_1p1-T4PkfGHxQAOHGlT4",
-  authDomain:        "cybergraphix-polos.firebaseapp.com",
-  projectId:         "cybergraphix-polos",
-  storageBucket:     "cybergraphix-polos.firebasestorage.app",
-  messagingSenderId: "524731216431",
-  appId:             "1:524731216431:web:b54afc73bda3b2b7cb8cda"
-};
-
-let FB = null;
-let currentUser = null;
-let curStar = 0;
-
-async function fbInit() {
-  if (FB) return FB;
-  const [appMod, authMod, dbMod] = await Promise.all([
-    import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js'),
-    import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js'),
-    import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js'),
-  ]);
-  const app  = appMod.initializeApp(FB_CONFIG);
-  const auth = authMod.getAuth(app);
-  const db   = dbMod.getFirestore(app);
-  FB = {
-    auth, db,
-    // auth helpers
-    createUser:    (e,p) => authMod.createUserWithEmailAndPassword(auth,e,p),
-    signIn:        (e,p) => authMod.signInWithEmailAndPassword(auth,e,p),
-    signOut:       ()    => authMod.signOut(auth),
-    onAuth:        cb    => authMod.onAuthStateChanged(auth, cb),
-    updateProfile: (u,d) => authMod.updateProfile(u,d),
-    // firestore helpers
-    col:  (...a) => dbMod.collection(db,...a),
-    doc:  (...a) => dbMod.doc(db,...a),
-    setDoc:   dbMod.setDoc,
-    getDoc:   dbMod.getDoc,
-    getDocs:  dbMod.getDocs,
-    addDoc:   dbMod.addDoc,
-    query:    dbMod.query,
-    where:    dbMod.where,
-    orderBy:  dbMod.orderBy,
-    deleteDoc:dbMod.deleteDoc,
-    ts:       dbMod.serverTimestamp,
-  };
-  return FB;
-}
-
-// ─── AUTH STATE ──────────────────────────────────────
-async function initAuth() {
-  const fb = await fbInit();
-  fb.onAuth(user => {
-    currentUser = user;
-    renderAuthBar();
-    renderReviewForm();
-    renderReviews();
-  });
-}
-
-function renderAuthBar() {
-  const bar = document.getElementById('authBar');
-  if (!bar) return;
-  if (currentUser) {
-    const name = currentUser.displayName || currentUser.email.split('@')[0];
-    bar.innerHTML = `
-      <span class="user-name">Ola, ${name}</span>
-      <button class="btn-auth meus-pedidos" onclick="openPedidosPage()">MEUS PEDIDOS</button>
-      <button class="btn-auth logout" onclick="doLogout()">SAIR</button>`;
-  } else {
-    bar.innerHTML = `
-      <button class="btn-auth" onclick="openAuthModal('login')">ENTRAR</button>
-      <button class="btn-auth" onclick="openAuthModal('cadastro')">CADASTRAR</button>`;
-  }
-}
-
-// ─── AUTH MODAL ──────────────────────────────────────
-function openAuthModal(tab) {
-  openModal('authModal');
-  switchAuthTab(tab || 'login');
-  setTimeout(() => {
-    const el = document.getElementById(tab === 'cadastro' ? 'cadNome' : 'loginEmail');
-    if (el) el.focus();
-  }, 150);
-}
-
-function switchAuthTab(tab) {
-  document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
-  document.getElementById('tabCadastro').classList.toggle('active', tab === 'cadastro');
-  document.getElementById('formLogin').style.display    = tab === 'login'    ? 'flex' : 'none';
-  document.getElementById('formCadastro').style.display = tab === 'cadastro' ? 'flex' : 'none';
-}
-
-async function doLogin() {
-  const email = document.getElementById('loginEmail').value.trim();
-  const pass  = document.getElementById('loginPass').value;
-  const err   = document.getElementById('loginError');
-  err.textContent = '';
-  if (!email || !pass) { err.textContent = 'Preencha e-mail e senha.'; return; }
-  try {
-    const fb = await fbInit();
-    await fb.signIn(email, pass);
-    closeModal('authModal');
-    showToast('✓ BEM-VINDO DE VOLTA!', true);
-  } catch(e) {
-    err.textContent = fbErrMsg(e.code);
-  }
-}
-
-async function doCadastro() {
-  const nome  = document.getElementById('cadNome').value.trim();
-  const email = document.getElementById('cadEmail').value.trim();
-  const pass  = document.getElementById('cadPass').value;
-  const err   = document.getElementById('cadError');
-  const suc   = document.getElementById('cadSuccess');
-  err.textContent = ''; suc.textContent = '';
-  if (!nome || !email || !pass) { err.textContent = 'Preencha todos os campos.'; return; }
-  if (pass.length < 6) { err.textContent = 'Senha deve ter ao menos 6 caracteres.'; return; }
-  try {
-    const fb   = await fbInit();
-    const cred = await fb.createUser(email, pass);
-    await fb.updateProfile(cred.user, { displayName: nome });
-    // Save user profile to Firestore
-    await fb.setDoc(fb.doc('usuarios', cred.user.uid), {
-      nome, email,
-      criadoEm: fb.ts(),
-    });
-    closeModal('authModal');
-    showToast('✓ CONTA CRIADA! BEM-VINDO!', true);
-  } catch(e) {
-    err.textContent = fbErrMsg(e.code);
-  }
-}
-
-async function doLogout() {
-  const fb = await fbInit();
-  await fb.signOut();
-  showToast('Ate mais!', false);
-}
-
-function fbErrMsg(code) {
-  const msgs = {
-    'auth/email-already-in-use':  'Este e-mail ja esta cadastrado.',
-    'auth/invalid-email':         'E-mail invalido.',
-    'auth/weak-password':         'Senha muito fraca.',
-    'auth/user-not-found':        'E-mail nao encontrado.',
-    'auth/wrong-password':        'Senha incorreta.',
-    'auth/invalid-credential':    'E-mail ou senha incorretos.',
-    'auth/too-many-requests':     'Muitas tentativas. Tente mais tarde.',
-  };
-  return msgs[code] || 'Erro: ' + code;
-}
-
-// ─── SAVE PEDIDO TO FIRESTORE ────────────────────────
-async function savePedidoFirestore(items, grand, delMode, nome, insta, ende, obs) {
-  if (!currentUser) return null;
-  try {
-    const fb = await fbInit();
-    const pedidoData = {
-      userId:    currentUser.uid,
-      userName:  currentUser.displayName || currentUser.email,
-      itens: items.map(p => ({
-        nome:  p.full,
-        qtd:   qty[p.id],
-        preco: getPrice(p, qty[p.id]),
-        sub:   getPrice(p, qty[p.id]) * qty[p.id],
-      })),
-      total:    grand,
-      entrega:  delMode || 'nao informado',
-      endereco: ende || '',
-      instagram:insta || '',
-      obs:      obs || '',
-      status:   'aguardando',
-      criadoEm: fb.ts(),
-    };
-    const ref = await fb.addDoc(fb.col('pedidos'), pedidoData);
-    return ref.id;
-  } catch(e) {
-    console.warn('savePedido error:', e);
-    return null;
-  }
-}
-
-// ─── MEUS PEDIDOS PAGE ───────────────────────────────
-async function openPedidosPage() {
-  if (!currentUser) { openAuthModal('login'); return; }
-  document.getElementById('pedidosPage').classList.add('open');
-  document.body.style.overflow = 'hidden';
-  renderPedidosList();
-}
-
-function closePedidosPage() {
-  document.getElementById('pedidosPage').classList.remove('open');
-  document.body.style.overflow = '';
-}
-
-async function renderPedidosList() {
-  const el = document.getElementById('pedidosList');
-  el.innerHTML = '<div class="no-pedidos">Carregando...</div>';
-  try {
-    const fb = await fbInit();
-    const q  = fb.query(
-      fb.col('pedidos'),
-      fb.where('userId', '==', currentUser.uid),
-      fb.orderBy('criadoEm', 'desc')
-    );
-    const snap = await fb.getDocs(q);
-    if (snap.empty) {
-      el.innerHTML = '<div class="no-pedidos">Voce ainda nao tem pedidos registrados.<br><span style="color:rgba(0,245,255,.4)">Monte um pedido e envie pelo WhatsApp para comecar!</span></div>';
-      return;
-    }
-    el.innerHTML = '';
-    snap.forEach((docSnap, i) => {
-      const p   = docSnap.data();
-      const dt  = p.criadoEm?.toDate?.() ?? new Date();
-      const dtStr = dt.toLocaleDateString('pt-BR') + ' ' + dt.toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'});
-      const statusLabels = {aguardando:'AGUARDANDO PIX', confirmado:'CONFIRMADO', pronto:'PRONTO P/ ENTREGA'};
-      const statusCls    = {aguardando:'aguardando', confirmado:'confirmado', pronto:'pronto'};
-      const itensHtml = (p.itens||[]).map(it =>
-        `${it.nome}: ${it.qtd} un x ${fmt(it.preco)} = ${fmt(it.sub)}`
-      ).join('<br>');
-      el.innerHTML += `<div class="pedido-card">
-        <div class="pedido-topo">
-          <div>
-            <div class="pedido-num">PEDIDO #${docSnap.id.slice(-6).toUpperCase()}</div>
-            <div class="pedido-data">${dtStr}</div>
-          </div>
-          <span class="pedido-status ${statusCls[p.status]||'aguardando'}">${statusLabels[p.status]||'AGUARDANDO PIX'}</span>
-        </div>
-        <div class="pedido-itens">${itensHtml}</div>
-        <div class="pedido-total">${fmt(p.total)}</div>
-        ${p.entrega ? `<div class="pedido-entrega">Entrega: ${p.entrega}${p.endereco ? ' — '+p.endereco : ''}</div>` : ''}
-      </div>`;
-    });
-  } catch(e) {
-    el.innerHTML = `<div class="no-pedidos" style="color:var(--mag)">Erro ao carregar pedidos: ${e.message}</div>`;
-  }
-}
-
-// ─── REVIEWS ─────────────────────────────────────────
-function setStar(n) {
-  curStar = n;
-  document.querySelectorAll('#starsInput .star-btn').forEach((b,i) => b.classList.toggle('active', i < n));
-}
-
-function renderReviewForm() {
-  const formBox = document.getElementById('reviewFormBox');
-  const notice  = document.getElementById('reviewLoginNotice');
-  if (!formBox || !notice) return;
-  if (currentUser) {
-    formBox.style.display  = 'block';
-    notice.style.display   = 'none';
-  } else {
-    formBox.style.display  = 'none';
-    notice.style.display   = 'block';
-  }
-}
-
-async function submitReview() {
-  if (!currentUser) { openAuthModal('login'); return; }
-  const text = (document.getElementById('revText')?.value || '').trim();
-  if (!curStar) { showToast('Selecione uma nota!'); return; }
-  if (!text)    { showToast('Escreva um comentario!'); return; }
-  try {
-    const fb = await fbInit();
-    await fb.addDoc(fb.col('avaliacoes'), {
-      userId:    currentUser.uid,
-      userName:  currentUser.displayName || currentUser.email.split('@')[0],
-      rating:    curStar,
-      text,
-      criadoEm:  fb.ts(),
-    });
-    document.getElementById('revText').value = '';
-    setStar(0);
-    renderReviews();
-    showToast('✓ AVALIACAO PUBLICADA!', true);
-  } catch(e) {
-    showToast('Erro: ' + e.message);
-  }
-}
-
-async function renderReviews() {
-  const grid = document.getElementById('reviewsGrid');
-  const avg  = document.getElementById('avgRating');
-  if (!grid) return;
-  try {
-    const fb   = await fbInit();
-    const snap = await fb.getDocs(fb.query(fb.col('avaliacoes'), fb.orderBy('criadoEm','desc')));
-    if (snap.empty) {
-      grid.innerHTML = '<p class="no-reviews" style="grid-column:1/-1">Nenhuma avaliacao ainda. Seja o primeiro!</p>';
-      if (avg) avg.style.display = 'none';
-      return;
-    }
-    const reviews = [];
-    snap.forEach(d => reviews.push(d.data()));
-    const mean = reviews.reduce((s,r) => s+r.rating, 0) / reviews.length;
-    if (avg) {
-      avg.style.display = 'flex';
-      document.getElementById('avgNum').textContent   = mean.toFixed(1);
-      document.getElementById('avgStars').textContent = '★'.repeat(Math.round(mean)) + '☆'.repeat(5-Math.round(mean));
-      document.getElementById('avgCount').textContent = reviews.length + ' avaliacao(oes)';
-    }
-    grid.innerHTML = reviews.map(r => {
-      const dt = r.criadoEm?.toDate?.() ?? new Date();
-      return `<div class="review-card">
-        <div class="rev-stars">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div>
-        <p class="rev-text">"${r.text}"</p>
-        <div class="rev-author">${r.userName}</div>
-        <div class="rev-date">${dt.toLocaleDateString('pt-BR')}</div>
-      </div>`;
-    }).join('');
-  } catch(e) {
-    grid.innerHTML = '<p class="no-reviews" style="grid-column:1/-1;color:var(--mag)">Erro ao carregar avaliacoes.</p>';
-  }
-}
-
-// ─── ADMIN: view all pedidos ──────────────────────────
-async function renderAdminReviews() {
-  const el = document.getElementById('adminReviewsList');
-  if (!el) return;
-  el.innerHTML = `<p style="font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--dim)">Carregando...</p>`;
-  try {
-    const fb   = await fbInit();
-    const snap = await fb.getDocs(fb.query(fb.col('avaliacoes'), fb.orderBy('criadoEm','desc')));
-    // Update stats count
-    const s2 = document.getElementById('aStat2');
-    if (s2) s2.textContent = snap.size;
-    if (snap.empty) {
-      el.innerHTML = `<p style="font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--dim)">Nenhuma avaliação ainda.</p>`;
-      return;
-    }
-    el.innerHTML = '';
-    snap.forEach(d => {
-      const r  = d.data();
-      const dt = r.criadoEm?.toDate?.() ?? new Date();
-      el.innerHTML += `<div style="background:var(--gb);border:1px solid var(--bc);padding:12px;display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
-        <div style="flex:1;min-width:0;">
-          <div style="font-family:'Orbitron',monospace;font-size:.68rem;color:var(--cyan);margin-bottom:3px;">
-            ${r.userName} · ${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)} · ${dt.toLocaleDateString('pt-BR')}
-          </div>
-          <div style="font-family:'Share Tech Mono',monospace;font-size:.74rem;color:rgba(232,244,255,.75);line-height:1.5;word-break:break-word;">"${r.text}"</div>
-        </div>
-        <button onclick="adminDeleteReview('${d.id}')"
-          style="background:none;border:1px solid var(--bm);color:var(--mag);font-family:'Share Tech Mono',monospace;font-size:.65rem;padding:4px 10px;cursor:pointer;white-space:nowrap;flex-shrink:0;">
-          ✕ DEL
-        </button>
-      </div>`;
-    });
-  } catch(e) {
-    el.innerHTML = `<p style="font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--mag);">Erro: ${e.message}</p>`;
-  }
-}
-
-async function adminDeleteReview(id) {
-  if (!currentUser || currentUser.uid !== ADMIN_UID) {
-    showToast('⚠ Faça login como admin primeiro!');
-    return;
-  }
-  if (!confirm('Excluir esta avaliação?')) return;
-  try {
-    const fb = await fbInit();
-    await fb.deleteDoc(fb.doc('avaliacoes', id));
-    renderAdminReviews();
-    renderReviews(); // refresh public list too
-    showToast('✓ AVALIAÇÃO REMOVIDA!', true);
-  } catch(e) {
-    showToast('Erro: ' + e.message);
-  }
-}
-
-async function adminClearAllReviews() {
-  if (!currentUser || currentUser.uid !== ADMIN_UID) {
-    showToast('⚠ Faça login como admin primeiro!');
-    return;
-  }
-  if (!confirm('Excluir TODAS as avaliações? Esta ação não pode ser desfeita.')) return;
-  try {
-    const fb   = await fbInit();
-    const snap = await fb.getDocs(fb.col('avaliacoes'));
-    const dels = [];
-    snap.forEach(d => dels.push(fb.deleteDoc(fb.doc('avaliacoes', d.id))));
-    await Promise.all(dels);
-    renderAdminReviews();
-    renderReviews();
-    showToast('✓ TODAS AS AVALIAÇÕES REMOVIDAS!', true);
-  } catch(e) {
-    showToast('Erro: ' + e.message);
-  }
-}
-
-async function renderAdminPedidos() {
-  const el = document.getElementById('adminPedidosList');
-  if (!el) return;
-  el.innerHTML = `<p style="font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--dim)">Carregando...</p>`;
-  try {
-    const fb   = await fbInit();
-    const snap = await fb.getDocs(fb.query(fb.col('pedidos'), fb.orderBy('criadoEm','desc')));
-    if (snap.empty) { el.innerHTML = `<p style="font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--dim)">Nenhum pedido ainda.</p>`; return; }
-    el.innerHTML = '';
-    snap.forEach(d => {
-      const p  = d.data();
-      const dt = p.criadoEm?.toDate?.() ?? new Date();
-      el.innerHTML += `<div style="background:var(--gb);border:1px solid var(--bc);padding:12px;margin-bottom:8px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px;">
-          <span style="font-family:'Orbitron',monospace;font-size:.7rem;color:var(--cyan);">#${d.id.slice(-6).toUpperCase()} — ${p.userName}</span>
-          <span style="font-family:'Orbitron',monospace;font-size:.8rem;color:var(--yel);">${fmt(p.total)}</span>
-        </div>
-        <div style="font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--dim);margin-bottom:6px;">${dt.toLocaleDateString('pt-BR')} ${dt.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})} — Entrega: ${p.entrega}</div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap;">
-          ${['aguardando','confirmado','pronto'].map(s =>
-            `<button onclick="updatePedidoStatus('${d.id}','${s}',this)"
-              style="font-family:'Share Tech Mono',monospace;font-size:.62rem;padding:3px 10px;cursor:pointer;border:1px solid var(--bc);background:${p.status===s?'var(--cyan)':'transparent'};color:${p.status===s?'var(--bg)':'var(--dim)'};"
-            >${s.toUpperCase()}</button>`
-          ).join('')}
-        </div>
-      </div>`;
-    });
-  } catch(e) {
-    el.innerHTML = `<p style="color:var(--mag);font-family:'Share Tech Mono',monospace;font-size:.72rem;">Erro: ${e.message}</p>`;
-  }
-}
-
-async function updatePedidoStatus(id, status, btn) {
-  if (!currentUser || currentUser.uid !== ADMIN_UID) {
-    showToast('⚠ Faça login como admin primeiro!');
-    return;
-  }
-  try {
-    const fb = await fbInit();
-    await fb.setDoc(fb.doc('pedidos', id), { status }, { merge: true });
-    renderAdminPedidos();
-    showToast('✓ STATUS ATUALIZADO!', true);
-  } catch(e) { showToast('Erro: ' + e.message); }
-}
-
-async function renderAdminUsers() {
-  const el = document.getElementById('adminUsersList');
-  if (!el) return;
-  el.innerHTML = `<p style="font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--dim)">Carregando...</p>`;
-  try {
-    const fb   = await fbInit();
-    const snap = await fb.getDocs(fb.col('usuarios'));
-    if (snap.empty) { el.innerHTML = `<p style="font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--dim)">Nenhum usuario cadastrado.</p>`; return; }
-    el.innerHTML = '';
-    snap.forEach(d => {
-      const u = d.data();
-      const dt = u.criadoEm?.toDate?.() ?? new Date();
-      el.innerHTML += `<div style="background:var(--gb);border:1px solid var(--bc);padding:10px 12px;margin-bottom:8px;font-family:'Share Tech Mono',monospace;font-size:.74rem;">
-        <div style="color:var(--cyan);margin-bottom:2px;">${u.nome} — ${u.email}</div>
-        <div style="color:var(--dim);">Cadastro: ${dt.toLocaleDateString('pt-BR')}</div>
-      </div>`;
-    });
-  } catch(e) {
-    el.innerHTML = `<p style="color:var(--mag);font-family:'Share Tech Mono',monospace;font-size:.72rem;">Erro: ${e.message}</p>`;
-  }
-}
-
-
-// ═══════════════════════════════════════════════════════
-// MÓDULO 01 — SIMULADOR DE PREÇOS
-// ───────────────────────────────────────────────────────
 // Variáveis globais do simulador
 // simCart: array de itens adicionados pelo cliente
 //   Cada item: { id, name, qty, unitPrice, total }
@@ -4166,7 +3595,6 @@ function startDeliveryTimer() {
 renderProducts();
 updStats();
 autoLoadConfig();
-initAuth(); // Firebase auth listener
 startDeliveryTimer(); // inicia o contador de entrega
 
 // ─── POPUP DE INFORMAÇÕES ────────────────────────────────
@@ -4288,42 +3716,10 @@ openPopupOnLoad();
 </div>
 
 
-<!-- ═══════════ MODAL: AUTH ═══════════ -->
-<div class="modal-overlay" id="authModal">
-  <div class="modal" style="max-width:420px">
-    <button class="modal-close" onclick="closeModal('authModal')">✕</button>
-    <div class="auth-tabs">
-      <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">ENTRAR</button>
-      <button class="auth-tab" id="tabCadastro" onclick="switchAuthTab('cadastro')">CADASTRAR</button>
-    </div>
-    <!-- Login form -->
-    <div id="formLogin" class="auth-form">
-      <input type="email" id="loginEmail" placeholder="seu e-mail" autocomplete="email">
-      <input type="password" id="loginPass" placeholder="senha" autocomplete="current-password">
-      <div class="auth-error" id="loginError"></div>
-      <button class="btn-primary" style="animation:none;width:100%" onclick="doLogin()">▶ ENTRAR</button>
-    </div>
-    <!-- Cadastro form -->
-    <div id="formCadastro" class="auth-form" style="display:none">
-      <input type="text" id="cadNome" placeholder="seu nome" autocomplete="name">
-      <input type="email" id="cadEmail" placeholder="seu e-mail" autocomplete="email">
-      <input type="password" id="cadPass" placeholder="senha (min. 6 caracteres)" autocomplete="new-password">
-      <div class="auth-error" id="cadError"></div>
-      <div class="auth-success" id="cadSuccess"></div>
-      <button class="btn-primary" style="animation:none;width:100%" onclick="doCadastro()">▶ CRIAR CONTA</button>
-    </div>
-  </div>
+<!-- authModal removido -->
 </div>
 
-<!-- ═══════════ PAGE: MEUS PEDIDOS ═══════════ -->
-<div class="page-overlay" id="pedidosPage">
-  <div class="page-header">
-    <button class="page-back" onclick="closePedidosPage()">← VOLTAR</button>
-    <span class="page-title">MEUS PEDIDOS</span>
-  </div>
-  <div class="pedidos-list" id="pedidosList">
-    <div class="no-pedidos">Carregando pedidos...</div>
-  </div>
+<!-- pedidosPage removido -->
 </div>
 
 
