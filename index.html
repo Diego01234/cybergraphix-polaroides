@@ -1,12 +1,3 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CyberGraphix ⚡ Polaroides</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Exo+2:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-
 <style>
 /* ─── TOKENS ─────────────────────────────────────────── */
 :root{
@@ -212,18 +203,15 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
 .modal-close:hover{color:var(--mag);}
 
 /* ─── ADMIN PANEL ─────────────────────────────────────── */
-.admin-section{background:rgba(255,0,170,.04);border:1px solid var(--bm);padding:24px;margin-bottom:20px;position:relative;}
-.admin-section-title{font-family:'Orbitron',monospace;font-size:.78rem;font-weight:700;color:var(--mag);margin-bottom:16px;letter-spacing:.1em;}
-.upload-area{border:2px dashed rgba(0,245,255,.3);padding:32px;text-align:center;cursor:pointer;transition:all .2s;background:rgba(0,245,255,.02);}
-.upload-area:hover,.upload-area.drag{border-color:var(--cyan);background:rgba(0,245,255,.06);}
+
 .upload-icon{font-size:2rem;margin-bottom:8px;}
 .upload-label{font-family:'Share Tech Mono',monospace;font-size:.78rem;color:var(--dim);line-height:1.6;}
 .upload-label strong{color:var(--cyan);}
 #adminFileIn{display:none;}
 .parse-result{margin-top:16px;font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--grn);background:rgba(0,255,136,.05);border:1px solid rgba(0,255,136,.2);padding:12px;}
 .parse-result.err{color:var(--mag);background:rgba(255,0,170,.05);border-color:var(--bm);}
-.btn-admin{font-family:'Orbitron',monospace;font-size:.72rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--bg);background:linear-gradient(90deg,var(--cyan),var(--mag));border:none;padding:11px 28px;cursor:pointer;clip-path:polygon(10px 0%,100% 0%,calc(100% - 10px) 100%,0% 100%);transition:all .2s;width:100%;margin-top:16px;}
-.btn-admin:hover{box-shadow:0 0 32px rgba(0,245,255,.4);}
+
+
 .btn-danger{background:linear-gradient(90deg,#ff4444,#aa0000);margin-top:8px;}
 .price-preview{margin-top:16px;}
 .price-preview table{width:100%;border-collapse:collapse;font-family:'Share Tech Mono',monospace;font-size:.72rem;}
@@ -232,9 +220,6 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
 .price-preview tr:hover td{background:rgba(0,245,255,.03);}
 
 /* ─── LOGIN MODAL ─────────────────────────────────────── */
-.login-box{display:flex;flex-direction:column;gap:14px;}
-.login-box input{background:rgba(0,0,0,.5);border:1px solid var(--bc);color:var(--w);padding:12px 16px;font-family:'Share Tech Mono',monospace;font-size:.9rem;width:100%;}
-.login-box input:focus{outline:none;border-color:var(--cyan);}
 
 /* ─── PRICE TABLE MODAL ───────────────────────────────── */
 .ptable{width:100%;border-collapse:collapse;font-family:'Share Tech Mono',monospace;font-size:.75rem;margin-top:8px;}
@@ -271,12 +256,7 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
 .hero-badge--warn span{color:var(--yel);}
 .model-btn{font-family:'Share Tech Mono',monospace;font-size:.78rem;color:rgba(255,0,170,.6);background:none;border:none;cursor:pointer;letter-spacing:.05em;margin-top:6px;padding:4px 0;text-decoration:underline;display:block;}
 .model-btn:hover{color:var(--mag);}
-.modelo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-top:4px;}
-.modelo-card{background:var(--gb);border:1px solid var(--bc);padding:8px 8px 24px;position:relative;text-align:center;cursor:pointer;transition:all .2s;}
-.modelo-card:hover{border-color:var(--mag);box-shadow:0 0 18px rgba(255,0,170,.2);}
-.modelo-card img{width:100%;aspect-ratio:3/4;object-fit:cover;display:block;background:var(--bg3);}
-.modelo-card.landscape img{aspect-ratio:4/3;}
-.modelo-card .modelo-label{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--dim);margin-top:8px;letter-spacing:.05em;position:absolute;bottom:6px;left:0;right:0;}
+
 .modelo-placeholder{width:100%;aspect-ratio:3/4;background:linear-gradient(135deg,rgba(0,245,255,.06),rgba(255,0,170,.06));border:1px dashed rgba(0,245,255,.2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;}
 .modelo-placeholder span{font-size:2rem;}
 .modelo-placeholder p{font-family:'Share Tech Mono',monospace;font-size:.62rem;color:var(--dim);text-align:center;line-height:1.4;padding:0 8px;}
@@ -289,106 +269,6 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
 .del-img-btn{position:absolute;top:2px;right:2px;background:rgba(255,0,170,.8);border:none;color:white;width:20px;height:20px;cursor:pointer;font-size:.7rem;display:flex;align-items:center;justify-content:center;}
 
 .scroll-hint{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:rgba(0,245,255,.35);letter-spacing:.2em;margin-top:14px;animation:pulse 2s ease-in-out infinite;}
-
-/* ─── LIGHTBOX (estilo mini álbuns) ─── */
-.lightbox-overlay{
-  position:fixed;inset:0;z-index:9000;
-  background:rgba(0,0,0,.95);
-  display:none;
-  align-items:center;
-  justify-content:center;
-  padding:16px;
-}
-.lightbox-overlay.open{display:flex;}
-.lightbox-img-wrap{
-  position:relative;
-  max-width:90vw;
-  max-height:90vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-.lightbox-img-wrap img{
-  max-width:90vw;
-  max-height:88vh;
-  object-fit:contain;
-  border:1px solid var(--bc);
-  box-shadow:0 0 60px rgba(0,245,255,.18);
-  display:block;
-}
-.lightbox-close{
-  position:fixed;top:18px;right:22px;
-  background:rgba(5,8,16,.85);
-  border:1px solid var(--bc);
-  color:var(--w);
-  width:40px;height:40px;
-  font-size:1.2rem;
-  cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  transition:all .2s;z-index:9010;
-  font-family:'Share Tech Mono',monospace;
-}
-.lightbox-close:hover{border-color:var(--mag);color:var(--mag);}
-.lightbox-nav{
-  position:fixed;top:50%;transform:translateY(-50%);
-  background:rgba(5,8,16,.8);
-  border:1px solid var(--bc);
-  color:var(--cyan);
-  width:48px;height:64px;
-  font-size:2rem;
-  cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  transition:all .2s;z-index:9010;
-  font-family:'Share Tech Mono',monospace;
-}
-.lightbox-nav:hover{border-color:var(--cyan);background:rgba(0,245,255,.1);}
-.lightbox-prev{left:10px;}
-.lightbox-next{right:10px;}
-@media(max-width:600px){
-  .lightbox-prev{left:4px;}
-  .lightbox-next{right:4px;}
-}
-.lightbox-fullbtn{
-  position:absolute;bottom:-40px;left:50%;transform:translateX(-50%);
-  font-family:'Share Tech Mono',monospace;
-  font-size:.68rem;
-  color:rgba(0,245,255,.6);
-  background:transparent;
-  border:none;
-  cursor:pointer;
-  letter-spacing:.08em;
-  white-space:nowrap;
-  padding:6px 0;
-  transition:color .2s;
-}
-.lightbox-fullbtn:hover{color:var(--cyan);}
-.lightbox-counter{
-  position:fixed;bottom:18px;left:50%;transform:translateX(-50%);
-  font-family:'Share Tech Mono',monospace;
-  font-size:.72rem;
-  color:var(--dim);
-  letter-spacing:.1em;
-  z-index:9010;
-}
-.lightbox-info{
-  position:fixed;
-  top:18px;left:50%;transform:translateX(-50%);
-  font-family:'Orbitron',monospace;
-  font-size:.78rem;
-  color:var(--cyan);
-  letter-spacing:.08em;
-  text-align:center;
-  z-index:9010;
-  background:rgba(5,8,16,.7);
-  padding:6px 16px;
-  border:1px solid var(--bc);
-  white-space:nowrap;
-  max-width:calc(100vw - 120px);
-  overflow:hidden;text-overflow:ellipsis;
-}
-/* modelo cards clicáveis */
-.modelo-card{cursor:pointer;}
-.modelo-card:hover::after{content:'🔍';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:1.8rem;pointer-events:none;}
 
 /* ─── SOCIAL ─── */
 .social-grid{display:grid;grid-template-columns:1fr;gap:14px;max-width:560px;}
@@ -1490,6 +1370,16 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
   .dtimer-value       { font-size: 1.25rem; }
 }
 
+
+/* Botão "Enviar Simulação" no simulador — verde WhatsApp */
+.sim-wpp-btn {
+  background: linear-gradient(90deg, #25D366, #128C7E) !important;
+  box-shadow: 0 0 20px rgba(37,211,102,.35) !important;
+}
+.sim-wpp-btn:hover {
+  box-shadow: 0 0 40px rgba(37,211,102,.6) !important;
+}
+
 </style>
 </head>
 <body>
@@ -1527,9 +1417,7 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
           📄 Impressões Apostilas
         </a>
 
-        <a href="https://cybergraphix.meloja.com.br/" class="mais-sites-item" target="_blank">
-          🎁 Mais Formas de Presentes
-        </a>
+        
         <!-- ↑ FIM DOS LINKS — adicione novos sites antes desta linha -->
 
       </div>
@@ -1573,9 +1461,6 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
                1. Dê um id único à seção no HTML (ex: id="novaseção")
                2. Copie o bloco <a> abaixo e mude href e texto
              ════════════════════════════════════════════ -->
-        <a href="#simulator" class="nav-menu-item" onclick="closeNavMenu()">
-          🔍 Simulador
-        </a>
         <a href="#calculator" class="nav-menu-item" onclick="closeNavMenu()">
           🛒 Pedido
         </a>
@@ -1591,7 +1476,6 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
     </div>
     <!-- Botão admin — abre o painel administrativo -->
     <!-- ↓ NÃO MOVA — o onclick="openLogin()" chama a função do painel admin -->
-    <button class="nav-admin-btn" onclick="openLogin()">⚙ ADMIN</button>
 
   </div>
 </nav>
@@ -1715,9 +1599,15 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
       <!-- Rodapé: botão para enviar selecionados ao carrinho -->
       <div class="sim-footer" id="simFooter" style="display:none">
         <div class="sim-selected-info" id="simSelectedInfo"></div>
-        <button class="sim-add-btn" onclick="simAddToCart()">
-          ▶ ADICIONAR SELECIONADOS AO PEDIDO
-        </button>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="sim-add-btn" onclick="simAddToCart()">
+            ▶ ADICIONAR AO PEDIDO
+          </button>
+          <!-- Botão exportar simulação para WhatsApp do Diego -->
+          <button class="sim-add-btn sim-wpp-btn" onclick="exportSimToWpp()">
+            📲 ENVIAR SIMULAÇÃO
+          </button>
+        </div>
       </div>
 
     </div><!-- fim #simResults -->
@@ -1769,69 +1659,6 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
   </div>
 </section>
 
-<!-- ═══════════ REVIEWS ═══════════ -->
-<!-- ═══════════ ENTREGA ═══════════ -->
-<section id="delivery">
-  <div class="container">
-    <p class="sec-eye">// módulo 03</p>
-    <h2 class="sec-title">Entrega ou Retirada?</h2>
-    <div class="divider"><span>◈ informe sua preferência ◈</span></div>
-
-    <div class="del-grid">
-      <div class="del-card" id="cd-ent" onclick="selDel('entrega')">
-        <div class="icon">🚚</div><h3>RECEBER EM CASA</h3><p>informe seu endereço no campo abaixo</p>
-      </div>
-      <div class="del-card" id="cd-ret" onclick="selDel('retirada')">
-        <div class="icon">📍</div><h3>RETIRADA</h3><p>te envio a localização no whatsapp</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════ DADOS / CONTATO ═══════════ -->
-
-<!-- section#reviews removida -->
-<section id="contact">
-  <div class="container">
-    <p class="sec-eye">// módulo 05</p>
-    <h2 class="sec-title">Seus Dados</h2>
-    <div class="divider"><span>◈ opcional — preencha o que quiser ◈</span></div>
-    <div class="form-box">
-      <p class="form-head">📋 IDENTIFICAÇÃO <span class="opt-badge">opcional</span></p>
-      <div class="fg">
-        <div class="field"><label>nome</label><input type="text" id="nome" placeholder="como você se chama?"></div>
-        <div class="field"><label>instagram</label><input type="text" id="insta" placeholder="@seu.arroba"></div>
-        <!-- Entrega: campo de endereço -->
-        <div id="endBox" style="display:none">
-          <div class="field" style="margin-top:14px">
-            <label>endereço de entrega</label>
-            <input type="text" id="ende" placeholder="rua, número, bairro, cidade — ex: Rua das Flores, 123, Centro">
-          </div>
-        </div>
-        <!-- Retirada: endereço do Diego -->
-        <div id="pickupBox" style="display:none;margin-top:14px;">
-          <div style="background:rgba(0,245,255,.04);border:1px solid var(--bc);padding:16px;position:relative;">
-            <div style="font-family:'Orbitron',monospace;font-size:.75rem;color:var(--cyan);letter-spacing:.1em;margin-bottom:10px;">PONTO DE RETIRADA</div>
-            <p style="font-family:'Share Tech Mono',monospace;font-size:.8rem;color:var(--w);line-height:1.8;margin-bottom:10px;">
-              R. Senador Jose Esteves, 560 — Esperanca<br>
-              <span style="color:var(--dim);font-size:.74rem;">
-                Ao lado da loja Tendencia Vest da Bianca do Beto<br>
-                Na rua do Comercial Cielo<br>
-                Escrito Cyber Graphix na frente — tambem tem um bar 🍺
-              </span>
-            </p>
-            <a href="https://maps.app.goo.gl/yVNJNeav8EoJbL7c8" target="_blank"
-               style="display:inline-flex;align-items:center;gap:8px;font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--cyan);text-decoration:none;border:1px solid var(--bc);padding:8px 14px;transition:all .2s;"
-               onmouseover="this.style.background='rgba(0,245,255,.08)'" onmouseout="this.style.background='transparent'">
-              📍 VER NO GOOGLE MAPS
-            </a>
-          </div>
-        </div>
-        <div class="field"><label>observações</label><textarea id="obs" rows="3" placeholder=""></textarea></div>
-      </div>
-    </div>
-  </div>
-</section>
 
 <!-- ═══════════ WPP ═══════════ -->
 <div class="wpp-section">
@@ -1910,156 +1737,12 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
 <div class="toast" id="toast"></div>
 
 
-<!-- ═══════════ MODAL: MODELOS DE FOTO ═══════════ -->
-<div class="modal-overlay" id="modeloModal">
-  <div class="modal" style="max-width:640px">
-    <button class="modal-close" onclick="closeModal('modeloModal')">✕</button>
-    <p class="modal-title" id="modeloTitle"></p>
-    <p style="font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--dim);margin-bottom:16px;line-height:1.6;" id="modeloDesc"></p>
-    <div class="modelo-grid" id="modeloGrid"></div>
-    <p style="font-family:'Share Tech Mono',monospace;font-size:.68rem;color:rgba(255,234,0,.6);margin-top:16px;border-top:1px solid rgba(255,234,0,.15);padding-top:12px;">
-      🔒 As fotos acima são exemplos de clientes anteriores. A confecção começa somente após o pagamento 100% via PIX.
-    </p>
-  </div>
+
+
 </div>
 
-<!-- ═══════════ MODAL: LOGIN ADMIN ═══════════ -->
-<div class="modal-overlay" id="loginModal">
-  <div class="modal">
-    <button class="modal-close" onclick="closeModal('loginModal')">✕</button>
-    <p class="modal-title">⚙ ACESSO ADMINISTRATIVO</p>
-    <div class="login-box">
-      <p style="font-family:'Share Tech Mono',monospace;font-size:.78rem;color:var(--dim);margin-bottom:8px;">Acesso administrativo:</p>
-      <input type="password" id="adminPass" placeholder="senha do painel..." onkeydown="if(event.key==='Enter')checkLogin()">
-      <div style="font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--dim);margin-top:6px;line-height:1.5;">
-        Use o e-mail e senha da conta admin criada no Firebase Authentication.
-      </div>
-      <button class="btn-primary" style="animation:none;margin-top:12px" onclick="checkLogin()">▶ ENTRAR NO PAINEL</button>
-    </div>
-  </div>
-</div>
-
-<!-- ═══════════ MODAL: ADMIN PANEL ═══════════ -->
-<div class="modal-overlay" id="adminModal">
-  <div class="modal" style="max-width:680px">
-    <button class="modal-close" onclick="closeModal('adminModal')">✕</button>
-    <p class="modal-title">⚙ PAINEL ADMINISTRATIVO — CYBERGRAPHIX</p>
-    <div id="driveStatus" style="display:flex;align-items:center;gap:10px;margin-bottom:20px;background:rgba(0,255,136,.05);border:1px solid rgba(0,255,136,.15);padding:10px 16px;">
-      <span id="driveIcon" style="font-size:1.2rem;">⏳</span>
-      <span id="driveMsg" style="font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--dim);letter-spacing:.04em;">Verificando Google Drive...</span>
-    </div>
-
-    <!-- UPLOAD PLANILHA -->
-    <div class="admin-section">
-      <p class="admin-section-title">📊 ATUALIZAR TABELA DE PREÇOS</p>
-      <p style="font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--dim);margin-bottom:14px;line-height:1.6;">
-        Envie a planilha .xlsx atualizada. O sistema vai ler automaticamente a aba <strong style="color:var(--cyan)">"Polaroides Valor Atual"</strong> e atualizar os preços no site.
-      </p>
-      <div class="upload-area" id="uploadArea" onclick="document.getElementById('adminFileIn').click()" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropFile(event)">
-        <div class="upload-icon">📂</div>
-        <div class="upload-label"><strong>Clique para selecionar</strong> ou arraste aqui<br>Aceito: .xlsx · .xlsm</div>
-      </div>
-      <input type="file" id="adminFileIn" accept=".xlsx,.xlsm,.xls" onchange="readFile(this.files[0])">
-      <div id="parseResult" style="display:none" class="parse-result"></div>
-      <div id="pricePreview" class="price-preview" style="display:none"></div>
-      <button class="btn-admin" id="applyBtn" style="display:none" onclick="applyPrices()">⚡ APLICAR NOVOS PREÇOS</button>
-    </div>
-
-    <!-- FOTOS MODELO -->
-    <div class="admin-section">
-      <p class="admin-section-title">🖼️ FOTOS MODELO (exibidas no "ver modelos")</p>
-      <p style="font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--dim);margin-bottom:14px;line-height:1.6;">
-        Cole o link de compartilhamento das fotos que já estão no Google Drive.<br>
-        <span style="color:var(--cyan);">No Drive: botão direito na foto → Compartilhar → Copiar link.</span>
-      </p>
-      <div style="margin-bottom:14px;">
-        <label style="font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;display:block;margin-bottom:6px;">produto</label>
-        <select id="imgProductSelect" style="background:rgba(0,0,0,.5);border:1px solid var(--bc);color:var(--w);padding:10px 14px;font-family:'Share Tech Mono',monospace;font-size:.82rem;width:100%;">
-          <option value="mini">Polaroide Mini</option>
-          <option value="media">Polaroide Média</option>
-          <option value="grande">Polaroide Insta X</option>
-          <option value="custom">Polaroide Personalizada</option>
-          <option value="tf">Tirinhas — Frases</option>
-          <option value="tk_">Tirinhas — Kodak</option>
-          <option value="tp">Tirinhas — Polaroide 4×14</option>
-        </select>
-      </div>
-      <div style="display:flex;gap:8px;margin-bottom:10px;">
-        <input type="text" id="driveUrlInput" placeholder="https://drive.google.com/file/d/.../view?usp=sharing"
-          style="flex:1;background:rgba(0,0,0,.45);border:1px solid var(--bc);color:var(--w);padding:10px 14px;font-family:'Share Tech Mono',monospace;font-size:.78rem;"
-          onkeydown="if(event.key==='Enter')addDriveLink()">
-        <button onclick="addDriveLink()" style="background:var(--cyan);color:var(--bg);border:none;padding:10px 18px;font-family:'Orbitron',monospace;font-size:.72rem;font-weight:700;cursor:pointer;white-space:nowrap;letter-spacing:.05em;">+ ADD</button>
-      </div>
-      <div id="linkFeedback" style="font-family:'Share Tech Mono',monospace;font-size:.72rem;min-height:18px;margin-bottom:10px;"></div>
-      <div class="uploaded-imgs" id="adminImgGrid"></div>
-    </div>
-
-    <!-- BACKUP / RESTORE -->
-    <div class="admin-section">
-      <p class="admin-section-title">☁️ SINCRONIZAR COM GOOGLE DRIVE</p>
-      <p style="font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--dim);margin-bottom:14px;line-height:1.6;">
-        Salve os links das fotos no Drive. Quando o site for atualizado, clique em <strong style="color:var(--cyan)">Carregar do Drive</strong> para restaurar tudo automaticamente.
-      </p>
-      <div id="driveSyncStatus" style="font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--dim);margin-bottom:14px;padding:10px 12px;background:var(--gb);border:1px solid var(--bc);line-height:1.5;">
-        Pronto para sincronizar.
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
-        <button class="btn-admin" style="margin-top:0" onclick="triggerSaveConfig()">☁️ SALVAR NO DRIVE</button>
-        <button class="btn-admin" style="margin-top:0;background:linear-gradient(90deg,var(--purp),var(--mag));" onclick="loadConfigFromDrive()">⬇️ CARREGAR DO DRIVE</button>
-      </div>
-      <!-- ID box — shown after first save -->
-      <div id="configFileIdBox" style="display:none;background:rgba(255,234,0,.07);border:1px solid rgba(255,234,0,.3);padding:14px;margin-bottom:10px;">
-        <p style="font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--yel);margin-bottom:8px;line-height:1.5;">
-          ⚡ AÇÃO NECESSÁRIA — copie este ID e envie para o Claude para gravar no código.<br>
-          Só assim as fotos aparecem em todos os celulares automaticamente:
-        </p>
-        <div style="display:flex;align-items:center;gap:8px;">
-          <code id="configFileIdValue" style="font-family:'Share Tech Mono',monospace;font-size:.82rem;color:var(--yel);background:rgba(0,0,0,.4);padding:8px 12px;flex:1;word-break:break-all;"></code>
-          <button onclick="navigator.clipboard.writeText(document.getElementById('configFileIdValue').textContent);showToast('✓ ID COPIADO!',true)" style="background:var(--yel);color:var(--bg);border:none;padding:8px 12px;font-family:'Orbitron',monospace;font-size:.65rem;font-weight:700;cursor:pointer;white-space:nowrap;">COPIAR</button>
-        </div>
-      </div>
-      <p style="font-family:'Share Tech Mono',monospace;font-size:.63rem;color:rgba(0,245,255,.3);line-height:1.6;" id="driveStatusNote">
-        Salve no Drive → copie o ID → envie para o Claude → site atualizado funciona em qualquer dispositivo ✓
-      </p>
-    </div>
-
-    <!-- STATS -->
-    <div class="admin-section">
-      <p class="admin-section-title">📈 ESTATÍSTICAS</p>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-family:'Share Tech Mono',monospace;font-size:.78rem;">
-        <div style="background:var(--gb);border:1px solid var(--bc);padding:12px;">
-          <div style="color:var(--dim);margin-bottom:4px;">pedidos via whatsapp</div>
-          <div style="color:var(--cyan);font-size:1.4rem;font-family:'Orbitron',monospace;" id="aStat1">0</div>
-        </div>
-        <div style="background:var(--gb);border:1px solid var(--bc);padding:12px;">
-          <div style="color:var(--dim);margin-bottom:4px;">avaliações recebidas</div>
-          <div style="color:var(--cyan);font-size:1.4rem;font-family:'Orbitron',monospace;" id="aStat2">0</div>
-        </div>
-      </div>
-    </div>
-    <!-- SENHA -->
-    <div class="admin-section">
-      <p class="admin-section-title">🔐 ALTERAR SENHA</p>
-      <div class="fg">
-        <div class="field"><label>nova senha</label><input type="password" id="newPass1" placeholder="nova senha..."></div>
-        <div class="field"><label>confirmar senha</label><input type="password" id="newPass2" placeholder="confirmar..."></div>
-        <button class="btn-admin" onclick="changePass()">🔐 SALVAR NOVA SENHA</button>
-      </div>
-    </div>
-
-  </div>
-</div>
 
 <!-- ═══════════ MODAL: TABELA DE PREÇOS ═══════════ -->
-<div class="modal-overlay" id="priceModal">
-  <div class="modal">
-    <button class="modal-close" onclick="closeModal('priceModal')">✕</button>
-    <p class="modal-title" id="priceMTitle"></p>
-    <p style="font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--dim);margin-bottom:16px;">Preço por unidade de acordo com a quantidade total pedida:</p>
-    <table class="ptable" id="priceTable"></table>
-  </div>
-</div>
-
 
 <script>
 // ═══════════════════════════════════════════════════════
@@ -2071,172 +1754,21 @@ const LS = {
   del: k => localStorage.removeItem(k)
 };
 
-// Senha padrão (hash simples)
-const ADMIN_HASH_KEY = 'cgx_admin_hash';
-function simpleHash(s) { let h=0; for(let c of s) h=(h<<5)-h+c.charCodeAt(0); return h>>>0; }
-if (!LS.get(ADMIN_HASH_KEY)) LS.set(ADMIN_HASH_KEY, simpleHash('cybergraphix2024'));
 
 // ═══════════════════════════════════════════════════════
-// GOOGLE DRIVE INTEGRATION
-// ═══════════════════════════════════════════════════════
-// ─── GOOGLE DRIVE — config only (fotos modelo) ──────────
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbwb3Ft1PBavUeHgeOKt5-9RN9O1v6QYkKrWoyQzAtW0UUIcmDQ5gFtUxs1-2CLc6OqcyQ/exec';
-
-// ════════════════════════════════════════════════════════
-// FOTOS MODELO — IDs do Google Drive
-// Para adicionar novas fotos: copie o fileId do Drive e
-// adicione uma nova linha no array do produto correto,
-// seguindo o padrão: {fileId:'SEU_ID_AQUI', name:'foto_N'}
+// DEFAULT_PRICING — tabela de preços por produto
+// ───────────────────────────────────────────────────────
+// Para alterar preços: edite o valor "u" de cada faixa.
 //
-// Produtos:
-//   mini   → Polaroide Mini
-//   media  → Polaroide Media
-//   grande → Polaroide Insta X
-//   custom → Polaroide Personalizada
-//   tf     → Tirinhas Frases
-//   tk_    → Tirinhas Kodak
-//   tp     → Tirinhas Polaroide 4x14
-// ════════════════════════════════════════════════════════
-const EMBEDDED_IMAGES = {
-  mini: [
-    {fileId:'1e8CyTOCztMR1QfJD95SILNSUIj_rFizD', name:'foto_1'},
-    // {fileId:'COLE_AQUI_PROXIMO_ID_MINI', name:'foto_2'},
-  ],
-  media: [
-    {fileId:'1IDIeVI44Jmz8RFk08moC0XqvKlrXhSU2', name:'foto_1'},
-    {fileId:'1cP2k-csXHx5DA0Qs5JE-hM7vdtBDnXz4', name:'foto_2'},
-    // {fileId:'COLE_AQUI_PROXIMO_ID_MEDIA', name:'foto_3'},
-  ],
-  grande: [
-    {fileId:'11fuANyURLkf6nEPytAkGcI5bwLodVL-f', name:'foto_1'},
-    {fileId:'19JYNxFwtnwZvBaNT9GGIio7XiPilW9aI', name:'foto_2'},
-    // {fileId:'COLE_AQUI_PROXIMO_ID_INSTA_X', name:'foto_3'},
-  ],
-  custom: [
-     {fileId:'1obNFz1nbPu8QtfvhMeFGQ3fzG3VJZtm4', name:'stranger_things'},
-     {fileId:'1cku1k-9ZXZmfOdTdLPIVFFlZ_XHdsjBH', name:'stitch'},
-     {fileId:'1-00mZIKX8NEq8aU99BkGZyLM_tpVrg6g', name:'shingeki_no_kyojin'},
-     {fileId:'1WOWmPcWry1KtF1L1FsS0hH9PQWuIg4mP', name:'miranha'},
-     {fileId:'1grCKTmX8PclOo_NsSUO2cmjetkQobA_1', name:'spotify'},
-     {fileId:'1rFGPb5RrqgKLvNMa5xpMyXFM-v4Bjp14', name:'Instagram'},
-     {fileId:'14ZwICQVIyY_RNTaxRy6r-mCK3yzzG2Uv', name:'noite_estrelada'},
-
-  ],
-  tf: [
-    // {fileId:'COLE_AQUI_PROXIMO_ID_TIRA_FRASES', name:'foto_1'},
-  ],
-  tk_: [
-    // {fileId:'COLE_AQUI_PROXIMO_ID_TIRA_KODAK', name:'foto_1'},
-  ],
-  tp: [
-    {fileId:'1tg6zraorJw_JrNELXz7opJJsN0qKAODe', name:'foto_1'},
-    // {fileId:'COLE_AQUI_PROXIMO_ID_TIRA_POLAROIDE', name:'foto_2'},
-  ],
-};
-
-async function postToDrive(base64, filename, mime) {
-  try {
-    const resp = await fetch(GAS_URL, {
-      method: 'POST',
-      body: JSON.stringify({ base64, type: mime, name: filename })
-    });
-    const result = await resp.json();
-    if (result.error) throw new Error(result.error);
-    // Store the fixed file ID so any device can load it later
-    if (result.id) LS.set('cgx_config_file_id', result.id);
-    return result.url || null;
-  } catch(err) {
-    console.warn('Drive error:', err.message);
-    return null;
-  }
-}
-
-async function saveConfigToDrive() {
-  const productIds = ['mini','media','grande','custom','tf','tk_','tp'];
-  const config = { version: 2, saved: new Date().toISOString(), images: {} };
-  productIds.forEach(id => {
-    const imgs = LS.get('cgx_imgs_' + id);
-    if (imgs && imgs.length) config.images[id] = imgs;
-  });
-  const total = Object.values(config.images).reduce((s,a) => s+a.length, 0);
-  if (!total) return null;
-  const json   = JSON.stringify(config);
-  const bytes  = new TextEncoder().encode(json);
-  const bin    = Array.from(bytes, b => String.fromCodePoint(b)).join('');
-  const base64 = btoa(bin);
-  return postToDrive(base64, 'cybergraphix_config.json', 'application/json');
-}
-
-async function triggerSaveConfig() {
-  const fb = document.getElementById('driveSyncStatus');
-  if (fb) { fb.style.color='var(--cyan)'; fb.textContent='⏳ Salvando no Drive...'; }
-  const url = await saveConfigToDrive();
-  const savedId = LS.get('cgx_config_file_id');
-  if (url && savedId) {
-    const idBox = document.getElementById('configFileIdBox');
-    const idVal = document.getElementById('configFileIdValue');
-    if (idBox) idBox.style.display = 'block';
-    if (idVal) idVal.textContent = savedId;
-    if (fb) {
-      fb.style.color='var(--grn)';
-      fb.textContent='✓ Config salva! Copie o ID abaixo e envie para o Claude atualizar o site — assim funciona em TODOS os celulares.';
-    }
-    showToast('✓ CONFIG SALVA NO DRIVE!', true);
-  } else {
-    if (fb) { fb.style.color='var(--mag)'; fb.textContent='⚠ Falha ao salvar. Verifique o AppScript e tente novamente.'; }
-    showToast('⚠ FALHA NO DRIVE!');
-  }
-}
-
-// Fetch + apply config from Drive — used both on page load and manually
-async function fetchAndApplyConfig(fileId) {
-  const dlUrl = 'https://drive.google.com/uc?export=download&id=' + fileId;
-  const resp  = await fetch(dlUrl);
-  if (!resp.ok) throw new Error('HTTP ' + resp.status);
-  const config = await resp.json();
-  if (!config.images) throw new Error('Formato inválido');
-  // Overwrite local storage with Drive config (Drive is source of truth)
-  Object.entries(config.images).forEach(([id, imgs]) => {
-    if (Array.isArray(imgs) && imgs.length) {
-      LS.set('cgx_imgs_' + id, imgs);
-    }
-  });
-  return config;
-}
-
-// Called on page load — loads embedded photo IDs into localStorage for all devices
-function autoLoadConfig() {
-  Object.entries(EMBEDDED_IMAGES).forEach(([id, imgs]) => {
-    if (!imgs || !imgs.length) return;
-    const existing    = LS.get('cgx_imgs_' + id) || [];
-    const existingIds = new Set(existing.map(i => i.fileId).filter(Boolean));
-    const toAdd       = imgs.filter(i => i.fileId && !existingIds.has(i.fileId));
-    if (toAdd.length) LS.set('cgx_imgs_' + id, [...existing, ...toAdd]);
-  });
-}
-
-// Called manually from admin panel
-async function loadConfigFromDrive() {
-  const fileId = LS.get('cgx_config_file_id');
-  const fb = document.getElementById('driveSyncStatus');
-  if (!fileId) {
-    if (fb) { fb.style.color='var(--dim)'; fb.textContent='Nenhum backup encontrado. Adicione fotos e clique "Salvar no Drive" primeiro.'; }
-    return;
-  }
-  if (fb) { fb.style.color='var(--cyan)'; fb.textContent='⏳ Carregando config do Drive...'; }
-  try {
-    const config = await fetchAndApplyConfig(fileId);
-    const total  = Object.values(config.images).reduce((s,a) => s+a.length, 0);
-    if (fb) { fb.style.color='var(--grn)'; fb.textContent='✓ ' + total + ' foto(s) carregada(s) do Drive. Salva em: ' + new Date(config.saved).toLocaleString('pt-BR'); }
-    showToast('✓ CONFIG CARREGADA DO DRIVE!', true);
-  } catch(err) {
-    if (fb) { fb.style.color='var(--yel)'; fb.textContent='⚠ Não foi possível carregar: ' + err.message; }
-  }
-}
-
-
-// ═══════════════════════════════════════════════════════
-// TABELAS DE PREÇO (fallback — valores da planilha)
+// ► QUANTIDADE MÍNIMA DO SIMULADOR (módulo 01):
+//   O mínimo de cada produto é o "q" da PRIMEIRA faixa.
+//   Exemplo: mini começa em {q:16, ...} → mínimo = 16 un
+//   Para mudar o mínimo: altere o "q" da primeira linha
+//   de cada produto abaixo.
+//
+// ► QUANTIDADE MÍNIMA DA CALCULADORA (módulo 02):
+//   Definida no array PRODUCTS mais abaixo, campo "min".
+//   Ambos devem ser iguais para consistência.
 // ═══════════════════════════════════════════════════════
 const DEFAULT_PRICING = {
   // ════════════════════════════════════════════════════
@@ -2250,53 +1782,56 @@ const DEFAULT_PRICING = {
 
   // ─── MINI: Polaroide Mini 5×7cm ─────────────────────
   mini: [
-    {q:16, u:0.9375},   // 16–19 un  → R$ 1,50/un
-    {q:32, u:0.8125},   // 32–36 un  → R$ 0,90/un
-    {q:48, u:0.7292},   // 48–63 un  → R$ 0,81/un
-    {q:64, u:0.7016},   // 64–79 un  → R$ 0,72/un
-    {q:80, u:0.6863},   // 80–95 un  → R$ 0,70/un
-    {q:96, u:0.6760},   // 96+ un    → R$ 0,69/un  ← MELHOR PREÇO
+    {q:4, u:1.5},   // 16–19 un  → R$ 1,50/un
+    {q:8, u:1.5},   // 16–19 un  → R$ 1,50/un
+    {q:12, u:1.5},   // 16–19 un  → R$ 1,50/un
+    {q:16, u:1.5},   // 16–19 un  → R$ 1,50/un
+    {q:32, u:0.9},   // 32–36 un  → R$ 0,90/un
+    {q:48, u:0.81},   // 48–63 un  → R$ 0,81/un
+    {q:64, u:0.72},   // 64–79 un  → R$ 0,72/un
+    {q:80, u:0.7},   // 80–95 un  → R$ 0,70/un
+    {q:96, u:0.69},   // 96+ un    → R$ 0,69/un  ← MELHOR PREÇO
   ],
 
   // ─── MÉDIA: Polaroide Média 6×8,6cm ─────────────────
   media: [
-    {q:9,  u:1.6667},   // 9–14  un  → R$ 2,00/un
-    {q:18, u:1.2222},   // 15–23 un  → R$ 1,67/un
-    {q:27, u:1.0370},   // 24–29 un  → R$ 1,33/un
-    {q:36, u:1.0000},   // 36–44 un  → R$ 1,07/un
-    {q:45, u:0.9978},   // 45–53 un  → R$ 1,00/un
-    {q:54, u:0.9500},   // 54–71 un  → R$ 1,00/un
-    {q:63, u:0.9000},   // 72–89 un  → R$ 0,95/un
-    {q:72, u:0.8900},   // 90+ un    → R$ 0,90/un  ← MELHOR PREÇO
+    {q:3,  u:2.0},
+    {q:6,  u:2.0},
+    {q:9,  u:2.0},   // 9–14  un  → R$ 2,00/un
+    {q:18, u:1.67},   // 15–23 un  → R$ 1,67/un
+    {q:27, u:1.33},   // 24–29 un  → R$ 1,33/un
+    {q:36, u:1.17},   // 36–44 un  → R$ 1,07/un
+    {q:45, u:1.07},   // 45–53 un  → R$ 1,00/un
+    {q:54, u:1.0},   // 54–71 un  → R$ 1,00/un
+    {q:63, u:1.0},   // 72–89 un  → R$ 0,95/un
+    {q:72, u:0.95},   // 90+ un    → R$ 0,90/un  ← MELHOR PREÇO
+    {q:81, u:0.90},   // 90+ un    → R$ 0,90/un  ← MELHOR PREÇO
   ],
 
   // ─── GRANDE / INSTA X: 7×10cm ───────────────────────
   grande: [
-    {q:8,  u:2.2500},   // 8–15  un  → R$ 2,50/un
-    {q:16, u:1.6250},   // 16–19 un  → R$ 2,00/un
-    {q:20, u:1.6000},   // 20–23 un  → R$ 1,90/un
-    {q:24, u:1.4583},   // 24–31 un  → R$ 1,75/un
-    {q:32, u:1.3125},   // 32–39 un  → R$ 1,44/un
-    {q:40, u:1.3725},   // 40–47 un  → R$ 1,31/un  ← MELHOR PREÇO
-    {q:48, u:1.3729},   // 48–63 un  → R$ 1,37/un
-    {q:64, u:1.3891},   // 64–79 un  → R$ 1,37/un
-    {q:80, u:1.3988},   // 80+ un    → R$ 1,39/un
+    {q:2,  u:2.5},
+    {q:4,  u:2.5},
+    {q:8,  u:2.5},   // 8–15  un  → R$ 2,50/un
+    {q:16, u:2.0},   // 16–19 un  → R$ 2,00/un
+    {q:20, u:1.9},   // 20–23 un  → R$ 1,90/un
+    {q:32, u:1.44},   // 32–39 un  → R$ 1,44/un
+    {q:40, u:1.31},   // 40–47 un  → R$ 1,31/un  ← MELHOR PREÇO
+    {q:48, u:1.37},   // 48–63 un  → R$ 1,37/un
+    {q:64, u:1.37},   // 64–79 un  → R$ 1,37/un
+    {q:72, u:1.39},   // 80+ un    → R$ 1,39/un
   ],
 
   // ─── PERSONALIZADA: 6,5×9cm ─────────────────────────
   personalizada: [
-    {q:3,   u:3.0000},
-    {q:6,   u:2.5000},
-    {q:9,   u:2.2222},
-    {q:18,  u:2.1111},
-    {q:27,  u:1.7778},
-    {q:36,  u:1.4815},
-    {q:45,  u:1.4444},
-    {q:54,  u:1.3778},
-    {q:63,  u:1.3333},
-    {q:72,  u:1.3016},
-    {q:90,  u:1.2778},
-    {q:108, u:1.2211},
+    {q:3,   u:3.0},
+    {q:6,   u:2.5},
+    {q:9,   u:2.22},
+    {q:18,  u:2.00},
+    {q:27,  u:1.78},
+    {q:36,  u:1.44},
+    {q:45,  u:1.33},
+    
   ],
 
   // ─── TIRINHAS — preço fixo por unidade ──────────────
@@ -2305,11 +1840,26 @@ const DEFAULT_PRICING = {
 
 let PRICING = LS.get('cgx_pricing') || JSON.parse(JSON.stringify(DEFAULT_PRICING));
 
+// ═══════════════════════════════════════════════════════
+// PRODUCTS — lista de produtos exibidos na calculadora
+// ───────────────────────────────────────────────────────
+// Campos de cada produto:
+//   id:   chave interna (não altere)
+//   name: nome curto exibido no card
+//   full: nome completo no resumo/WhatsApp
+//   size: dimensão exibida no card
+//   icon: emoji do card
+//   min:  ► QUANTIDADE MÍNIMA DA CALCULADORA (módulo 02)
+//            Altere aqui para mudar o mínimo do card.
+//            Mantenha igual ao "q" da 1ª faixa do DEFAULT_PRICING.
+//   tk:   chave que liga este produto à tabela de preços
+// ═══════════════════════════════════════════════════════
 const PRODUCTS = [
-  {id:'mini',    name:'MINI',            full:'Polaroide Mini',            size:'5×7cm · foto 4,2×5cm',      icon:'📷',tk:'mini',         min:16},
-  {id:'media',   name:'MÉDIA',           full:'Polaroide Média',           size:'6×8,6cm · foto 5,1×6,2cm',  icon:'🖼️',tk:'media',        min:9 },
-  {id:'grande',  name:'INSTA X',         full:'Polaroide Insta X',         size:'7×10cm · foto 6×7cm',        icon:'✨',tk:'grande',       min:8 },
-  {id:'custom',  name:'PERSONALIZADA',   full:'Polaroide Personalizada',   size:'6,5×9cm · foto 5,6×6,4cm',  icon:'🎨',tk:'personalizada',min:6 },
+  {id:'mini',    name:'MINI',            full:'Polaroide Mini',            size:'5×7cm · foto 4,2×5cm',      icon:'📷',tk:'mini',         min:4},
+  {id:'media',   name:'MÉDIA',           full:'Polaroide Média',           size:'6×8,6cm · foto 5,1×6,2cm',  icon:'🖼️',tk:'media',        min:3 },
+  {id:'grande',  name:'INSTA X',         full:'Polaroide Insta X',         size:'7×10cm · foto 6×7cm',        icon:'✨',tk:'grande',       min:2 },
+
+  {id:'custom',  name:'PERSONALIZADA',   full:'Polaroide Personalizada',   size:'6,5×9cm · foto 5,6×6,4cm',  icon:'🎨',tk:'personalizada',min:3 },
   
   {id:'tp',      name:'TIRINHA POLAROIDE',  full:'Tirinhas — Polaroide 4×14', size:'4×14cm',                    icon:'📸',tk:'tp',           min:1 },
 ];
@@ -2344,8 +1894,7 @@ function renderProducts() {
       <div class="u-price" id="up-${p.id}"><span class="tier-note">${mn}</span></div>
       <!-- ↓ Hint de desconto progressivo — controlado por updPrice() -->
       <div class="discount-hint" id="dh-${p.id}"></div>
-      <button class="price-table-btn" onclick="showPriceTable('${p.id}')">ver tabela de preços ↗</button>
-      <button class="model-btn" onclick="showModelo('${p.id}')">ver modelos de foto ↗</button>
+      
     </div>`;
   }).join('');
 }
@@ -2491,15 +2040,7 @@ function showPriceTable(id) {
   openModal('priceModal');
 }
 
-// ─── DELIVERY ────────────────────────────────────────
-let delMode = '';
-function selDel(m) {
-  delMode = m;
-  document.getElementById('cd-ent').classList.toggle('active', m === 'entrega');
-  document.getElementById('cd-ret').classList.toggle('active', m === 'retirada');
-  document.getElementById('endBox').style.display    = m === 'entrega'  ? 'block' : 'none';
-  document.getElementById('pickupBox').style.display = m === 'retirada' ? 'block' : 'none';
-}
+
 
 // ─── WHATSAPP ────────────────────────────────────────
 function sendWpp() {
@@ -2527,7 +2068,6 @@ function sendWpp() {
   // increment pedidos counter
   const cnt = (LS.get('cgx_pedidos') || 0) + 1;
   LS.set('cgx_pedidos', cnt);
-  updStats();
   window.open(`https://wa.me/5592994120494?text=${encodeURIComponent(lines.join('\n'))}`,'_blank');
   showToast('✓ PEDIDO ENVIADO!', true);
 }
@@ -2536,253 +2076,7 @@ function v(id) { const el=document.getElementById(id); return el ? el.value.trim
 
 // ─── REVIEWS ────────────────────────────────────────
 
-
-
-// ─── ADMIN ───────────────────────────────────────────
-function openLogin() { openModal('loginModal'); setTimeout(()=>document.getElementById('adminPass').focus(),100); }
-
-function checkLogin() {
-  const pass   = document.getElementById('adminPass').value;
-  const stored = LS.get(ADMIN_HASH_KEY);
-  if (simpleHash(pass) !== stored) {
-    showToast('⚠ SENHA INCORRETA!');
-    document.getElementById('adminPass').value = '';
-    return;
-  }
-  openAdminPanel();
-}
-
-function openAdminPanel() {
-  closeModal('loginModal');
-  document.getElementById('adminPass').value = '';
-  openModal('adminModal');
-  document.getElementById('aStat1').textContent = LS.get('cgx_pedidos') || 0;
-  loadConfigFromDrive();
-  renderAdminReviews();
-  renderAdminPedidos();
-  renderAdminUsers();
-}
-
-function changePass() {
-  const p1 = document.getElementById('newPass1').value;
-  const p2 = document.getElementById('newPass2').value;
-  if (!p1) { showToast('⚠ Digite a nova senha!'); return; }
-  if (p1 !== p2) { showToast('⚠ As senhas não coincidem!'); return; }
-  LS.set(ADMIN_HASH_KEY, simpleHash(p1));
-  document.getElementById('newPass1').value = '';
-  document.getElementById('newPass2').value = '';
-  showToast('✓ SENHA ALTERADA!', true);
-}
-
-
-
-
-// ─── XLSX UPLOAD ────────────────────────────────────
-function dragOver(e) { e.preventDefault(); document.getElementById('uploadArea').classList.add('drag'); }
-function dragLeave(e) { document.getElementById('uploadArea').classList.remove('drag'); }
-function dropFile(e) { e.preventDefault(); dragLeave(); if(e.dataTransfer.files[0]) readFile(e.dataTransfer.files[0]); }
-
 let pendingPricing = null;
-
-function readFile(file) {
-  if (!file) return;
-  const pr = document.getElementById('parseResult');
-  const btn = document.getElementById('applyBtn');
-  const prev = document.getElementById('pricePreview');
-  pr.style.display = 'none'; btn.style.display = 'none'; prev.style.display = 'none';
-  pendingPricing = null;
-
-  if (!file.name.match(/\.(xlsx|xlsm|xls)$/i)) {
-    pr.className = 'parse-result err'; pr.textContent = '⚠ ERRO: arquivo inválido. Use .xlsx ou .xlsm'; pr.style.display = 'block'; return;
-  }
-
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    try {
-      const wb = XLSX.read(e.target.result, {type:'binary'});
-      const sheetName = wb.SheetNames.find(s => s.toLowerCase().includes('valor atual'));
-      if (!sheetName) throw new Error('Aba "Polaroides Valor Atual" não encontrada!');
-      const ws = wb.Sheets[sheetName];
-      const data = XLSX.utils.sheet_to_json(ws, {header:1, defval:null});
-
-      // Parse the sheet — extract pricing tables
-      const extracted = parseSheet(data);
-      if (!extracted) throw new Error('Não foi possível ler os preços. Verifique a estrutura da planilha.');
-
-      pendingPricing = extracted;
-      pr.className = 'parse-result';
-      pr.textContent = `✓ LEITURA OK — aba "${sheetName}" processada com sucesso! Verifique os preços abaixo e clique em "Aplicar".`;
-      pr.style.display = 'block';
-      renderPreview(extracted);
-      prev.style.display = 'block';
-      btn.style.display = 'block';
-    } catch(err) {
-      pr.className = 'parse-result err';
-      pr.textContent = '⚠ ERRO: ' + err.message;
-      pr.style.display = 'block';
-    }
-  };
-  reader.readAsBinaryString(file);
-}
-
-function parseSheet(data) {
-  // Strategy: scan all cells for the pricing table header patterns
-  // We look for columns labeled "Fls"/"Folhas", "Desconto", "Unid", "Bruto", "Unid. Preço", "Valor"
-  // Then read data rows below until NaN row
-
-  const result = {
-    mini: [], media: [], grande: [], personalizada: [], micro: [],
-    tf: DEFAULT_PRICING.tf, tk: DEFAULT_PRICING.tk, tp: DEFAULT_PRICING.tp
-  };
-
-  let found = 0;
-
-  // Scan for table headers by looking for specific patterns
-  for (let r = 0; r < data.length; r++) {
-    const row = data[r];
-    for (let c = 0; c < (row||[]).length; c++) {
-      const cell = String(row[c]||'').trim();
-
-      // Look for "MINI" label row
-      if (cell === 'MINI') {
-        // The pricing table for mini should start nearby — find "Fls"/"Folhas" header below or to the right
-        const table = extractTableNear(data, r, c);
-        if (table && table.length > 0) { result.mini = table; found++; }
-      }
-      if (cell === 'MÉDIA' || cell === 'MEDIA') {
-        const table = extractTableNear(data, r, c);
-        if (table && table.length > 0) { result.media = table; found++; }
-      }
-      if (cell === 'GRANDE' || cell.includes('INSTA')) {
-        const table = extractTableNear(data, r, c);
-        if (table && table.length > 0) { result.grande = table; found++; }
-      }
-      if (cell === 'MICRO') {
-        const table = extractTableNear(data, r, c);
-        if (table && table.length > 0) { result.micro = table; found++; }
-      }
-      if (cell === 'Personalizadas' || cell === 'PERSONALIZADAS') {
-        const table = extractTableNear(data, r, c);
-        if (table && table.length > 0) { result.personalizada = table; found++; }
-      }
-    }
-  }
-
-  // Fallback: scan for "Fls"/"Folhas" + "Unid. Preço" header rows
-  // and try to map them to product types by nearby context
-  if (found < 2) {
-    // Use a more flexible approach: find all header rows
-    const tables = findAllPricingTables(data);
-    if (tables.length >= 3) {
-      // map by order: index 0=GRANDE, 1=PERSONALIZADA, 2=MINI, 3=MICRO
-      if (tables[0]) result.grande = tables[0];
-      if (tables[1]) result.personalizada = tables[1];
-      if (tables[2]) result.mini = tables[2];
-      if (tables[3]) result.micro = tables[3];
-    }
-  }
-
-  // Validate — require at least mini or media or grande
-  if (!result.mini.length && !result.media.length && !result.grande.length) return null;
-  return result;
-}
-
-function extractTableNear(data, labelRow, labelCol) {
-  // Look for "Fls"/"Folhas" header within 3 rows below the label
-  for (let dr = 1; dr <= 5; dr++) {
-    const r = labelRow + dr;
-    if (r >= data.length) break;
-    const row = data[r] || [];
-    for (let c = Math.max(0, labelCol - 3); c < Math.min(row.length, labelCol + 5); c++) {
-      const cell = String(row[c]||'').trim().toLowerCase();
-      if (cell === 'fls' || cell === 'folhas') {
-        // Found header row — look for "Unid. Preço" in same row
-        let priceCol = -1;
-        for (let cc = c; cc < Math.min(row.length, c + 8); cc++) {
-          const h = String(row[cc]||'').trim().toLowerCase();
-          if (h.includes('unid') && h.includes('pre')) { priceCol = cc; break; }
-          if (h.includes('unid. preço') || h.includes('unitário')) { priceCol = cc; break; }
-        }
-        // column c = Fls, find Unid column (usually c+2) and price col
-        const unidCol = c + 2; // typically: Fls, Desconto, Unid, Bruto, Unid.Preço, Valor
-        const pCol = priceCol !== -1 ? priceCol : c + 4;
-        return readTableRows(data, r + 1, c, pCol);
-      }
-    }
-  }
-  return null;
-}
-
-function readTableRows(data, startRow, flsCol, priceCol) {
-  const rows = [];
-  for (let r = startRow; r < Math.min(data.length, startRow + 20); r++) {
-    const row = data[r] || [];
-    const fls = row[flsCol];
-    const price = row[priceCol];
-    if (fls === null || fls === undefined || isNaN(Number(fls))) break;
-    const fNum = Number(fls);
-    const pNum = Number(price);
-    if (isNaN(fNum) || isNaN(pNum) || pNum <= 0) break;
-    // Convert folhas to units
-    const sheetSize = findSheetSize(data, flsCol);
-    const units = Math.round(fNum * sheetSize);
-    if (units > 0 && pNum > 0) rows.push({q: units, u: Math.round(pNum * 1000) / 1000});
-  }
-  return rows;
-}
-
-function findSheetSize(data, col) {
-  // Try to find the number on the label row (e.g. "6 x 7" = 2, "5x7" etc)
-  // Simplistic: return common defaults based on column context
-  return 8; // default — most polaroids are 8/sheet for grande
-}
-
-function findAllPricingTables(data) {
-  const tables = [];
-  for (let r = 0; r < data.length; r++) {
-    const row = data[r] || [];
-    for (let c = 0; c < row.length; c++) {
-      const cell = String(row[c]||'').trim().toLowerCase();
-      if ((cell === 'fls' || cell === 'folhas') && row[c+4] !== undefined) {
-        const priceCol = c + 4;
-        const t = readTableRows(data, r + 1, c, priceCol);
-        if (t.length > 1) tables.push(t);
-      }
-    }
-  }
-  return tables;
-}
-
-function renderPreview(pricing) {
-  const prev = document.getElementById('pricePreview');
-  const names = {mini:'MINI',media:'MÉDIA',grande:'GRANDE/INSTA X',personalizada:'PERSONALIZADA',micro:'MICRO'};
-  let html = '';
-  for (const [key, name] of Object.entries(names)) {
-    const t = pricing[key];
-    if (!t || !t.length) continue;
-    html += `<p style="font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--cyan);margin:12px 0 6px;letter-spacing:.1em;">${name}</p>`;
-    html += `<table><tr><th>Qtd mín.</th><th>Preço/un</th></tr>`;
-    t.forEach(row => html += `<tr><td>${row.q}+</td><td>${fmt(row.u)}</td></tr>`);
-    html += '</table>';
-  }
-  prev.innerHTML = html || '<p style="color:var(--dim);font-family:\'Share Tech Mono\',monospace;font-size:.75rem;">Nenhum dado encontrado para prévia.</p>';
-}
-
-function applyPrices() {
-  if (!pendingPricing) return;
-  // Merge: only update keys that have data, keep rest
-  for (const [k, v] of Object.entries(pendingPricing)) {
-    if (v && v.length > 0) PRICING[k] = v;
-  }
-  LS.set('cgx_pricing', PRICING);
-  // Re-render
-  renderProducts();
-  PRODUCTS.forEach(p => qty[p.id] > 0 && updPrice(p.id));
-  updSummary();
-  document.getElementById('applyBtn').style.display = 'none';
-  document.getElementById('parseResult').textContent = '✓ PREÇOS APLICADOS!';
-  showToast('✓ TABELA ATUALIZADA!', true);
-}
 
 // ─── MODELO PHOTOS ───────────────────────────────────────
 const PRODUCT_LABELS = {
@@ -2795,150 +2089,6 @@ const PRODUCT_LABELS = {
   tp:     {name:'Tirinhas — Polaroide 4×14',desc:'Tirinha no estilo polaroide clássico, 4×14cm.'},
 };
 
-function showModelo(productId) {
-  const p = PRODUCTS.find(x => x.id === productId);
-  const info = PRODUCT_LABELS[productId] || {name: p.full, desc:''};
-  document.getElementById('modeloTitle').textContent = `📸 MODELOS: ${info.name.toUpperCase()}`;
-  document.getElementById('modeloDesc').textContent = info.desc;
-
-  const stored = LS.get('cgx_imgs_' + productId) || [];
-  const grid = document.getElementById('modeloGrid');
-
-  if (!stored.length) {
-    grid.innerHTML = `
-      <div style="grid-column:1/-1;text-align:center;padding:32px 0;">
-        <div style="font-size:3rem;margin-bottom:12px;">📷</div>
-        <p style="font-family:'Share Tech Mono',monospace;font-size:.8rem;color:var(--dim);line-height:1.7;">
-          Nenhuma foto de modelo cadastrada ainda.<br>
-          <span style="color:rgba(0,245,255,.5)">O administrador pode adicionar fotos pelo painel ⚙ ADMIN.</span>
-        </p>
-      </div>`;
-  } else {
-    // Build full-res URL list for lightbox
-    const allSrcs = stored.map(img => driveThumbUrl(img.fileId, 1600));
-    // Build rich objects for lightbox with model number as label
-    const lbItems = stored.map((img, i) => ({
-      src:   driveThumbUrl(img.fileId, 1600),
-      label: `${info.name} — foto ${i + 1} de ${stored.length}`
-    }));
-    grid.innerHTML = stored.map((img, i) => {
-      const src = driveThumbUrl(img.fileId, 400);
-      return `<div class="modelo-card" onclick="_lbOpenFromModelo(${i})" title="Clique para ampliar">
-        <img src="${src}" alt="Modelo ${i+1}" loading="lazy"
-          onerror="this.parentElement.style.opacity='.35';this.title='Verifique a permissão da foto no Drive';">
-        <div class="modelo-label">🔍 foto ${i+1}</div>
-      </div>`;
-    }).join('');
-    // Store for onclick access
-    window._lbModeloItems = lbItems;
-  }
-  openModal('modeloModal');
-}
-
-function _lbOpenFromModelo(idx) {
-  openLightbox(window._lbModeloItems || [], idx);
-}
-
-// Extract Google Drive file ID from any share link format
-function extractDriveFileId(url) {
-  url = url.trim();
-  // formats: /file/d/ID/view  |  id=ID  |  /d/ID  |  open?id=ID
-  const patterns = [
-    /\/file\/d\/([a-zA-Z0-9_-]{25,})/,
-    /[?&]id=([a-zA-Z0-9_-]{25,})/,
-    /\/d\/([a-zA-Z0-9_-]{25,})/,
-    /\/open\?id=([a-zA-Z0-9_-]{25,})/,
-  ];
-  for (const p of patterns) {
-    const m = url.match(p);
-    if (m) return m[1];
-  }
-  return null;
-}
-
-// Convert Drive file ID to direct embed thumbnail URL
-function driveThumbUrl(fileId, size) {
-  size = size || 400;
-  return 'https://drive.google.com/thumbnail?id=' + fileId + '&sz=w' + size;
-}
-
-function addDriveLink() {
-  const input    = document.getElementById('driveUrlInput');
-  const feedback = document.getElementById('linkFeedback');
-  const raw      = input.value.trim();
-  if (!raw) { feedback.style.color = 'var(--mag)'; feedback.textContent = '⚠ Cole o link do Drive primeiro.'; return; }
-
-  const fileId = extractDriveFileId(raw);
-  if (!fileId) {
-    feedback.style.color = 'var(--mag)';
-    feedback.textContent = '⚠ Link inválido. Use o link de compartilhamento do Google Drive.';
-    return;
-  }
-
-  const productId = document.getElementById('imgProductSelect').value;
-  const existing  = LS.get('cgx_imgs_' + productId) || [];
-
-  // Prevent duplicates
-  if (existing.find(i => i.fileId === fileId)) {
-    feedback.style.color = 'var(--yel)';
-    feedback.textContent = '⚠ Essa foto já foi adicionada.';
-    return;
-  }
-
-  existing.push({ fileId: fileId, name: 'foto_' + (existing.length + 1) });
-  LS.set('cgx_imgs_' + productId, existing);
-  input.value = '';
-  feedback.style.color = 'var(--grn)';
-  feedback.textContent = '✓ Foto adicionada! ID: ' + fileId.slice(0,12) + '...';
-  renderAdminImgGrid();
-  showToast('✓ FOTO ADICIONADA!', true);
-}
-
-function renderAdminImgGrid() {
-  const productId = document.getElementById('imgProductSelect').value;
-  const imgs = LS.get('cgx_imgs_' + productId) || [];
-  const grid = document.getElementById('adminImgGrid');
-  if (!imgs.length) {
-    grid.innerHTML = `<p style="font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--dim);margin-top:8px;grid-column:1/-1">Nenhuma foto para este modelo.</p>`;
-    return;
-  }
-  grid.innerHTML = imgs.map((img, i) => {
-    const src = driveThumbUrl(img.fileId, 120);
-    return `<div class="uploaded-img-thumb" style="position:relative;">
-      <img src="${src}" alt="${img.name||''}" onerror="this.style.opacity='.3';this.title='Foto sem permissão pública';">
-      <button class="del-img-btn" onclick="delModeloImg('${productId}',${i})">✕</button>
-    </div>`;
-  }).join('');
-}
-
-function delModeloImg(productId, idx) {
-  const imgs = LS.get('cgx_imgs_' + productId) || [];
-  imgs.splice(idx, 1);
-  LS.set('cgx_imgs_' + productId, imgs);
-  renderAdminImgGrid();
-  showToast('✓ FOTO REMOVIDA!', true);
-}
-
-// Update renderAdminImgGrid when select changes
-document.addEventListener('DOMContentLoaded', () => {
-  const sel = document.getElementById('imgProductSelect');
-  if (sel) sel.addEventListener('change', renderAdminImgGrid);
-});
-
-
-// ─── STATS ───────────────────────────────────────────
-function updStats() {
-  const pedidos = LS.get('cgx_pedidos') || 0;
-  document.getElementById('statPedidos').textContent = pedidos;
-}
-
-// ─── MODALS ──────────────────────────────────────────
-function openModal(id) { document.getElementById(id).classList.add('open'); }
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-document.querySelectorAll('.modal-overlay').forEach(m => {
-  m.addEventListener('click', e => { if (e.target === m) closeModal(m.id); });
-});
-document.addEventListener('keydown', e => { if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.open').forEach(m => closeModal(m.id)); });
 
 // ─── TOAST ───────────────────────────────────────────
 function showToast(msg, ok=false) {
@@ -2958,57 +2108,6 @@ window.addEventListener('scroll', () => {
 let _lbImgs   = [];  // array de {src, label}
 let _lbIdx    = 0;
 
-function openLightbox(imgs, startIdx) {
-  // imgs pode ser array de strings ou array de {src, label}
-  _lbImgs = imgs.map(i => typeof i === 'string' ? {src: i, label: ''} : i);
-  _lbIdx  = startIdx || 0;
-  _renderLightbox();
-  document.getElementById('lightboxOverlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-
-function _renderLightbox() {
-  const item = _lbImgs[_lbIdx];
-  const img  = document.getElementById('lightboxImg');
-  img.src           = item.src;
-  img.style.opacity = '0';
-  img.onload = () => { img.style.transition = 'opacity .25s'; img.style.opacity = '1'; };
-  // info bar: show label if available
-  const info = document.getElementById('lightboxInfo');
-  if (info) {
-    info.textContent = item.label || '';
-    info.style.display = item.label ? 'block' : 'none';
-  }
-  // counter
-  const ctr = document.getElementById('lightboxCounter');
-  if (ctr) ctr.textContent = (_lbIdx + 1) + ' / ' + _lbImgs.length;
-  // nav arrows: hide if single image
-  document.querySelectorAll('.lightbox-nav').forEach(n =>
-    n.style.display = _lbImgs.length > 1 ? 'flex' : 'none'
-  );
-}
-
-function closeLightbox() {
-  document.getElementById('lightboxOverlay').classList.remove('open');
-  document.body.style.overflow = '';
-  if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
-}
-
-function lightboxBgClick(e) {
-  if (e.target === document.getElementById('lightboxOverlay')) closeLightbox();
-}
-
-function lightboxNav(dir) {
-  _lbIdx = (_lbIdx + dir + _lbImgs.length) % _lbImgs.length;
-  _renderLightbox();
-}
-
-function lightboxOpenNative() {
-  const el  = document.getElementById('lightboxImg');
-  const req = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen;
-  if (req) req.call(el).catch(() => {});
-}
-
 document.addEventListener('keydown', e => {
   const lb = document.getElementById('lightboxOverlay');
   if (!lb || !lb.classList.contains('open')) return;
@@ -3016,72 +2115,6 @@ document.addEventListener('keydown', e => {
   if (e.key === 'ArrowRight')  lightboxNav(1);
   if (e.key === 'ArrowLeft')   lightboxNav(-1);
 });
-
-
-// ─── BACKUP / RESTORE CONFIG ─────────────────────────────
-function exportConfig() {
-  // Collect all image data from localStorage
-  const productIds = ['mini','media','grande','custom','tf','tk_','tp'];
-  const config = {
-    version: 1,
-    exported: new Date().toISOString(),
-    images: {}
-  };
-  productIds.forEach(id => {
-    const imgs = LS.get('cgx_imgs_' + id);
-    if (imgs && imgs.length) config.images[id] = imgs;
-  });
-
-  const total = Object.values(config.images).reduce((s,arr) => s + arr.length, 0);
-  if (!total) { showToast('⚠ Nenhuma foto cadastrada para exportar!'); return; }
-
-  const blob = new Blob([JSON.stringify(config, null, 2)], {type:'application/json'});
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  a.href     = url;
-  a.download = 'cybergraphix_fotos_' + new Date().toISOString().slice(0,10) + '.json';
-  a.click();
-  URL.revokeObjectURL(url);
-
-  const fb = document.getElementById('backupFeedback');
-  if (fb) { fb.style.color = 'var(--grn)'; fb.textContent = '✓ Exportado! ' + total + ' foto(s) em ' + Object.keys(config.images).length + ' produto(s).'; }
-  showToast('✓ CONFIG EXPORTADA!', true);
-}
-
-function importConfig(input) {
-  const file = input.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    try {
-      const config = JSON.parse(e.target.result);
-      if (!config.images) throw new Error('Arquivo inválido — estrutura não reconhecida.');
-
-      let total = 0;
-      Object.entries(config.images).forEach(([id, imgs]) => {
-        if (Array.isArray(imgs) && imgs.length) {
-          // Merge: keep existing + add new (avoid duplicate fileIds)
-          const existing = LS.get('cgx_imgs_' + id) || [];
-          const existingIds = new Set(existing.map(i => i.fileId).filter(Boolean));
-          const toAdd = imgs.filter(i => !existingIds.has(i.fileId));
-          LS.set('cgx_imgs_' + id, [...existing, ...toAdd]);
-          total += toAdd.length;
-        }
-      });
-
-      input.value = '';
-      renderAdminImgGrid();
-      const fb = document.getElementById('backupFeedback');
-      if (fb) { fb.style.color = 'var(--grn)'; fb.textContent = '✓ Importado! ' + total + ' foto(s) restaurada(s).'; }
-      showToast('✓ CONFIG IMPORTADA! ' + total + ' foto(s)', true);
-    } catch(err) {
-      const fb = document.getElementById('backupFeedback');
-      if (fb) { fb.style.color = 'var(--mag)'; fb.textContent = '⚠ Erro: ' + err.message; }
-      showToast('⚠ ARQUIVO INVÁLIDO!');
-    }
-  };
-  reader.readAsText(file);
-}
 
 
 // ═══════════════════════════════════════════════════════
@@ -3591,10 +2624,42 @@ function startDeliveryTimer() {
   setInterval(tick, 1000); // atualiza a cada segundo
 }
 
+
+// ─── exportSimToWpp ──────────────────────────────────
+// Lê os itens selecionados na tabela do simulador e
+// monta uma mensagem formatada para o WhatsApp do Diego.
+// ↓ Para mudar o número de destino: edite WPP_NUMBER abaixo
+function exportSimToWpp() {
+  const WPP_NUMBER = '5592994120494'; // ← número do Diego (com DDI/DDD)
+
+  const checkboxes = document.querySelectorAll('.sim-check:checked');
+  if (!checkboxes.length) {
+    showToast('⚠ Selecione ao menos um produto!');
+    return;
+  }
+
+  const lines = ['*SIMULAÇÃO DE PEDIDO — CyberGraphix*', ''];
+  let total = 0;
+  checkboxes.forEach(chk => {
+    const name  = chk.dataset.name;
+    const qty   = chk.dataset.qty;
+    const unit  = parseFloat(chk.dataset.unit);
+    const sub   = parseFloat(chk.dataset.total);
+    total += sub;
+    lines.push(`• ${name}: ${qty} un × R$ ${fmt(unit)} = *R$ ${fmt(sub)}*`);
+  });
+
+  lines.push('');
+  lines.push(`*TOTAL ESTIMADO: R$ ${fmt(total)}*`);
+  lines.push('');
+  lines.push('_Simulação gerada pelo site CyberGraphix Polaroides_');
+
+  const url = `https://wa.me/${WPP_NUMBER}?text=${encodeURIComponent(lines.join('\n'))}`;
+  window.open(url, '_blank');
+}
+
 // ─── INIT ────────────────────────────────────────────
 renderProducts();
-updStats();
-autoLoadConfig();
 startDeliveryTimer(); // inicia o contador de entrega
 
 // ─── POPUP DE INFORMAÇÕES ────────────────────────────────
@@ -3628,8 +2693,6 @@ function closeInfoPopup() {
     }, 250);
   }
 }
-
-
 
 // ═══════════════════════════════════════════════════════
 // MENU DE NAVEGAÇÃO INTERNA — toggleNavMenu / closeNavMenu
@@ -3702,10 +2765,7 @@ openPopupOnLoad();
 </script>
 
 
-<!-- ═══════════ LIGHTBOX ═══════════ -->
-<div class="lightbox-overlay" id="lightboxOverlay" onclick="lightboxBgClick(event)">
-  <div class="lightbox-info" id="lightboxInfo"></div>
-  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+<button class="lightbox-close" onclick="closeLightbox()">✕</button>
   <button class="lightbox-nav lightbox-prev" onclick="lightboxNav(-1)">‹</button>
   <div class="lightbox-img-wrap">
     <img id="lightboxImg" src="" alt="">
@@ -3716,10 +2776,8 @@ openPopupOnLoad();
 </div>
 
 
-<!-- authModal removido -->
 </div>
 
-<!-- pedidosPage removido -->
 </div>
 
 
@@ -3734,7 +2792,7 @@ openPopupOnLoad();
     <div class="popup-items">
       <div class="popup-item">
         <span class="popup-item-icon">🕓</span>
-        <span class="popup-item-text">Nossas entregas são entre as 16h – 17h</span>
+        <span class="popup-item-text">Nossas entregas são das 18h</span>
       </div>
       <div class="popup-item">
         <span class="popup-item-icon">📅</span>
