@@ -57,11 +57,10 @@ nav{
 .nav-links a{font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--dim);text-decoration:none;letter-spacing:.15em;text-transform:uppercase;transition:color .2s;}
 .nav-links a:hover{color:var(--cyan);}
 .nav-admin-btn{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--mag);border:1px solid var(--mag);padding:5px 12px;cursor:pointer;background:transparent;letter-spacing:.1em;transition:all .2s;}
-.nav-admin-btn:hover{background:var(--mag);color:var(--bg);}
-/* Regra antiga removida — links internos agora ficam no dropdown .nav-menu-dropdown, visível em mobile e desktop */
+
 
 /* ─── HERO ────────────────────────────────────────────── */
-.hero{min-height:auto;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:110px 20px 56px;position:relative;z-index:1;text-align:center;}
+.hero{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:100px 20px 52px;position:relative;z-index:1;text-align:center;}
 .hero-glow{position:absolute;width:700px;height:700px;background:radial-gradient(circle,rgba(0,245,255,.09) 0%,transparent 65%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;}
 .hero-glow2{position:absolute;width:400px;height:400px;background:radial-gradient(circle,rgba(255,0,170,.08) 0%,transparent 65%);top:20%;right:5%;pointer-events:none;}
 .floating-cards{display:flex;gap:16px;margin-bottom:24px;animation:float 5s ease-in-out infinite;}
@@ -77,19 +76,13 @@ nav{
 .brand-tag{font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--cyan);letter-spacing:.3em;text-transform:uppercase;margin-bottom:14px;opacity:.8;animation:fadeUp .5s ease both;}
 .logo{font-family:'Orbitron',monospace;font-size:clamp(2.5rem,9vw,5.5rem);font-weight:900;line-height:1;letter-spacing:.04em;background:linear-gradient(135deg,var(--cyan) 0%,#a000ff 50%,var(--mag) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 24px rgba(0,245,255,.4));animation:fadeUp .6s ease .1s both;}
 .logo-sub{font-family:'Orbitron',monospace;font-size:clamp(.9rem,3vw,1.5rem);font-weight:400;color:var(--mag);letter-spacing:.5em;text-shadow:0 0 20px var(--mag);margin-bottom:16px;animation:fadeUp .6s ease .2s both;}
-.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.25);padding:6px 16px;margin-bottom:20px;animation:fadeUp .6s ease .25s both;}
+.hero-badge{max-width:250px;display:inlflex;align-items:wrap; justify-content: center; gap:8px;background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.25);padding:6px 16px;margin-bottom:20px;animation:fadeUp .6s ease .25s both;}
 .hero-badge span{font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--grn);letter-spacing:.1em;}
 .hero-desc{max-width:500px;font-size:.95rem;color:rgba(232,244,255,.65);line-height:1.6;margin-bottom:24px;font-weight:300;animation:fadeUp .6s ease .3s both;}
 .btn-primary{font-family:'Orbitron',monospace;font-size:.82rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--bg);background:linear-gradient(90deg,var(--cyan),var(--mag));border:none;padding:16px 44px;cursor:pointer;clip-path:polygon(14px 0%,100% 0%,calc(100% - 14px) 100%,0% 100%);transition:all .2s;box-shadow:0 0 32px rgba(0,245,255,.35);animation:fadeUp .6s ease .4s both;}
 .btn-primary:hover{box-shadow:0 0 60px rgba(0,245,255,.65),0 0 100px rgba(255,0,170,.3);transform:translateY(-3px);}
 
-/* STATS BAR */
-.stats-bar{display:flex;gap:0;justify-content:center;margin-top:28px;flex-wrap:wrap;animation:fadeUp .6s ease .5s both;width:100%;max-width:600px;}
-.stat{padding:12px 24px;text-align:center;border:1px solid var(--bc);border-right:none;background:var(--gb);}
-.stat:last-child{border-right:1px solid var(--bc);}
-.stat-num{font-family:'Orbitron',monospace;font-size:1.4rem;font-weight:900;color:var(--cyan);text-shadow:0 0 16px rgba(0,245,255,.5);}
-.stat-lbl{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--dim);letter-spacing:.1em;margin-top:2px;}
-@media(max-width:500px){.stat{padding:12px 18px;}.stat-num{font-size:1.1rem;}}
+
 
 /* ─── SECTIONS ────────────────────────────────────────── */
 section{padding:64px 20px;position:relative;z-index:1;}
@@ -249,7 +242,7 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
   .product-icon{font-size:2.2rem;}
 }
 
-.hero-badges{display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:20px;}
+.hero-badges{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:20px;}
 .hero-badge--mag{background:rgba(255,0,170,.08);border-color:rgba(255,0,170,.3);}
 .hero-badge--mag span{color:var(--mag);}
 .hero-badge--warn{background:rgba(255,234,0,.07);border-color:rgba(255,234,0,.3);}
@@ -576,10 +569,12 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
   .hero-badge span {
     font-size: .62rem;
     letter-spacing: .06em;
+
   }
   .hero-badge {
     padding: 5px 10px;
     text-align: center;
+
   }
 
   /* Descricao */
@@ -593,17 +588,7 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
     font-size: .75rem;
     padding: 14px 28px;
   }
-
-  /* Stats bar: cabe em 2 colunas */
-  .stats-bar {
-    max-width: 100%;
-  }
-  .stat {
-    padding: 10px 16px;
-    flex: 1 1 calc(50% - 2px);
-    min-width: 0;
-  }
-  .stat-num { font-size: 1rem; }
+ 
 
   /* Nav: colunas menores para nao transbordar */
   nav {
@@ -1518,10 +1503,7 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
 
   <button class="btn-primary" onclick="document.getElementById('calculator').scrollIntoView({behavior:'smooth'})">▶ MONTAR MEU PEDIDO</button>
   <p class="scroll-hint">↓ role para montar seu pedido ↓</p>
-  <div class="stats-bar" id="statsBar">
-    <div class="stat"><div class="stat-num" id="statPedidos">0</div><div class="stat-lbl">pedidos enviados</div></div>
-    <div class="stat"><div class="stat-num">7</div><div class="stat-lbl">modelos disponíveis</div></div>
-  </div>
+  
 </section>
 
 <!-- ═══════════ CALCULADORA ═══════════ -->
@@ -1773,13 +1755,6 @@ const LS = {
 const DEFAULT_PRICING = {
   // ════════════════════════════════════════════════════
   // TABELAS DE PREÇO — Desconto Progressivo
-  // Fonte: planilha "Polaroides Valor Atual"
-  //
-  // Formato de cada faixa: {q: QTDE_MINIMA, u: PRECO_POR_UNIDADE}
-  // Para alterar um preço: edite o valor "u" da faixa correspondente.
-  // Para adicionar uma faixa nova: insira {q:QTDE, u:PRECO} na ordem crescente de q.
-  // ════════════════════════════════════════════════════
-
   // ─── MINI: Polaroide Mini 5×7cm ─────────────────────
   mini: [
     {q:4, u:1.5},   // 16–19 un  → R$ 1,50/un
@@ -1836,6 +1811,19 @@ const DEFAULT_PRICING = {
 
   // ─── TIRINHAS — preço fixo por unidade ──────────────
     tp: [{q:1, u:5.00}],   // Polaroide 4×14cm
+
+  // ─── Fotos 10x15 cm ─────────────────────────
+    foto10x15: [
+      {q:3,   u:4.0},
+      {q:6,   u:3.67},
+      {q:9,   u:3.11},
+      {q:12,  u:3.00},
+      {q:15,  u:2.8},
+      {q:18,  u:2.78},
+      {q:21,  u:2.6},
+      {q:24,  u:2.58},
+      {q:27,  u:2.52},
+    ],
 };
 
 let PRICING = LS.get('cgx_pricing') || JSON.parse(JSON.stringify(DEFAULT_PRICING));
@@ -1862,6 +1850,7 @@ const PRODUCTS = [
   {id:'custom',  name:'PERSONALIZADA',   full:'Polaroide Personalizada',   size:'6,5×9cm · foto 5,6×6,4cm',  icon:'🎨',tk:'personalizada',min:3 },
   
   {id:'tp',      name:'TIRINHA POLAROIDE',  full:'Tirinhas — Polaroide 4×14', size:'4×14cm',                    icon:'📸',tk:'tp',           min:1 },
+  {id:'foto10x15',      name:'FOTO 10X15',  full:'Fotos 10x15 cm', size:'10×15cm',                    icon:'🖼️',tk:'foto10x15',           min:1 },
 ];
 
 const qty = {};
@@ -1978,7 +1967,7 @@ function updPrice(id) {
   // ── Hint de desconto progressivo ──
   // Ativo apenas para Mini, Média e Insta X (que têm tabela progressiva)
   // ↓ Para adicionar/remover produtos com hint, edite este array:
-  const showDiscount = ['mini', 'media', 'grande', 'custom'].includes(id);
+  const showDiscount = ['mini', 'media', 'grande', 'custom', 'foto10x15'].includes(id);
   if (!dh || !showDiscount) return;
 
   const next = getNextTier(p, q);
@@ -2084,6 +2073,9 @@ const PRODUCT_LABELS = {
   media:  {name:'Polaroide Média',       desc:'Formato médio (6×8,6cm). O clássico estilo polaroid, muito procurado para decoração.'},
   grande: {name:'Polaroide Insta X',     desc:'Formato grande Insta X (7×10cm). Mais espaço para a foto, resultado incrível.'},
   custom: {name:'Polaroide Personalizada',desc:'Formato personalizado (6,5×9cm) com layout exclusivo para o seu pedido.'},
+
+  foto10x15: {name:'Fotos 10x15cm',desc:'Formato 10x15cm. Ideais para quadros'},
+
   tf:     {name:'Tirinhas — Frases',     desc:'Tirinha 5×15cm com frases. Ótima para decoração e presentear com uma mensagem especial.'},
   tk_:    {name:'Tirinhas — Estilo Kodak',desc:'Tirinha estilo Kodak 4×14cm. Visual retrô e muito estiloso.'},
   tp:     {name:'Tirinhas — Polaroide 4×14',desc:'Tirinha no estilo polaroide clássico, 4×14cm.'},
