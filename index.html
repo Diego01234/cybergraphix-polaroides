@@ -553,7 +553,7 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
   .hero-glow  { width: 280px; height: 280px; }
   .hero-glow2 { width: 180px; height: 180px; }
 
-  /* Logo: tamanho minimo seguro */
+  /* Logo: tamanho Pequenamo seguro */
   .logo {
     font-size: clamp(2rem, 11vw, 3.2rem);
     letter-spacing: .02em;
@@ -1459,7 +1459,7 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
 
       </div>
     </div>
-    <!-- Botão admin — abre o painel administrativo -->
+    <!-- Botão admin — abre o painel adPequenastrativo -->
     <!-- ↓ NÃO MOVA — o onclick="openLogin()" chama a função do painel admin -->
 
   </div>
@@ -1606,7 +1606,7 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
 <div class="sim-cart-panel" id="simCartPanel" style="display:none">
   <div class="sim-cart-header">
     <span class="sim-cart-title">🛒 Carrinho</span>
-    <!-- Botão para fechar/minimizar o carrinho -->
+    <!-- Botão para fechar/Pequenamizar o carrinho -->
     <button class="sim-cart-close" onclick="toggleCart()">✕</button>
   </div>
   <div class="sim-cart-items" id="simCartItems">
@@ -1618,7 +1618,7 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
   </button>
 </div>
 
-<!-- Botão flutuante para reabrir o carrinho quando minimizado -->
+<!-- Botão flutuante para reabrir o carrinho quando Pequenamizado -->
 <button class="sim-cart-fab" id="simCartFab" style="display:none"
         onclick="toggleCart()">
   🛒 <span id="simCartCount">0</span>
@@ -1744,7 +1744,7 @@ const LS = {
 //
 // ► QUANTIDADE MÍNIMA DO SIMULADOR (módulo 01):
 //   O mínimo de cada produto é o "q" da PRIMEIRA faixa.
-//   Exemplo: mini começa em {q:16, ...} → mínimo = 16 un
+//   Exemplo: Pequena começa em {q:16, ...} → mínimo = 16 un
 //   Para mudar o mínimo: altere o "q" da primeira linha
 //   de cada produto abaixo.
 //
@@ -1755,8 +1755,8 @@ const LS = {
 const DEFAULT_PRICING = {
   // ════════════════════════════════════════════════════
   // TABELAS DE PREÇO — Desconto Progressivo
-  // ─── MINI: Polaroide Mini 5×7cm ─────────────────────
-  mini: [
+  // ─── Pequena: Polaroide Pequena 5×7cm ─────────────────────
+  Pequena: [
     {q:4, u:1.5},   // 16–19 un  → R$ 1,50/un
     {q:8, u:1.5},   // 16–19 un  → R$ 1,50/un
     {q:12, u:1.5},   // 16–19 un  → R$ 1,50/un
@@ -1783,7 +1783,7 @@ const DEFAULT_PRICING = {
     {q:81, u:0.90},   // 90+ un    → R$ 0,90/un  ← MELHOR PREÇO
   ],
 
-  // ─── GRANDE / INSTA X: 7×10cm ───────────────────────
+  // ─── GRANDE: 7×10cm ───────────────────────
   grande: [
     {q:2,  u:2.5},
     {q:4,  u:2.5},
@@ -1843,13 +1843,13 @@ let PRICING = LS.get('cgx_pricing') || JSON.parse(JSON.stringify(DEFAULT_PRICING
 //   tk:   chave que liga este produto à tabela de preços
 // ═══════════════════════════════════════════════════════
 const PRODUCTS = [
-  {id:'mini',    name:'MINI',            full:'Polaroide Mini',            size:'5×7cm · foto 4,2×5cm',      icon:'📷',tk:'mini',         min:4},
-  {id:'media',   name:'MÉDIA',           full:'Polaroide Média',           size:'6×8,6cm · foto 5,1×6,2cm',  icon:'🖼️',tk:'media',        min:3 },
-  {id:'grande',  name:'INSTA X',         full:'Polaroide Insta X',         size:'7×10cm · foto 6×7cm',        icon:'✨',tk:'grande',       min:2 },
+  {id:'Pequena',    name:'POLAROIDE PEQUENA',            full:'Polaroide Pequena',            size:'5×7cm · foto 4,2×5cm',      icon:'📷',tk:'Pequena',         min:4},
+  {id:'media',   name:'POLAROIDE MÉDIA',           full:'Polaroide Média',           size:'6×8,6cm · foto 5,1×6,2cm',  icon:'🖼️',tk:'media',        min:3 },
+  {id:'grande',  name:'POLAROIDE GRANDE',         full:'Polaroide Grande',         size:'7×10cm · foto 6×7cm',        icon:'✨',tk:'grande',       min:2 },
 
-  {id:'custom',  name:'PERSONALIZADA',   full:'Polaroide Personalizada',   size:'6,5×9cm · foto 5,6×6,4cm',  icon:'🎨',tk:'personalizada',min:3 },
+  {id:'custom',  name:'POLAROIDE PERSONALIZADA',   full:'Polaroide Personalizada',   size:'6,5×9cm · foto 5,6×6,4cm',  icon:'🎨',tk:'personalizada',min:3 },
   
-  {id:'tp',      name:'TIRINHA POLAROIDE',  full:'Tirinhas — Polaroide 4×14', size:'4×14cm',                    icon:'📸',tk:'tp',           min:1 },
+  {id:'tp',      name:'POLAROIDE TIRINHA',  full:'Tirinhas — Polaroide 4×14', size:'4×14cm',                    icon:'📸',tk:'tp',           min:1 },
 
   {id:'foto10x15',      name:'FOTO 10X15',  full:'Fotos 10x15 cm', size:'10×15cm',                    icon:'🖼️',tk:'foto10x15',           min:1},
 ];
@@ -1966,9 +1966,8 @@ function updPrice(id) {
   el.innerHTML = `<strong>${fmt(pr)}</strong>/un → subtotal <strong>${fmt(pr * q)}</strong>`;
 
   // ── Hint de desconto progressivo ──
-  // Ativo apenas para Mini, Média e Insta X (que têm tabela progressiva)
   // ↓ Para adicionar/remover produtos com hint, edite este array:
-  const showDiscount = ['mini', 'media', 'grande', 'custom', 'foto10x15'].includes(id);
+  const showDiscount = ['Pequena', 'media', 'grande', 'custom', 'foto10x15'].includes(id);
   if (!dh || !showDiscount) return;
 
   const next = getNextTier(p, q);
@@ -2070,9 +2069,9 @@ let pendingPricing = null;
 
 // ─── MODELO PHOTOS ───────────────────────────────────────
 const PRODUCT_LABELS = {
-  mini:   {name:'Polaroide Mini',        desc:'Formato mini (5×7cm). Ideal para varal de fotos, presentes e coleções.'},
+  Pequena:   {name:'Polaroide Pequena',        desc:'Formato Pequena (5×7cm). Ideal para varal de fotos, presentes e coleções.'},
   media:  {name:'Polaroide Média',       desc:'Formato médio (6×8,6cm). O clássico estilo polaroid, muito procurado para decoração.'},
-  grande: {name:'Polaroide Insta X',     desc:'Formato grande Insta X (7×10cm). Mais espaço para a foto, resultado incrível.'},
+  grande: {name:'Polaroide Grande',     desc:'Formato grande Grande (7×10cm). Mais espaço para a foto, resultado incrível.'},
   custom: {name:'Polaroide Personalizada',desc:'Formato personalizado (6,5×9cm) com layout exclusivo para o seu pedido.'},
 
   foto10x15: {name:'Fotos 10x15cm',desc:'Formato 10x15cm. Ideais para quadros'},
@@ -2097,7 +2096,7 @@ window.addEventListener('scroll', () => {
   document.getElementById('scrollTop').classList.toggle('vis', window.scrollY > 400);
 });
 
-// ─── LIGHTBOX (estilo mini álbuns) ──────────────────────
+// ─── LIGHTBOX (estilo Pequena álbuns) ──────────────────────
 let _lbImgs   = [];  // array de {src, label}
 let _lbIdx    = 0;
 
@@ -2286,7 +2285,7 @@ function buildSimRow(p, qty, unitPrice, total, infoHtml, disabled) {
     </div>
     <!-- Preço por unidade -->
     <div class="sim-col sim-col--unit">
-      <span class="sim-unit-val">${unitPrice ? 'R$ ' + fmt(unitPrice) : '—'}</span>
+      <span class="sim-unit-val">${unitPrice ?   fmt(unitPrice) : '—'}</span>
     </div>
     <!-- Total -->
     <div class="sim-col sim-col--total">
