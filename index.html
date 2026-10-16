@@ -1,3 +1,12 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cyber Graphix 🐺</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Exo+2:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
 <style>
 /* ─── TOKENS ─────────────────────────────────────────── */
 :root{
@@ -37,27 +46,12 @@ nav{
   align-items:center;
   gap:16px;
 }
-/* ↓ ESTILO DOS LINKS EXTERNOS (lado esquerdo) */
-.nav-ext-link{
-  font-family:'Share Tech Mono',monospace;
-  font-size:.68rem;    /* ↓ TAMANHO DO TEXTO DOS LINKS EXTERNOS */
-  color:var(--mag);    /* ↓ COR DOS LINKS EXTERNOS (magenta) */
-  text-decoration:none;
-  letter-spacing:.12em;
-  text-transform:uppercase;
-  border:1px solid var(--bm);
-  padding:4px 10px;
-  transition:all .2s;
-}
-.nav-ext-link:hover{background:var(--mag);color:var(--bg);}
 /* ↓ DIREITA DO NAV — links internos + auth + admin */
 .nav-links{justify-content:flex-end;}
 .nav-brand{font-family:'Orbitron',monospace;font-size:.9rem;font-weight:900;background:linear-gradient(90deg,var(--cyan),var(--mag));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 .nav-links{display:flex;gap:20px;align-items:center;}
 .nav-links a{font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--dim);text-decoration:none;letter-spacing:.15em;text-transform:uppercase;transition:color .2s;}
 .nav-links a:hover{color:var(--cyan);}
-.nav-admin-btn{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--mag);border:1px solid var(--mag);padding:5px 12px;cursor:pointer;background:transparent;letter-spacing:.1em;transition:all .2s;}
-
 
 /* ─── HERO ────────────────────────────────────────────── */
 .hero{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:100px 20px 52px;position:relative;z-index:1;text-align:center;}
@@ -76,13 +70,11 @@ nav{
 .brand-tag{font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--cyan);letter-spacing:.3em;text-transform:uppercase;margin-bottom:14px;opacity:.8;animation:fadeUp .5s ease both;}
 .logo{font-family:'Orbitron',monospace;font-size:clamp(2.5rem,9vw,5.5rem);font-weight:900;line-height:1;letter-spacing:.04em;background:linear-gradient(135deg,var(--cyan) 0%,#a000ff 50%,var(--mag) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 24px rgba(0,245,255,.4));animation:fadeUp .6s ease .1s both;}
 .logo-sub{font-family:'Orbitron',monospace;font-size:clamp(.9rem,3vw,1.5rem);font-weight:400;color:var(--mag);letter-spacing:.5em;text-shadow:0 0 20px var(--mag);margin-bottom:16px;animation:fadeUp .6s ease .2s both;}
-.hero-badge{max-width:250px;display:inlflex;align-items:wrap; justify-content: center; gap:8px;background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.25);padding:6px 16px;margin-bottom:20px;animation:fadeUp .6s ease .25s both;}
+.hero-badge{max-width:250px;display:inline-flex;flex-wrap:wrap;align-items:center; justify-content: center; gap:8px;background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.25);padding:6px 16px;margin-bottom:20px;animation:fadeUp .6s ease .25s both;}
 .hero-badge span{font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--grn);letter-spacing:.1em;}
 .hero-desc{max-width:500px;font-size:.95rem;color:rgba(232,244,255,.65);line-height:1.6;margin-bottom:24px;font-weight:300;animation:fadeUp .6s ease .3s both;}
 .btn-primary{font-family:'Orbitron',monospace;font-size:.82rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--bg);background:linear-gradient(90deg,var(--cyan),var(--mag));border:none;padding:16px 44px;cursor:pointer;clip-path:polygon(14px 0%,100% 0%,calc(100% - 14px) 100%,0% 100%);transition:all .2s;box-shadow:0 0 32px rgba(0,245,255,.35);animation:fadeUp .6s ease .4s both;}
 .btn-primary:hover{box-shadow:0 0 60px rgba(0,245,255,.65),0 0 100px rgba(255,0,170,.3);transform:translateY(-3px);}
-
-
 
 /* ─── SECTIONS ────────────────────────────────────────── */
 section{padding:64px 20px;position:relative;z-index:1;}
@@ -112,10 +104,6 @@ section{padding:64px 20px;position:relative;z-index:1;}
 .u-price strong{color:var(--mag);font-size:.95rem;}
 .tier-note{color:rgba(0,245,255,.5);font-size:.788rem;}
 
-/* PRICE TABLE POPUP */
-.price-table-btn{font-family:'Share Tech Mono',monospace;font-size:.78rem;color:rgba(0,245,255,.55);background:none;border:none;cursor:pointer;letter-spacing:.05em;margin-top:8px;padding:4px 0;text-decoration:underline;display:block;}
-.price-table-btn:hover{color:var(--cyan);}
-
 /* SUMMARY */
 .summary-box{background:var(--gm);border:1px solid var(--bm);padding:28px;position:relative;}
 .summary-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--mag),var(--cyan),var(--mag));}
@@ -129,46 +117,6 @@ section{padding:64px 20px;position:relative;z-index:1;}
 
 /* ─── DELIVERY ────────────────────────────────────────── */
 #delivery{background:var(--bg);}
-.del-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:32px;}
-@media(max-width:480px){.del-grid{grid-template-columns:1fr;}}
-.del-card{background:var(--gb);border:1px solid var(--bc);padding:22px;cursor:pointer;transition:all .2s;text-align:center;position:relative;}
-.del-card.active{border-color:var(--mag);background:rgba(255,0,170,.07);box-shadow:0 0 32px rgba(255,0,170,.18);}
-.del-card.active::after{content:'✓ SELECIONADO';position:absolute;top:8px;right:8px;font-family:'Share Tech Mono',monospace;font-size:.58rem;color:var(--mag);}
-.del-card .icon{font-size:2rem;margin-bottom:10px;}
-.del-card h3{font-family:'Orbitron',monospace;font-size:.78rem;font-weight:700;color:var(--w);margin-bottom:4px;letter-spacing:.06em;}
-.del-card p{font-size:.75rem;color:var(--dim);font-family:'Share Tech Mono',monospace;}
-
-/* ─── FORM ────────────────────────────────────────────── */
-.form-box{background:var(--gb);border:1px solid var(--bc);padding:28px;position:relative;}
-.form-box::before{content:'';position:absolute;top:0;left:0;width:2px;height:100%;background:linear-gradient(to bottom,var(--cyan),transparent);}
-.form-head{font-family:'Orbitron',monospace;font-size:.82rem;font-weight:700;color:var(--cyan);margin-bottom:20px;letter-spacing:.1em;display:flex;align-items:center;gap:10px;}
-.opt-badge{font-family:'Share Tech Mono',monospace;font-size:.62rem;background:rgba(0,245,255,.08);border:1px solid var(--bc);color:var(--dim);padding:2px 8px;letter-spacing:.1em;text-transform:uppercase;}
-.fg{display:grid;gap:14px;}
-.field{display:flex;flex-direction:column;gap:6px;}
-.field label{font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--dim);letter-spacing:.15em;text-transform:uppercase;}
-.field input,.field textarea,.field select{background:rgba(0,0,0,.45);border:1px solid rgba(0,245,255,.13);color:var(--w);padding:10px 14px;font-family:'Share Tech Mono',monospace;font-size:.88rem;transition:all .2s;resize:none;width:100%;}
-.field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:var(--cyan);background:rgba(0,245,255,.04);box-shadow:0 0 16px rgba(0,245,255,.14);}
-.field input::placeholder,.field textarea::placeholder{color:rgba(74,96,128,.5);}
-.field select option{background:var(--bg2);}
-
-/* ─── REVIEWS ─────────────────────────────────────────── */
-#reviews{background:var(--bg2);}
-.stars-input{display:flex;gap:8px;margin-bottom:4px;}
-.star-btn{font-size:1.6rem;background:none;border:none;cursor:pointer;color:var(--dim2);transition:color .15s;}
-.star-btn.active,.star-btn:hover{color:var(--yel);}
-.reviews-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-top:32px;}
-.review-card{background:var(--gb);border:1px solid var(--bc);padding:20px;position:relative;}
-.review-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--mag),transparent);}
-.rev-stars{color:var(--yel);font-size:1rem;margin-bottom:8px;}
-.rev-text{font-size:.88rem;color:rgba(232,244,255,.75);line-height:1.6;margin-bottom:10px;font-style:italic;}
-.rev-author{font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--dim);letter-spacing:.1em;}
-.rev-date{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--dim2);margin-top:4px;}
-.no-reviews{text-align:center;font-family:'Share Tech Mono',monospace;font-size:.82rem;color:var(--dim);padding:32px 0;}
-.avg-rating{display:flex;align-items:center;gap:16px;margin-bottom:36px;background:var(--gb);border:1px solid var(--bc);padding:20px;}
-.avg-num{font-family:'Orbitron',monospace;font-size:2.8rem;font-weight:900;color:var(--yel);text-shadow:0 0 24px rgba(255,234,0,.5);}
-.avg-info{display:flex;flex-direction:column;gap:4px;}
-.avg-stars{color:var(--yel);font-size:1.2rem;}
-.avg-count{font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--dim);}
 
 /* ─── WPP BTN ─────────────────────────────────────────── */
 .wpp-section{background:var(--bg);padding:64px 20px;text-align:center;position:relative;z-index:1;border-top:1px solid rgba(0,245,255,.08);}
@@ -186,40 +134,7 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
 .toast.show{transform:translateX(-50%) translateY(0);}
 .toast.ok{border-color:var(--grn);color:var(--grn);box-shadow:0 0 28px rgba(0,255,136,.35);}
 
-/* ─── MODAL ───────────────────────────────────────────── */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:2000;display:none;align-items:center;justify-content:center;padding:20px;}
-.modal-overlay.open{display:flex;}
-.modal{background:var(--bg2);border:1px solid var(--bc);padding:32px;max-width:560px;width:100%;position:relative;max-height:90vh;overflow-y:auto;}
-.modal::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--cyan),var(--mag));}
-.modal-title{font-family:'Orbitron',monospace;font-size:1rem;font-weight:700;color:var(--cyan);margin-bottom:24px;letter-spacing:.1em;}
-.modal-close{position:absolute;top:12px;right:16px;background:none;border:none;color:var(--dim);font-size:1.4rem;cursor:pointer;font-family:'Share Tech Mono',monospace;}
-.modal-close:hover{color:var(--mag);}
-
-/* ─── ADMIN PANEL ─────────────────────────────────────── */
-
-.upload-icon{font-size:2rem;margin-bottom:8px;}
-.upload-label{font-family:'Share Tech Mono',monospace;font-size:.78rem;color:var(--dim);line-height:1.6;}
-.upload-label strong{color:var(--cyan);}
-#adminFileIn{display:none;}
-.parse-result{margin-top:16px;font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--grn);background:rgba(0,255,136,.05);border:1px solid rgba(0,255,136,.2);padding:12px;}
-.parse-result.err{color:var(--mag);background:rgba(255,0,170,.05);border-color:var(--bm);}
-
-
-.btn-danger{background:linear-gradient(90deg,#ff4444,#aa0000);margin-top:8px;}
-.price-preview{margin-top:16px;}
-.price-preview table{width:100%;border-collapse:collapse;font-family:'Share Tech Mono',monospace;font-size:.72rem;}
-.price-preview th{color:var(--cyan);padding:6px 8px;border-bottom:1px solid var(--bc);text-align:left;letter-spacing:.1em;}
-.price-preview td{color:rgba(232,244,255,.7);padding:5px 8px;border-bottom:1px solid rgba(0,245,255,.05);}
-.price-preview tr:hover td{background:rgba(0,245,255,.03);}
-
 /* ─── LOGIN MODAL ─────────────────────────────────────── */
-
-/* ─── PRICE TABLE MODAL ───────────────────────────────── */
-.ptable{width:100%;border-collapse:collapse;font-family:'Share Tech Mono',monospace;font-size:.75rem;margin-top:8px;}
-.ptable th{color:var(--cyan);padding:8px;border-bottom:1px solid var(--bc);text-align:left;}
-.ptable td{color:rgba(232,244,255,.75);padding:7px 8px;border-bottom:1px solid rgba(0,245,255,.05);}
-.ptable tr:hover td{background:rgba(0,245,255,.03);}
-.ptable .active-row td{color:var(--yel);}
 
 /* ─── SCROLL TO TOP ───────────────────────────────────── */
 .scroll-top{position:fixed;bottom:28px;right:24px;z-index:800;width:42px;height:42px;background:var(--bg2);border:1px solid var(--bc);color:var(--cyan);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.2rem;opacity:0;transition:all .3s;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);}
@@ -228,7 +143,6 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
 
 /* ─── SECTION BG ALTERNATION ─────────────────────────── */
 #delivery{background:var(--bg);}
-#contact{background:var(--bg3);padding-top:0;}
 
 @media(max-width:640px){
   .product-grid{grid-template-columns:1fr;}
@@ -247,24 +161,11 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
 .hero-badge--mag span{color:var(--mag);}
 .hero-badge--warn{background:rgba(255,234,0,.07);border-color:rgba(255,234,0,.3);}
 .hero-badge--warn span{color:var(--yel);}
-.model-btn{font-family:'Share Tech Mono',monospace;font-size:.78rem;color:rgba(255,0,170,.6);background:none;border:none;cursor:pointer;letter-spacing:.05em;margin-top:6px;padding:4px 0;text-decoration:underline;display:block;}
-.model-btn:hover{color:var(--mag);}
-
-.modelo-placeholder{width:100%;aspect-ratio:3/4;background:linear-gradient(135deg,rgba(0,245,255,.06),rgba(255,0,170,.06));border:1px dashed rgba(0,245,255,.2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;}
-.modelo-placeholder span{font-size:2rem;}
-.modelo-placeholder p{font-family:'Share Tech Mono',monospace;font-size:.62rem;color:var(--dim);text-align:center;line-height:1.4;padding:0 8px;}
-.admin-img-section{margin-top:16px;}
-.img-upload-area{border:2px dashed rgba(255,0,170,.3);padding:20px;text-align:center;cursor:pointer;transition:all .2s;background:rgba(255,0,170,.02);margin-bottom:12px;}
-.img-upload-area:hover{border-color:var(--mag);background:rgba(255,0,170,.06);}
-.uploaded-imgs{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:8px;margin-top:12px;max-height:200px;overflow-y:auto;}
-.uploaded-img-thumb{position:relative;aspect-ratio:1;background:var(--bg3);}
-.uploaded-img-thumb img{width:100%;height:100%;object-fit:cover;}
-.del-img-btn{position:absolute;top:2px;right:2px;background:rgba(255,0,170,.8);border:none;color:white;width:20px;height:20px;cursor:pointer;font-size:.7rem;display:flex;align-items:center;justify-content:center;}
 
 .scroll-hint{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:rgba(0,245,255,.35);letter-spacing:.2em;margin-top:14px;animation:pulse 2s ease-in-out infinite;}
 
 /* ─── SOCIAL ─── */
-.social-grid{display:grid;grid-template-columns:1fr;gap:14px;max-width:560px;}
+.social-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;max-width:1060px;}
 .social-card{display:flex;align-items:center;gap:16px;background:var(--gb);border:1px solid var(--bc);padding:18px 20px;text-decoration:none;transition:all .2s;position:relative;overflow:hidden;}
 .social-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;opacity:0;transition:opacity .2s;}
 .social-card:hover{transform:translateX(6px);}
@@ -286,74 +187,6 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
 .social-cta{font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--dim);}
 .social-arrow{font-family:'Orbitron',monospace;font-size:1.2rem;color:var(--dim);transition:transform .2s;}
 .social-card:hover .social-arrow{transform:translateX(4px);color:var(--cyan);}
-
-/* ─── AUTH BAR ─────────────────────────────────────── */
-.auth-bar{display:flex;align-items:center;gap:10px;}
-.auth-bar .user-name{font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--cyan);letter-spacing:.05em;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.btn-auth{font-family:'Share Tech Mono',monospace;font-size:.65rem;border:1px solid var(--bc);color:var(--dim);background:transparent;padding:5px 12px;cursor:pointer;letter-spacing:.08em;transition:all .2s;}
-.btn-auth:hover{border-color:var(--cyan);color:var(--cyan);}
-.btn-auth.logout{border-color:var(--bm);color:var(--mag);}
-.btn-auth.logout:hover{background:var(--mag);color:var(--bg);}
-.btn-auth.meus-pedidos{border-color:rgba(0,255,136,.3);color:var(--grn);}
-.btn-auth.meus-pedidos:hover{background:var(--grn);color:var(--bg);}
-
-/* ─── AUTH MODAL ────────────────────────────────────── */
-.auth-tabs{display:flex;gap:0;margin-bottom:24px;border-bottom:1px solid var(--bc);}
-.auth-tab{font-family:'Orbitron',monospace;font-size:.72rem;font-weight:700;letter-spacing:.1em;padding:10px 20px;cursor:pointer;background:none;border:none;color:var(--dim);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s;}
-.auth-tab.active{color:var(--cyan);border-bottom-color:var(--cyan);}
-.auth-form{display:flex;flex-direction:column;gap:12px;}
-.auth-form input{background:rgba(0,0,0,.45);border:1px solid var(--bc);color:var(--w);padding:11px 14px;font-family:'Share Tech Mono',monospace;font-size:.88rem;width:100%;}
-.auth-form input:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 12px rgba(0,245,255,.15);}
-.auth-form input::placeholder{color:rgba(74,96,128,.5);}
-.auth-error{font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--mag);min-height:18px;text-align:center;}
-.auth-success{font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--grn);min-height:18px;text-align:center;}
-
-/* ─── MEUS PEDIDOS PAGE ─────────────────────────────── */
-.page-overlay{position:fixed;inset:0;background:var(--bg);z-index:3000;display:none;overflow-y:auto;padding-top:70px;}
-.page-overlay.open{display:block;}
-.page-header{background:var(--bg2);border-bottom:1px solid var(--bc);padding:20px 24px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:10;}
-.page-back{background:none;border:1px solid var(--bc);color:var(--cyan);padding:8px 16px;font-family:'Share Tech Mono',monospace;font-size:.72rem;cursor:pointer;letter-spacing:.1em;transition:all .2s;}
-.page-back:hover{background:var(--cyan);color:var(--bg);}
-.page-title{font-family:'Orbitron',monospace;font-size:1.1rem;font-weight:700;background:linear-gradient(90deg,var(--w),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.pedidos-list{max-width:700px;margin:32px auto;padding:0 20px;}
-.pedido-card{background:var(--gb);border:1px solid var(--bc);padding:20px;margin-bottom:16px;position:relative;}
-.pedido-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(to bottom,var(--cyan),var(--purp));}
-.pedido-topo{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;gap:12px;flex-wrap:wrap;}
-.pedido-num{font-family:'Orbitron',monospace;font-size:.72rem;color:var(--cyan);letter-spacing:.1em;}
-.pedido-data{font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--dim);}
-.pedido-status{font-family:'Share Tech Mono',monospace;font-size:.65rem;padding:3px 10px;border-radius:2px;letter-spacing:.08em;}
-.pedido-status.aguardando{background:rgba(255,234,0,.1);border:1px solid rgba(255,234,0,.3);color:var(--yel);}
-.pedido-status.confirmado{background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.3);color:var(--grn);}
-.pedido-status.pronto{background:rgba(0,245,255,.1);border:1px solid var(--bc);color:var(--cyan);}
-.pedido-itens{font-family:'Share Tech Mono',monospace;font-size:.78rem;color:rgba(232,244,255,.75);line-height:1.8;margin-bottom:10px;}
-.pedido-total{font-family:'Orbitron',monospace;font-size:1.1rem;font-weight:700;color:var(--yel);text-shadow:0 0 12px rgba(255,234,0,.4);}
-.pedido-entrega{font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--dim);margin-top:6px;}
-.no-pedidos{text-align:center;padding:60px 20px;font-family:'Share Tech Mono',monospace;font-size:.85rem;color:var(--dim);line-height:2;}
-
-/* ─── REVIEWS with login ────────────────────────────── */
-.review-login-notice{background:rgba(0,245,255,.04);border:1px solid var(--bc);padding:20px;text-align:center;font-family:'Share Tech Mono',monospace;font-size:.8rem;color:var(--dim);line-height:1.8;margin-bottom:24px;}
-.review-login-notice strong{color:var(--cyan);}
-.review-login-notice button{font-family:'Orbitron',monospace;font-size:.72rem;color:var(--bg);background:var(--cyan);border:none;padding:8px 20px;cursor:pointer;margin-top:10px;font-weight:700;letter-spacing:.1em;transition:all .2s;}
-.review-login-notice button:hover{box-shadow:0 0 20px rgba(0,245,255,.4);}
-/* reviews section restored */
-#reviews{background:var(--bg2);}
-.avg-rating{display:flex;align-items:center;gap:16px;margin-bottom:36px;background:var(--gb);border:1px solid var(--bc);padding:20px;}
-.avg-num{font-family:'Orbitron',monospace;font-size:2.8rem;font-weight:900;color:var(--yel);text-shadow:0 0 24px rgba(255,234,0,.5);}
-.avg-info{display:flex;flex-direction:column;gap:4px;}
-.avg-stars{color:var(--yel);font-size:1.2rem;}
-.avg-count{font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--dim);}
-.reviews-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-top:32px;}
-.review-card{background:var(--gb);border:1px solid var(--bc);padding:20px;position:relative;}
-.review-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--mag),transparent);}
-.rev-stars{color:var(--yel);font-size:1rem;margin-bottom:8px;}
-.rev-text{font-size:.88rem;color:rgba(232,244,255,.75);line-height:1.6;margin-bottom:10px;font-style:italic;}
-.rev-author{font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--dim);}
-.rev-date{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--dim2);margin-top:4px;}
-.stars-input{display:flex;gap:8px;margin-bottom:4px;}
-.star-btn{font-size:1.6rem;background:none;border:none;cursor:pointer;color:var(--dim2);transition:color .15s;}
-.star-btn.active,.star-btn:hover{color:var(--yel);}
-.no-reviews{text-align:center;font-family:'Share Tech Mono',monospace;font-size:.82rem;color:var(--dim);padding:32px 0;}
-
 
 /* ════════════════════════════════════════════════════════
    DESCONTO PROGRESSIVO — hint exibido abaixo do preço
@@ -392,7 +225,6 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
   from { opacity:0; transform:translateY(-4px); }
   to   { opacity:1; transform:translateY(0); }
 }
-
 
 /* ═══════════════════════════════════════════════════════
    POPUP DE AVISO — exibido automaticamente ao carregar
@@ -517,7 +349,6 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
   transform: translateY(-2px);
 }
 
-
 /* ═══════════════════════════════════════════════════════
    MOBILE — centralizacao e ajuste do hero para celular
    Afeta telas ate 480px (celular). Notebook nao muda.
@@ -553,7 +384,7 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
   .hero-glow  { width: 280px; height: 280px; }
   .hero-glow2 { width: 180px; height: 180px; }
 
-  /* Logo: tamanho Pequenamo seguro */
+  /* Logo: tamanho mínimo seguro */
   .logo {
     font-size: clamp(2rem, 11vw, 3.2rem);
     letter-spacing: .02em;
@@ -588,7 +419,6 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
     font-size: .75rem;
     padding: 14px 28px;
   }
- 
 
   /* Nav: colunas menores para nao transbordar */
   nav {
@@ -619,7 +449,6 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
   .hero-glow2 { width: 260px; height: 260px; }
   html, body { overflow-x: hidden; }
 }
-
 
 /* ═══════════════════════════════════════════════════════
    MENU "MAIS SITES" — dropdown, funciona em mobile e desktop
@@ -705,7 +534,7 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
 }
 
 /* Mobile: dropdown abre para baixo normalmente */
-@media(max-width:480px) {
+@media(max-width:480px){
   .mais-sites-btn {
     font-size: .62rem;
     padding: 5px 8px;
@@ -714,7 +543,6 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
     min-width: 180px;
   }
 }
-
 
 /* ═══════════════════════════════════════════════════════
    MENU DE NAVEGAÇÃO INTERNA — dropdown "Menu"
@@ -817,7 +645,7 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
 /* ─── Ajustes mobile (até 480px) ───────────────────────
    O dropdown já funciona no mobile por padrão.
    Aqui apenas ajustamos tamanhos para telas pequenas. */
-@media(max-width:480px) {
+@media(max-width:480px){
   .nav-menu-btn {
     font-size: .62rem;   /* ↓ TAMANHO DO BOTÃO NO MOBILE */
     padding: 5px 8px;
@@ -827,7 +655,6 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
     right: 0;            /* mantém alinhado à direita no mobile */
   }
 }
-
 
 /* ═══════════════════════════════════════════════════════
    MÓDULO 01 — SIMULADOR DE PREÇOS
@@ -1231,7 +1058,7 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
 .sim-cart-fab:hover { box-shadow: 0 0 40px rgba(0,245,255,.6); }
 
 /* ─── MOBILE ─────────────────────────────────────────── */
-@media(max-width:600px) {
+@media(max-width:600px){
   /* Tabela: esconde colunas preço/un e info no mobile
      para caber na tela sem scroll horizontal */
   .sim-table-head,
@@ -1261,7 +1088,6 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
   }
   .sim-or { width: 100%; flex-direction: row; }
 }
-
 
 /* ═══════════════════════════════════════════════════════
    CONTADOR DE ENTREGA — .delivery-timer-box
@@ -1349,12 +1175,11 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
 }
 
 /* Mobile: layout um pouco menor */
-@media(max-width:480px) {
+@media(max-width:480px){
   .delivery-timer-box { padding: 14px 16px; gap: 14px; }
   .dtimer-icon        { font-size: 1.7rem; }
   .dtimer-value       { font-size: 1.25rem; }
 }
-
 
 /* Botão "Enviar Simulação" no simulador — verde WhatsApp */
 .sim-wpp-btn {
@@ -1449,9 +1274,6 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
         <a href="#calculator" class="nav-menu-item" onclick="closeNavMenu()">
           🛒 Pedido
         </a>
-        <a href="#delivery" class="nav-menu-item" onclick="closeNavMenu()">
-          🚚 Entrega
-        </a>
         <a href="#social" class="nav-menu-item" onclick="closeNavMenu()">
           📱 Redes Sociais
         </a>
@@ -1459,8 +1281,6 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
 
       </div>
     </div>
-    <!-- Botão admin — abre o painel adPequenastrativo -->
-    <!-- ↓ NÃO MOVA — o onclick="openLogin()" chama a função do painel admin -->
 
   </div>
 </nav>
@@ -1478,7 +1298,7 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
   <div class="logo-sub">Fotos Impressas</div>
   <div class="hero-badges">
     <div class="hero-badge"><span>⚡ QUANTO MAIS VOCÊ PEDE, MAIS BARATO FICA ⚡</span></div>
-    <div class="hero-badge hero-badge--mag"><span>📸 IMPRESSÕES FOTOGRÁFICAS EM FORMATO POLAROIDES</span></div>
+    <div class="hero-badge hero-badge--mag"><span>📸 IMPRESSÕES FOTOGRÁFICAS</span></div>
     <div class="hero-badge hero-badge--warn"><span>🔒 CONFECÇÃO SOMENTE APÓS PAGAMENTO 100% VIA PIX</span></div>
   </div>
   <p class="hero-desc">Impressões polaroides de alta qualidade. Monte seu pedido, veja o preço cair em tempo real e envie direto pelo WhatsApp.</p>
@@ -1530,13 +1350,13 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
       <div class="sim-block">
         <label class="sim-label">
           <span class="sim-label-icon">🔢</span>
-          Tenho essa quantidade de fotos:
+          Quero essa quantidade de fotos/chaveiros:
         </label>
         <div class="sim-input-row">
           <input  type="number" id="simQty" min="1" placeholder="ex: 20"
-                  oninput="runSimulator()"
+                  oninput="simInputChanged('qty')"
                   class="sim-input">
-          <span class="sim-unit">fotos</span>
+          <span class="sim-unit">Unidades</span>
         </div>
       </div>
 
@@ -1553,7 +1373,7 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
         <div class="sim-input-row">
           <span class="sim-unit sim-unit--prefix">R$</span>
           <input  type="number" id="simBudget" min="1" step="0.01" placeholder="ex: 18,00"
-                  oninput="runSimulator()"
+                  oninput="simInputChanged('budget')"
                   class="sim-input">
         </div>
       </div>
@@ -1606,7 +1426,7 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
 <div class="sim-cart-panel" id="simCartPanel" style="display:none">
   <div class="sim-cart-header">
     <span class="sim-cart-title">🛒 Carrinho</span>
-    <!-- Botão para fechar/Pequenamizar o carrinho -->
+    <!-- Botão para fechar/minimizar o carrinho -->
     <button class="sim-cart-close" onclick="toggleCart()">✕</button>
   </div>
   <div class="sim-cart-items" id="simCartItems">
@@ -1618,7 +1438,7 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
   </button>
 </div>
 
-<!-- Botão flutuante para reabrir o carrinho quando Pequenamizado -->
+<!-- Botão flutuante para reabrir o carrinho quando minimizado -->
 <button class="sim-cart-fab" id="simCartFab" style="display:none"
         onclick="toggleCart()">
   🛒 <span id="simCartCount">0</span>
@@ -1654,7 +1474,7 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
 <!-- ═══════════ REDES SOCIAIS ═══════════ -->
 <section id="social" style="background:var(--bg2);padding:56px 20px;">
   <div class="container">
-    <p class="sec-eye">// módulo 06</p>
+    <p class="sec-eye">// módulo 03</p>
     <h2 class="sec-title">Redes Sociais</h2>
     <div class="divider"><span>◈ siga, fale e se conecte ◈</span></div>
     <div class="social-grid">
@@ -1717,14 +1537,6 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
 
 <!-- ─── TOAST ─── -->
 <div class="toast" id="toast"></div>
-
-
-
-
-</div>
-
-
-<!-- ═══════════ MODAL: TABELA DE PREÇOS ═══════════ -->
 
 <script>
 // ═══════════════════════════════════════════════════════
@@ -1824,6 +1636,16 @@ const DEFAULT_PRICING = {
       {q:24,  u:2.58},
       {q:27,  u:2.52},
     ],
+
+     // ─── Chaveiros Retangular 3x4 cm ─────────────────────────
+    chaveiros: [
+      {q:1,   u:12.0},
+      {q:2,   u:10.0},
+      {q:4,   u:8.0},
+      {q:10,  u:7.0},
+      {q:20,  u:6.0},
+      {q:50,  u:5.0},
+    ],
 };
 
 let PRICING = LS.get('cgx_pricing') || JSON.parse(JSON.stringify(DEFAULT_PRICING));
@@ -1849,9 +1671,11 @@ const PRODUCTS = [
 
   {id:'custom',  name:'POLAROIDE PERSONALIZADA',   full:'Polaroide Personalizada',   size:'6,5×9cm · foto 5,6×6,4cm',  icon:'🎨',tk:'personalizada',min:3 },
   
-  {id:'tp',      name:'POLAROIDE TIRINHA',  full:'Tirinhas — Polaroide 4×14', size:'4×14cm',                    icon:'📸',tk:'tp',           min:1 },
+  {id:'tp',      name:'POLAROIDE TIRINHA',  full:'Tirinhas — Polaroide 6×20cm', size:'6×20cm',                    icon:'📸',tk:'tp',           min:1 },
 
   {id:'foto10x15',      name:'FOTO 10X15',  full:'Fotos 10x15 cm', size:'10×15cm',                    icon:'🖼️',tk:'foto10x15',           min:1},
+
+  {id:'chaveiros',      name:'CHAVEIROS RETANGULAR 3X4',  full:'Chaveiro Retangular 3x4 cm', size:'3x4cm',                    icon:'🔑🖼️',tk:'chaveiros',           min:1},
 ];
 
 const qty = {};
@@ -1967,7 +1791,7 @@ function updPrice(id) {
 
   // ── Hint de desconto progressivo ──
   // ↓ Para adicionar/remover produtos com hint, edite este array:
-  const showDiscount = ['Pequena', 'media', 'grande', 'custom', 'foto10x15'].includes(id);
+  const showDiscount = ['Pequena', 'media', 'grande', 'custom', 'foto10x15', 'chaveiros'].includes(id);
   if (!dh || !showDiscount) return;
 
   const next = getNextTier(p, q);
@@ -2012,22 +1836,6 @@ function updSummary() {
 }
 
 // PRICE TABLE MODAL
-function showPriceTable(id) {
-  const p = PRODUCTS.find(x => x.id === id);
-  const t = PRICING[p.tk];
-  const curQty = qty[id];
-  document.getElementById('priceMTitle').textContent = `▶ TABELA: ${p.full}`;
-  let rows = '';
-  for (let i = 0; i < t.length; i++) {
-    const from = t[i].q;
-    const to = i + 1 < t.length ? t[i + 1].q - 1 : '∞';
-    const isActive = curQty >= t[i].q && (i + 1 >= t.length || curQty < t[i + 1].q);
-    const cls = isActive ? 'active-row' : '';
-    rows += `<tr class="${cls}"><td>${from}${to !== '∞' ? ' – ' + to : '+'} un</td><td>${fmt(t[i].u)}/un</td><td>${isActive ? '◀ ATUAL' : ''}</td></tr>`;
-  }
-  document.getElementById('priceTable').innerHTML = `<tr><th>Quantidade</th><th>Preço unitário</th><th></th></tr>${rows}`;
-  openModal('priceModal');
-}
 
 
 
@@ -2063,25 +1871,6 @@ function sendWpp() {
 
 function v(id) { const el=document.getElementById(id); return el ? el.value.trim() : ''; }
 
-// ─── REVIEWS ────────────────────────────────────────
-
-let pendingPricing = null;
-
-// ─── MODELO PHOTOS ───────────────────────────────────────
-const PRODUCT_LABELS = {
-  Pequena:   {name:'Polaroide Pequena',        desc:'Formato Pequena (5×7cm). Ideal para varal de fotos, presentes e coleções.'},
-  media:  {name:'Polaroide Média',       desc:'Formato médio (6×8,6cm). O clássico estilo polaroid, muito procurado para decoração.'},
-  grande: {name:'Polaroide Grande',     desc:'Formato grande Grande (7×10cm). Mais espaço para a foto, resultado incrível.'},
-  custom: {name:'Polaroide Personalizada',desc:'Formato personalizado (6,5×9cm) com layout exclusivo para o seu pedido.'},
-
-  foto10x15: {name:'Fotos 10x15cm',desc:'Formato 10x15cm. Ideais para quadros'},
-
-  tf:     {name:'Tirinhas — Frases',     desc:'Tirinha 5×15cm com frases. Ótima para decoração e presentear com uma mensagem especial.'},
-  tk_:    {name:'Tirinhas — Estilo Kodak',desc:'Tirinha estilo Kodak 4×14cm. Visual retrô e muito estiloso.'},
-  tp:     {name:'Tirinhas — Polaroide 4×14',desc:'Tirinha no estilo polaroide clássico, 4×14cm.'},
-};
-
-
 // ─── TOAST ───────────────────────────────────────────
 function showToast(msg, ok=false) {
   const t = document.getElementById('toast');
@@ -2096,23 +1885,11 @@ window.addEventListener('scroll', () => {
   document.getElementById('scrollTop').classList.toggle('vis', window.scrollY > 400);
 });
 
-// ─── LIGHTBOX (estilo Pequena álbuns) ──────────────────────
-let _lbImgs   = [];  // array de {src, label}
-let _lbIdx    = 0;
-
-document.addEventListener('keydown', e => {
-  const lb = document.getElementById('lightboxOverlay');
-  if (!lb || !lb.classList.contains('open')) return;
-  if (e.key === 'Escape')      closeLightbox();
-  if (e.key === 'ArrowRight')  lightboxNav(1);
-  if (e.key === 'ArrowLeft')   lightboxNav(-1);
-});
 
 
 // ═══════════════════════════════════════════════════════
-// FIREBASE CONFIG
+// VARIÁVEIS GLOBAIS DO SIMULADOR
 // ═══════════════════════════════════════════════════════
-// Variáveis globais do simulador
 // simCart: array de itens adicionados pelo cliente
 //   Cada item: { id, name, qty, unitPrice, total }
 // simCartVisible: controla se o painel do carrinho está aberto
@@ -2142,7 +1919,15 @@ function runSimulator() {
     renderSimByBudget(budget); // modo B: por valor
   }
 }
+function simInputChanged(origem) {
+  const qtyEl = document.getElementById('simQty');
+  const budEl = document.getElementById('simBudget');
 
+  if (origem === 'qty'    && qtyEl.value !== '') budEl.value = '';
+  if (origem === 'budget' && budEl.value !== '') qtyEl.value = '';
+
+  runSimulator();
+}
 // ─── renderSimByQty ──────────────────────────────────
 // Modo A: o cliente digitou uma quantidade.
 // Para cada produto, calcula o preço nessa quantidade.
@@ -2458,7 +2243,6 @@ const CUTOFF_HOUR    = 16;   // ← horário limite para entrega no dia (24h)
 const MANAUS_TZ = 'America/Manaus'; // ← fuso oficial de Manaus
 
 // Nomes dos dias da semana em português
-const DIAS_SEMANA = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
 
 // Cores do timer conforme estado
 // ↓ Para mudar as cores, edite os valores hex abaixo
@@ -2756,21 +2540,6 @@ document.addEventListener('click', function(e) {
 openPopupOnLoad();
 </script>
 
-
-<button class="lightbox-close" onclick="closeLightbox()">✕</button>
-  <button class="lightbox-nav lightbox-prev" onclick="lightboxNav(-1)">‹</button>
-  <div class="lightbox-img-wrap">
-    <img id="lightboxImg" src="" alt="">
-    <button class="lightbox-fullbtn" onclick="lightboxOpenNative()">⤢ abrir em tela cheia nativa</button>
-  </div>
-  <button class="lightbox-nav lightbox-next" onclick="lightboxNav(1)">›</button>
-  <div class="lightbox-counter" id="lightboxCounter"></div>
-</div>
-
-
-</div>
-
-</div>
 
 
 <!-- ═══════════════════════════════════════════════════════
