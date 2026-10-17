@@ -221,6 +221,28 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
   color: var(--grn);       /* ↓ COR DA MENSAGEM "MELHOR PREÇO" */
   font-size: .7rem;
 }
+/* ─── BOTÃO "ENVIAR ESSE PEDIDO" (dentro de cada card do módulo 02) ───
+   Escondido por padrão; o JS (updPrice) mostra quando a quantidade > 0
+   e esconde de novo quando volta a 0 — junto com o hint de desconto. */
+.send-item-btn {
+  display: none;                 /* ← escondido; o JS mostra quando qty > 0 */
+  width: 100%;
+  margin-top: 12px;
+  padding: 12px 10px;
+  font-family: 'Orbitron', monospace;
+  font-size: .72rem;             /* ↓ TAMANHO DO TEXTO */
+  font-weight: 700;
+  letter-spacing: .1em;
+  color: #fff;
+  background: linear-gradient(90deg, #25D366, #128C7E);   /* ↓ verde WhatsApp */
+  border: none;
+  cursor: pointer;
+  clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+  box-shadow: 0 0 20px rgba(37,211,102,.35);
+  transition: all .2s;
+}
+.send-item-btn:hover { box-shadow: 0 0 40px rgba(37,211,102,.6); }
+
 @keyframes hintIn {
   from { opacity:0; transform:translateY(-4px); }
   to   { opacity:1; transform:translateY(0); }
@@ -1190,6 +1212,56 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
   box-shadow: 0 0 40px rgba(37,211,102,.6) !important;
 }
 
+
+/* ═══════════════════════════════════════════════════════
+   AJUSTES DE CELULAR — corrige o layout em telas pequenas
+   ─────────────────────────────────────────────────────
+   Fica NO FIM do <style> de propósito: como vem por último,
+   estas regras vencem as anteriores quando a tela é pequena.
+   No computador (telas grandes) nada aqui é aplicado.
+   ═══════════════════════════════════════════════════════ */
+
+/* ↓ Impede o iPhone de aumentar o texto sozinho ao girar a tela */
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+
+/* ↓ AVISO (toast): largura se ajusta ao texto e nunca passa da tela */
+.toast {
+  width: max-content;
+  max-width: calc(100vw - 32px);
+  text-align: center;
+}
+
+/* ─── REDES SOCIAIS: 3 colunas só cabem no computador ───
+   Abaixo de 860px vira 1 coluna (um card embaixo do outro).
+   ↓ Para usar 2 colunas em tablet, troque 1fr por 1fr 1fr */
+@media (max-width: 860px) {
+  .social-grid { grid-template-columns: 1fr; }
+  .social-card:hover { transform: none; } /* no toque o "pulinho" lateral atrapalha */
+}
+
+/* ─── CELULAR (até 600px) ─────────────────────────────── */
+@media (max-width: 600px) {
+
+  /* Badges do topo: centralizados e sem o espaço vertical duplicado */
+  .hero-badges { justify-content: center; }
+  .hero-badges .hero-badge { margin-bottom: 0; max-width: 340px; }
+
+  /* Textos das divisórias podem quebrar linha (antes eram "nowrap") */
+  .divider span { white-space: normal; text-align: center; }
+
+  /* Tabela do simulador: colunas ajustadas para o texto não encostar */
+  .sim-table-head,
+  .sim-row { grid-template-columns: 26px minmax(0,1fr) 40px 78px; }
+  .sim-table-head { padding: 8px 8px; }
+  .sim-row        { padding: 12px 8px; }
+  .sim-prod-name  { font-size: .68rem; padding-right: 6px; }
+  .sim-prod-size  { font-size: .58rem; }
+  .sim-qty-val    { font-size: .8rem; }
+  .sim-total-val  { font-size: .78rem; white-space: nowrap; }
+
+  /* Botão "↑" não fica por cima do botão do carrinho */
+  .scroll-top { z-index: 650; }
+}
 </style>
 </head>
 <body>
@@ -1350,7 +1422,7 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
       <div class="sim-block">
         <label class="sim-label">
           <span class="sim-label-icon">🔢</span>
-          Quero essa quantidade de fotos/chaveiros:
+          Quero essa quantidade de itens:
         </label>
         <div class="sim-input-row">
           <input  type="number" id="simQty" min="1" placeholder="ex: 20"
@@ -1450,7 +1522,14 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
     <h2 class="sec-title">Calculadora de Pedido</h2>
     <div class="divider"><span>◈ preço cai automaticamente com a quantidade ◈</span></div>
     <div class="product-grid" id="productGrid"></div>
-    <div class="summary-box">
+  </div>
+</section>
+
+<section id="resumo">
+  <div class="container">
+    <p class="sec-eye">// módulo 03</p>
+    <h2 class="sec-title">RESUMO DO SEU PEDIDO</h2>
+    <div class="divider"><span>◈ seu pedido a ser trasmitir para o Whatsapp do Diego ◈</span></div>
       <p class="sum-title">▶ RESUMO DO SEU PEDIDO</p>
       <div id="sumItems"><p class="empty-msg">&gt; aguardando seleção de itens...</p></div>
       <div id="sumTotal" style="display:none" class="sum-total">
@@ -1474,7 +1553,7 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
 <!-- ═══════════ REDES SOCIAIS ═══════════ -->
 <section id="social" style="background:var(--bg2);padding:56px 20px;">
   <div class="container">
-    <p class="sec-eye">// módulo 03</p>
+    <p class="sec-eye">// Módulo Redes Sociais</p>
     <h2 class="sec-title">Redes Sociais</h2>
     <div class="divider"><span>◈ siga, fale e se conecte ◈</span></div>
     <div class="social-grid">
@@ -1529,7 +1608,7 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
 </section>
 
 <footer>
-  <span class="b">CYBER GRAPHIX</span> &nbsp;◈&nbsp; polaroides &amp; impressões &nbsp;◈&nbsp; feito com <span class="h">♥</span> em Boa Vista do Ramos/Am
+  <span class="b">CYBER GRAPHIX</span> &nbsp;◈&nbsp; polaroides ◈&nbsp; chaveiros ◈&nbsp; quadros ◈&nbsp; impressões &nbsp;◈&nbsp; feito com <span class="h">♥</span> em Boa Vista do Ramos/Am
 </footer>
 
 <!-- ─── SCROLL TOP ─── -->
@@ -1646,6 +1725,17 @@ const DEFAULT_PRICING = {
       {q:20,  u:6.0},
       {q:50,  u:5.0},
     ],
+
+     quadro10x15: [
+      {q:1,   u:29.9},
+    ],
+
+    quadro15x21: [
+      {q:1,   u:39.9},
+    ],
+    quadro20x30: [
+      {q:1,   u:49.9},
+    ],
 };
 
 let PRICING = LS.get('cgx_pricing') || JSON.parse(JSON.stringify(DEFAULT_PRICING));
@@ -1676,6 +1766,10 @@ const PRODUCTS = [
   {id:'foto10x15',      name:'FOTO 10X15',  full:'Fotos 10x15 cm', size:'10×15cm',                    icon:'🖼️',tk:'foto10x15',           min:1},
 
   {id:'chaveiros',      name:'CHAVEIROS RETANGULAR 3X4',  full:'Chaveiro Retangular 3x4 cm', size:'3x4cm',                    icon:'🔑🖼️',tk:'chaveiros',           min:1},
+
+  {id:'quadro10x15',      name:'QUADRO 10X15 - A6',  full:'Quadro 10x15 - A6', size:'10x15cm',                    icon:'🖼️',tk:'quadro10x15',           min:1},
+  {id:'quadro15x21',      name:'QUADRO 15X21 - A5',  full:'Quadro 15x21 - A5', size:'15x21cm',                    icon:'🖼️',tk:'quadro15x21',           min:1},
+  {id:'quadro20x30',      name:'QUADRO 20X30 - A4',  full:'Quadro 20X30 - A4', size:'20x30cm',                    icon:'🖼️',tk:'quadro20x30',           min:1},
 ];
 
 const qty = {};
@@ -1708,6 +1802,11 @@ function renderProducts() {
       <div class="u-price" id="up-${p.id}"><span class="tier-note">${mn}</span></div>
       <!-- ↓ Hint de desconto progressivo — controlado por updPrice() -->
       <div class="discount-hint" id="dh-${p.id}"></div>
+
+      <!-- ↓ Botão "Enviar esse pedido" — fica escondido até a quantidade ser > 0 -->
+      <button class="send-item-btn" id="sb-${p.id}" onclick="sendItemWpp('${p.id}')">
+        📲 ENVIAR ESSE PEDIDO
+      </button>
       
     </div>`;
   }).join('');
@@ -1770,6 +1869,9 @@ function updPrice(id) {
   const el = document.getElementById('up-' + id);
   // ↓ div do hint de desconto progressivo (pode ser null em produtos sem desconto)
   const dh = document.getElementById('dh-' + id);
+  // ↓ Botão "Enviar esse pedido": aparece só quando há quantidade (some junto com o hint)
+  const sb = document.getElementById('sb-' + id);
+  if (sb) sb.style.display = q > 0 ? 'block' : 'none';
 
   // ── Sem quantidade selecionada: exibe quantidade mínima ──
   if (!q) {
@@ -1844,28 +1946,42 @@ function sendWpp() {
   const items = PRODUCTS.filter(p => qty[p.id] > 0);
   if (!items.length) { showToast('⚠ ERRO: adicione pelo menos 1 item!'); return; }
   let grand = 0;
-  let lines = ['*PEDIDO - Cyber Graphix Polaroides*', '', '*ITENS:*'];
+  let lines = ['*PEDIDO - Cyber Graphix*', '', '*ITENS:*'];
   items.forEach(p => {
     const q = qty[p.id], pr = getPrice(p, q), sub = pr * q;
     grand += sub;
     lines.push(`- ${p.full}: ${q} un x ${fmt(pr)} = *${fmt(sub)}*`);
   });
   lines.push('', `*TOTAL FINAL: ${fmt(grand)}*`);
-  if (delMode) lines.push('', `*ENTREGA:* ${delMode === 'entrega' ? 'Receber em casa' : 'Retirada'}`);
-  const n=v('nome'),w=v('wpp'),ig=v('insta'),e=v('ende'),o=v('obs');
-  if (n||w||ig||e||o) {
-    lines.push('','*DADOS DO (A) CLIENTE:*');
-    if(n) lines.push(`- Nome: ${n}`);
-    if(w) lines.push(`- WhatsApp: ${w}`);
-    if(ig) lines.push(`- Instagram: ${ig}`);
-    if(e) lines.push(`- Endereco: ${e}`);
-    if(o) lines.push(`- Obs: ${o}`);
-  }
-  lines.push('','_Pedido via Cyber Graphix Polaroides_');
+  
+  lines.push('','_Pedido via Cyber Graphix_');
   // increment pedidos counter
   const cnt = (LS.get('cgx_pedidos') || 0) + 1;
   LS.set('cgx_pedidos', cnt);
   window.open(`https://wa.me/5592994120494?text=${encodeURIComponent(lines.join('\n'))}`,'_blank');
+  showToast('✓ PEDIDO ENVIADO!', true);
+}
+
+// ─── sendItemWpp ─────────────────────────────────────
+// Envia pelo WhatsApp SOMENTE o item do card clicado.
+// ↓ Para mudar o número, edite 5592994120494 abaixo.
+function sendItemWpp(id) {
+  const p = PRODUCTS.find(x => x.id === id);
+  const q = qty[id];
+  if (!p || !q) { showToast('⚠ Escolha a quantidade primeiro!'); return; }
+
+  const pr  = getPrice(p, q);
+  const sub = pr * q;
+
+  const lines = [
+    '*PEDIDO - Cyber Graphix*', '',
+    '*ITEM:*',
+    `- ${p.full}: ${q} un x ${fmt(pr)} = *${fmt(sub)}*`, '',
+    `*TOTAL: ${fmt(sub)}*`, '',
+    '_Pedido via Cyber Graphix_'
+  ];
+
+  window.open(`https://wa.me/5592994120494?text=${encodeURIComponent(lines.join('\n'))}`, '_blank');
   showToast('✓ PEDIDO ENVIADO!', true);
 }
 
@@ -2003,8 +2119,8 @@ function renderSimByBudget(budget) {
       // Orçamento não cobre nem a quantidade mínima
       const minCost = tiers[0].q * tiers[0].u;
       rows.push(buildSimRow(p, tiers[0].q, tiers[0].u, minCost,
-        `<span class="sim-badge-min">MÍNIMO R$ ${fmt(minCost)}</span><br>
-         <span class="sim-badge-need">faltam R$ ${fmt(minCost - budget)}</span>`,
+        `<span class="sim-badge-min">MÍNIMO ${fmt(minCost)}</span><br>
+         <span class="sim-badge-need">faltam ${fmt(minCost - budget)}</span>`,
         true
       ));
     } else {
@@ -2157,7 +2273,7 @@ function renderCart() {
     <div class="sim-cart-item">
       <div class="sim-cart-item-info">
         <div class="sim-cart-item-name">${item.name}</div>
-        <div class="sim-cart-item-detail">${item.qty} un × R$ ${fmt(item.unitPrice)}</div>
+        <div class="sim-cart-item-detail">${item.qty} un × ${fmt(item.unitPrice)}</div>
       </div>
       <span class="sim-cart-item-price">${fmt(item.total)}</span>
       <!-- Botão "−" chama simRemoveFromCart com o id do produto -->
@@ -2217,7 +2333,7 @@ function simCartGoToPedido() {
   hideCart();
 
   // Rola até a calculadora
-  const calc = document.getElementById('calculator');
+  const calc = document.getElementById('resumo');
   if (calc) calc.scrollIntoView({ behavior: 'smooth' });
   showToast('✓ ITENS ADICIONADOS AO PEDIDO!', true);
 }
@@ -2422,11 +2538,11 @@ function exportSimToWpp() {
     const unit  = parseFloat(chk.dataset.unit);
     const sub   = parseFloat(chk.dataset.total);
     total += sub;
-    lines.push(`• ${name}: ${qty} un × R$ ${fmt(unit)} = *R$ ${fmt(sub)}*`);
+    lines.push(`• ${name}: ${qty} un × ${fmt(unit)} = *${fmt(sub)}*`);
   });
 
   lines.push('');
-  lines.push(`*TOTAL ESTIMADO: R$ ${fmt(total)}*`);
+  lines.push(`*TOTAL ESTIMADO: ${fmt(total)}*`);
   lines.push('');
   lines.push('_Simulação gerada pelo site CyberGraphix Polaroides_');
 
@@ -2561,7 +2677,7 @@ openPopupOnLoad();
       </div>
       <div class="popup-item">
         <span class="popup-item-icon">🔒</span>
-        <span class="popup-item-text">Produção das Polaroides somente após pagamento via PIX no WhatsApp</span>
+        <span class="popup-item-text">Produção dos itens somente após pagamento via PIX no WhatsApp</span>
       </div>
     </div>
     <button class="popup-btn" onclick="closeInfoPopup()">▶ ENTENDIDO</button>
