@@ -225,9 +225,9 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
    Escondido por padrão; o JS (updPrice) mostra quando a quantidade > 0
    e esconde de novo quando volta a 0 — junto com o hint de desconto. */
 .send-item-btn {
-  display: none;                 /* ← escondido; o JS mostra quando qty > 0 */
+  display: block;                /* ← quem esconde/mostra é o wrapper .card-actions */
   width: 100%;
-  margin-top: 12px;
+  margin-top: 0;
   padding: 12px 10px;
   font-family: 'Orbitron', monospace;
   font-size: .72rem;             /* ↓ TAMANHO DO TEXTO */
@@ -1214,6 +1214,159 @@ footer .b{color:var(--cyan);}footer .h{color:var(--mag);}
 
 
 /* ═══════════════════════════════════════════════════════
+   CARRINHO + BOTÕES NOS CARDS + LIMPAR PEDIDO
+   ─────────────────────────────────────────────────────
+   Tudo que é novo do fluxo "adicionar ao carrinho / enviar /
+   limpar" fica neste bloco, para você achar fácil.
+   ═══════════════════════════════════════════════════════ */
+
+/* ─── CARDS (módulo 02): os dois botões embaixo do hint ───
+   O wrapper .card-actions só aparece quando a quantidade > 0
+   (o JS updPrice() mostra e esconde, junto com o hint). */
+.card-actions {
+  display: none;               /* ← o JS troca para flex quando qty > 0 */
+  flex-direction: column;
+  gap: 8px;                    /* ↓ ESPAÇO ENTRE OS DOIS BOTÕES */
+  margin-top: 12px;
+}
+.cart-item-btn {
+  width: 100%;
+  padding: 12px 10px;
+  font-family: 'Orbitron', monospace;
+  font-size: .72rem;           /* ↓ TAMANHO DO TEXTO */
+  font-weight: 700;
+  letter-spacing: .1em;
+  color: var(--bg);
+  background: linear-gradient(90deg, var(--cyan), var(--mag));   /* ↓ COR: botão "Adicionar" */
+  border: none;
+  cursor: pointer;
+  clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+  box-shadow: 0 0 20px rgba(0,245,255,.3);
+  transition: all .2s;
+}
+.cart-item-btn:hover { box-shadow: 0 0 36px rgba(0,245,255,.55); }
+/* Estado "já está no carrinho": verde, para o cliente saber que deu certo */
+.cart-item-btn.in-cart {
+  color: var(--grn);
+  background: linear-gradient(90deg, rgba(0,255,136,.22), rgba(0,255,136,.1));
+  box-shadow: none;
+}
+/* Card que já está no carrinho ganha a barrinha lateral verde */
+.product-card.in-cart { border-color: rgba(0,255,136,.45); }
+.product-card.in-cart::before { background: linear-gradient(to bottom, var(--grn), var(--cyan)); opacity: 1; }
+
+/* ─── SIMULADOR (módulo 01): aviso "no carrinho" sob o nome ─── */
+.sim-cart-note {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .62rem;
+  color: var(--grn);           /* ↓ COR DO AVISO */
+  margin-top: 3px;
+}
+
+/* ─── CARRINHO FLUTUANTE: botões de ação e botão 🛒 ─── */
+.sim-cart-empty {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .72rem;
+  color: var(--dim);
+  padding: 16px;
+  text-align: center;
+}
+.sim-cart-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 14px 14px;
+}
+.sim-cart-actions .sim-cart-go { margin: 0; width: 100%; }
+.sim-cart-send {
+  width: 100%;
+  font-family: 'Orbitron', monospace;
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  color: #fff;
+  background: linear-gradient(90deg, #25D366, #128C7E);   /* ↓ verde WhatsApp */
+  border: none;
+  padding: 12px 6px;
+  cursor: pointer;
+  clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+  box-shadow: 0 0 20px rgba(37,211,102,.35);
+  transition: all .2s;
+}
+.sim-cart-send:hover { box-shadow: 0 0 36px rgba(37,211,102,.6); }
+.sim-cart-fab .fab-total { font-size: .62rem; opacity: .85; margin-left: 6px; }
+.sim-cart-fab.bump { animation: fabBump .5s ease; }
+@keyframes fabBump {
+  0%   { transform: scale(1); }
+  30%  { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}
+
+/* ─── RESUMO (módulo 03): ✕ em cada item, aviso e botão limpar ─── */
+.sum-item span:first-child { flex: 1; min-width: 0; }
+.sum-item .r { margin-left: 10px; white-space: nowrap; }
+.sum-del {
+  background: none;
+  border: 1px solid var(--bm);
+  color: var(--mag);
+  width: 26px; height: 26px;
+  margin-left: 10px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all .15s;
+}
+.sum-del:hover { background: var(--mag); color: var(--bg); }
+
+.sum-pending {
+  display: none;
+  margin-top: 16px;
+  padding: 12px 14px;
+  background: rgba(255,234,0,.06);
+  border: 1px solid rgba(255,234,0,.35);
+  border-left: 3px solid var(--yel);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .75rem;
+  line-height: 1.7;
+  color: rgba(232,244,255,.85);
+}
+.sum-pending-title { color: var(--yel); font-weight: 700; letter-spacing: .06em; margin-bottom: 6px; }
+.sum-pending-btn {
+  margin-top: 10px;
+  width: 100%;
+  font-family: 'Orbitron', monospace;
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  color: var(--bg);
+  background: linear-gradient(90deg, var(--cyan), var(--mag));
+  border: none;
+  padding: 11px 8px;
+  cursor: pointer;
+  clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+}
+
+.sum-actions { display: none; justify-content: flex-end; margin-top: 18px; }
+.sum-clear-btn {
+  font-family: 'Orbitron', monospace;
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  color: var(--mag);           /* ↓ COR DO BOTÃO LIMPAR */
+  background: transparent;
+  border: 1px solid var(--mag);
+  padding: 11px 18px;
+  cursor: pointer;
+  transition: all .2s;
+}
+.sum-clear-btn:hover { background: var(--mag); color: var(--bg); }
+
+@media (max-width: 600px) {
+  .sum-actions { justify-content: stretch; }
+  .sum-clear-btn { width: 100%; }
+  .sim-cart-fab .fab-total { display: none; }   /* ↓ no celular o 🛒 fica só com o número (menor, não cobre botões) */
+}
+
+/* ═══════════════════════════════════════════════════════
    AJUSTES DE CELULAR — corrige o layout em telas pequenas
    ─────────────────────────────────────────────────────
    Fica NO FIM do <style> de propósito: como vem por último,
@@ -1251,13 +1404,13 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 
   /* Tabela do simulador: colunas ajustadas para o texto não encostar */
   .sim-table-head,
-  .sim-row { grid-template-columns: 26px minmax(0,1fr) 40px 78px; }
+  .sim-row { grid-template-columns: 26px minmax(0,1fr) 36px 94px; }
   .sim-table-head { padding: 8px 8px; }
   .sim-row        { padding: 12px 8px; }
   .sim-prod-name  { font-size: .68rem; padding-right: 6px; }
   .sim-prod-size  { font-size: .58rem; }
   .sim-qty-val    { font-size: .8rem; }
-  .sim-total-val  { font-size: .78rem; white-space: nowrap; }
+  .sim-total-val  { font-size: .72rem; white-space: nowrap; }
 
   /* Botão "↑" não fica por cima do botão do carrinho */
   .scroll-top { z-index: 650; }
@@ -1367,13 +1520,13 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
   </div>
   <p class="brand-tag">[ sistema de pedidos v3.0 ]</p>
   <div class="logo">Cyber Graphix</div>
-  <div class="logo-sub">Fotos Impressas</div>
+  <div class="logo-sub">presentes impressos</div>
   <div class="hero-badges">
     <div class="hero-badge"><span>⚡ QUANTO MAIS VOCÊ PEDE, MAIS BARATO FICA ⚡</span></div>
-    <div class="hero-badge hero-badge--mag"><span>📸 IMPRESSÕES FOTOGRÁFICAS</span></div>
+    <div class="hero-badge hero-badge--mag"><span>📸 IMPRESSÕES FOTOGRÁFICAS, QUADROS E CHAVEIROS</span></div>
     <div class="hero-badge hero-badge--warn"><span>🔒 CONFECÇÃO SOMENTE APÓS PAGAMENTO 100% VIA PIX</span></div>
   </div>
-  <p class="hero-desc">Impressões polaroides de alta qualidade. Monte seu pedido, veja o preço cair em tempo real e envie direto pelo WhatsApp.</p>
+  <p class="hero-desc">Impressões de alta qualidade. Monte seu pedido, veja o preço cair em tempo real e envie direto pelo WhatsApp.</p>
 <!-- ═══════════════════════════════════════════════════
          CONTADOR DE ENTREGA
          Atualizado a cada segundo pelo JS startDeliveryTimer().
@@ -1470,12 +1623,13 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
       <!-- Linhas geradas pelo JS — uma por produto -->
       <div id="simRows"></div>
 
-      <!-- Rodapé: botão para enviar selecionados ao carrinho -->
+      <!-- Rodapé: resumo dos marcados + ver carrinho + enviar simulação -->
       <div class="sim-footer" id="simFooter" style="display:none">
         <div class="sim-selected-info" id="simSelectedInfo"></div>
         <div style="display:flex;gap:10px;flex-wrap:wrap">
-          <button class="sim-add-btn" onclick="simAddToCart()">
-            ▶ ADICIONAR AO PEDIDO
+          <!-- Abre o carrinho flutuante (os itens entram ao marcar o checkbox) -->
+          <button class="sim-add-btn" onclick="showCart()">
+            🛒 VER CARRINHO
           </button>
           <!-- Botão exportar simulação para WhatsApp do Diego -->
           <button class="sim-add-btn sim-wpp-btn" onclick="exportSimToWpp()">
@@ -1489,15 +1643,17 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
   </div>
 </section>
 
-<!-- ═══════════ CARRINHO DO SIMULADOR ═══════════
-     Painel flutuante que aparece ao lado direito quando
-     o cliente adiciona itens via simulador.
-     O JS gerencia a lista de itens e o total.
+<!-- ═══════════ CARRINHO FLUTUANTE ═══════════
+     Painel que guarda o PEDIDO. Itens entram por:
+       • checkbox do módulo 01 (simulador)
+       • botão "Adicionar ao carrinho" dos cards (módulo 02)
+     O JS (renderCart) monta a lista e o total.
+     Botões: enviar pedido para o WhatsApp · ver resumo.
      Para mudar a posição: edite .sim-cart-panel no CSS.
      ════════════════════════════════════════════════════ -->
 <div class="sim-cart-panel" id="simCartPanel" style="display:none">
   <div class="sim-cart-header">
-    <span class="sim-cart-title">🛒 Carrinho</span>
+    <span class="sim-cart-title" id="simCartTitle">🛒 Carrinho</span>
     <!-- Botão para fechar/minimizar o carrinho -->
     <button class="sim-cart-close" onclick="toggleCart()">✕</button>
   </div>
@@ -1505,15 +1661,21 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
     <!-- Itens gerados pelo JS renderCart() -->
   </div>
   <div class="sim-cart-total" id="simCartTotal"></div>
-  <button class="sim-cart-go" onclick="simCartGoToPedido()">
-    ▶ IR PARA O PEDIDO
-  </button>
+  <div class="sim-cart-actions">
+    <!-- Envia o pedido inteiro (todos os itens do carrinho) -->
+    <button class="sim-cart-send" onclick="sendWpp()">
+      📲 ENVIAR PEDIDO PARA O WHATSAPP
+    </button>
+    <button class="sim-cart-go" onclick="simCartGoToPedido()">
+      ▶ VER RESUMO DO PEDIDO
+    </button>
+  </div>
 </div>
 
 <!-- Botão flutuante para reabrir o carrinho quando minimizado -->
 <button class="sim-cart-fab" id="simCartFab" style="display:none"
         onclick="toggleCart()">
-  🛒 <span id="simCartCount">0</span>
+  🛒 <span id="simCartCount">0</span><span class="fab-total" id="simCartFabTotal"></span>
 </button>
 
 <section id="calculator">
@@ -1530,12 +1692,20 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
     <p class="sec-eye">// módulo 03</p>
     <h2 class="sec-title">RESUMO DO SEU PEDIDO</h2>
     <div class="divider"><span>◈ seu pedido a ser trasmitir para o Whatsapp do Diego ◈</span></div>
-      <p class="sum-title">▶ RESUMO DO SEU PEDIDO</p>
-      <div id="sumItems"><p class="empty-msg">&gt; aguardando seleção de itens...</p></div>
-      <div id="sumTotal" style="display:none" class="sum-total">
-        <span class="tot-lbl">// TOTAL FINAL</span>
-        <span class="tot-val" id="totVal">R$ 0,00</span>
-      </div>
+    <p class="sum-title">▶ RESUMO DO SEU PEDIDO</p>
+    <div id="sumItems"><p class="empty-msg">&gt; carrinho vazio — escolha os itens e toque em "Adicionar ao carrinho"</p></div>
+
+    <!-- ↓ Aviso amarelo: itens escolhidos no card que ainda não foram para o carrinho (JS updSummary) -->
+    <div class="sum-pending" id="sumPending"></div>
+
+    <div id="sumTotal" style="display:none" class="sum-total">
+      <span class="tot-lbl">// TOTAL FINAL</span>
+      <span class="tot-val" id="totVal">R$ 0,00</span>
+    </div>
+
+    <!-- ↓ Botão LIMPAR PEDIDO — zera carrinho, cards, resumo e simulador (função limparTudo) -->
+    <div class="sum-actions" id="sumActions">
+      <button class="sum-clear-btn" onclick="limparTudo()">🗑 LIMPAR PEDIDO</button>
     </div>
   </div>
 </section>
@@ -1663,27 +1833,27 @@ const DEFAULT_PRICING = {
   media: [
     {q:3,  u:2.0},
     {q:6,  u:2.0},
-    {q:9,  u:2.0},   // 9–14  un  → R$ 2,00/un
-    {q:18, u:1.67},   // 15–23 un  → R$ 1,67/un
-    {q:27, u:1.33},   // 24–29 un  → R$ 1,33/un
-    {q:36, u:1.17},   // 36–44 un  → R$ 1,07/un
-    {q:45, u:1.07},   // 45–53 un  → R$ 1,00/un
-    {q:54, u:1.0},   // 54–71 un  → R$ 1,00/un
-    {q:63, u:1.0},   // 72–89 un  → R$ 0,95/un
-    {q:72, u:0.95},   // 90+ un    → R$ 0,90/un  ← MELHOR PREÇO
-    {q:81, u:0.90},   // 90+ un    → R$ 0,90/un  ← MELHOR PREÇO
+    {q:9,  u:2.0},   
+    {q:18, u:1.67},  
+    {q:27, u:1.33},   
+    {q:36, u:1.17},   
+    {q:45, u:1.07},  
+    {q:54, u:1.0},   
+    {q:63, u:1.0}, 
+    {q:72, u:0.95},  
+    {q:81, u:0.90},  
   ],
 
   // ─── GRANDE: 7×10cm ───────────────────────
   grande: [
     {q:2,  u:2.5},
     {q:4,  u:2.5},
-    {q:8,  u:2.5},   // 8–15  un  → R$ 2,50/un
-    {q:16, u:2.0},   // 16–19 un  → R$ 2,00/un
-    {q:24, u:1.75},   // 20–23 un  → R$ 1,90/un
-    {q:32, u:1.5},   // 32–39 un  → R$ 1,44/un
-    {q:40, u:1.31},   // 40–47 un  → R$ 1,31/un  ← MELHOR PREÇO
-    {q:48, u:1.37},   // 48–63 un  → R$ 1,37/un
+    {q:8,  u:2.5},  
+    {q:16, u:1.81},   
+    {q:24, u:1.75},   
+    {q:32, u:1.5},   
+    {q:40, u:1.31},   
+    {q:48, u:1.37},   
     
   ],
 
@@ -1736,6 +1906,15 @@ const DEFAULT_PRICING = {
     quadro20x30: [
       {q:1,   u:49.9},
     ],
+
+    photocards: [
+      {q:3,   u:2.0},
+      {q:10,   u:1.80},
+      {q:20,   u:1.60},
+      {q:30,  u:1.30},
+      {q:50,  u:1.0},
+      {q:100,  u:0.90},
+    ],
 };
 
 let PRICING = LS.get('cgx_pricing') || JSON.parse(JSON.stringify(DEFAULT_PRICING));
@@ -1762,6 +1941,8 @@ const PRODUCTS = [
   {id:'custom',  name:'POLAROIDE PERSONALIZADA',   full:'Polaroide Personalizada',   size:'6,5×9cm · foto 5,6×6,4cm',  icon:'🎨',tk:'personalizada',min:3 },
   
   {id:'tp',      name:'POLAROIDE TIRINHA',  full:'Tirinhas — Polaroide 6×20cm', size:'6×20cm',                    icon:'📸',tk:'tp',           min:1 },
+
+ {id:'photocards',      name:'PHOTOCARDS',  full:'photocards', size:'5,5×8,5cm',                    icon:'📸',tk:'photocards',           min:3 },
 
   {id:'foto10x15',      name:'FOTO 10X15',  full:'Fotos 10x15 cm', size:'10×15cm',                    icon:'🖼️',tk:'foto10x15',           min:1},
 
@@ -1790,7 +1971,7 @@ function fmt(v) { return v.toLocaleString('pt-BR', {style:'currency', currency:'
 function renderProducts() {
   document.getElementById('productGrid').innerHTML = PRODUCTS.map(p => {
     const mn = p.min > 1 ? `mín. ${p.min} un` : 'a partir de 1 un';
-    return `<div class="product-card">
+    return `<div class="product-card" id="pc-${p.id}">
       <div class="product-icon">${p.icon}</div>
       <p class="product-name">${p.name}</p>
       <p class="product-size">${p.size}</p>
@@ -1803,10 +1984,17 @@ function renderProducts() {
       <!-- ↓ Hint de desconto progressivo — controlado por updPrice() -->
       <div class="discount-hint" id="dh-${p.id}"></div>
 
-      <!-- ↓ Botão "Enviar esse pedido" — fica escondido até a quantidade ser > 0 -->
-      <button class="send-item-btn" id="sb-${p.id}" onclick="sendItemWpp('${p.id}')">
-        📲 ENVIAR ESSE PEDIDO
-      </button>
+      <!-- ↓ Botões do card — ficam escondidos até a quantidade ser > 0 (junto com o hint) -->
+      <div class="card-actions" id="ca-${p.id}">
+        <!-- Adiciona ao carrinho; depois de adicionado vira "NO CARRINHO" (e abre o carrinho ao clicar) -->
+        <button class="cart-item-btn" id="ab-${p.id}" onclick="cardCartAction('${p.id}')">
+          🛒 ADICIONAR AO CARRINHO
+        </button>
+        <!-- Envia SÓ este item direto para o WhatsApp -->
+        <button class="send-item-btn" id="sb-${p.id}" onclick="sendItemWpp('${p.id}')">
+          📲 ENVIAR ESSE PEDIDO
+        </button>
+      </div>
       
     </div>`;
   }).join('');
@@ -1822,7 +2010,7 @@ function chg(id, d) {
   }
   qty[id] = v;
   document.getElementById('q-' + id).value = v;
-  updPrice(id); updSummary();
+  onCardQtyChanged(id);   // ↓ atualiza preço, carrinho (se o item já está nele), resumo e simulador
 }
 function setQ(id, v) {
   const p = PRODUCTS.find(x => x.id === id);
@@ -1832,7 +2020,8 @@ function setQ(id, v) {
     v = p.min;
     document.getElementById('q-' + id).value = v;
   }
-  qty[id] = v; updPrice(id); updSummary();
+  qty[id] = v;
+  onCardQtyChanged(id);   // ↓ atualiza preço, carrinho (se o item já está nele), resumo e simulador
 }
 // ════════════════════════════════════════════════════════
 // getNextTier — encontra o próximo nível de desconto
@@ -1869,9 +2058,18 @@ function updPrice(id) {
   const el = document.getElementById('up-' + id);
   // ↓ div do hint de desconto progressivo (pode ser null em produtos sem desconto)
   const dh = document.getElementById('dh-' + id);
-  // ↓ Botão "Enviar esse pedido": aparece só quando há quantidade (some junto com o hint)
-  const sb = document.getElementById('sb-' + id);
-  if (sb) sb.style.display = q > 0 ? 'block' : 'none';
+  // ↓ Botões do card ("Adicionar ao carrinho" + "Enviar esse pedido"):
+  //   aparecem só quando há quantidade (somem junto com o hint)
+  const ca = document.getElementById('ca-' + id);
+  const ab = document.getElementById('ab-' + id);
+  const pc = document.getElementById('pc-' + id);
+  const inCart = cartQty(id) > 0;     // se está no carrinho, o card acompanha a quantidade dele
+  if (ca) ca.style.display = q > 0 ? 'flex' : 'none';
+  if (ab && q > 0) {
+    ab.textContent = inCart ? `✓ NO CARRINHO · ${q} un ▸ VER` : '🛒 ADICIONAR AO CARRINHO';
+    ab.classList.toggle('in-cart', inCart);
+  }
+  if (pc) pc.classList.toggle('in-cart', inCart);
 
   // ── Sem quantidade selecionada: exibe quantidade mínima ──
   if (!q) {
@@ -1893,7 +2091,7 @@ function updPrice(id) {
 
   // ── Hint de desconto progressivo ──
   // ↓ Para adicionar/remover produtos com hint, edite este array:
-  const showDiscount = ['Pequena', 'media', 'grande', 'custom', 'foto10x15', 'chaveiros'].includes(id);
+  const showDiscount = ['Pequena', 'media', 'grande', 'custom', 'foto10x15', 'chaveiros', 'photocards'].includes(id);
   if (!dh || !showDiscount) return;
 
   const next = getNextTier(p, q);
@@ -1920,21 +2118,37 @@ function updPrice(id) {
   dh.style.display = 'block';
 }
 function updSummary() {
-  const items = PRODUCTS.filter(p => qty[p.id] > 0);
-  const el = document.getElementById('sumItems');
-  const tot = document.getElementById('sumTotal');
-  const tv = document.getElementById('totVal');
-  if (!items.length) {
-    el.innerHTML = '<p class="empty-msg">&gt; aguardando seleção de itens...</p>';
-    tot.style.display = 'none'; return;
+  const el    = document.getElementById('sumItems');
+  const tot   = document.getElementById('sumTotal');
+  const tv    = document.getElementById('totVal');
+  const pend  = document.getElementById('sumPending');
+  const acts  = document.getElementById('sumActions');
+  const lines  = cartLines();
+  const drafts = pendingDrafts();
+
+  // ── Itens do carrinho ──
+  if (!lines.length) {
+    el.innerHTML = '<p class="empty-msg">&gt; carrinho vazio — escolha os itens e toque em "Adicionar ao carrinho"</p>';
+    tot.style.display = 'none';
+  } else {
+    el.innerHTML = lines.map(l => `<div class="sum-item"><span>${l.p.icon} ${l.p.full} × ${l.qty} un</span><span class="r">${fmt(l.total)}</span><button class="sum-del" onclick="cartRemove('${l.id}')" title="Remover do pedido">✕</button></div>`).join('');
+    tot.style.display = 'flex';
+    tv.textContent = fmt(cartTotal());
   }
-  let grand = 0;
-  el.innerHTML = items.map(p => {
-    const q = qty[p.id], pr = getPrice(p, q), sub = pr * q;
-    grand += sub;
-    return `<div class="sum-item"><span>${p.icon} ${p.full} × ${q} un</span><span class="r">${fmt(sub)}</span></div>`;
-  }).join('');
-  tot.style.display = 'flex'; tv.textContent = fmt(grand);
+
+  // ── Aviso: itens escolhidos nos cards que ainda NÃO estão no carrinho ──
+  if (drafts.length) {
+    pend.innerHTML = `<div class="sum-pending-title">⚠ AINDA NÃO ESTÃO NO CARRINHO</div>`
+      + drafts.map(p => `<div>${p.icon} ${p.full} × ${qty[p.id]} un</div>`).join('')
+      + `<button class="sum-pending-btn" onclick="addPendingToCart()">🛒 ADICIONAR AO CARRINHO</button>`;
+    pend.style.display = 'block';
+  } else {
+    pend.style.display = 'none';
+    pend.innerHTML = '';
+  }
+
+  // ── Botão "Limpar pedido": só aparece se há algo para limpar ──
+  acts.style.display = (lines.length || drafts.length) ? 'flex' : 'none';
 }
 
 // PRICE TABLE MODAL
@@ -1943,17 +2157,26 @@ function updSummary() {
 
 // ─── WHATSAPP ────────────────────────────────────────
 function sendWpp() {
-  const items = PRODUCTS.filter(p => qty[p.id] > 0);
-  if (!items.length) { showToast('⚠ ERRO: adicione pelo menos 1 item!'); return; }
+  // ↓ Itens escolhidos no card mas fora do carrinho: pergunta antes de enviar
+  const pend = pendingDrafts();
+  if (pend.length) {
+    const nomes = pend.map(p => `• ${p.full} × ${qty[p.id]} un`).join('\n');
+    if (!confirm(`Estes itens ainda NÃO estão no carrinho:\n\n${nomes}\n\nAdicionar ao pedido e enviar?`)) return;
+    pend.forEach(p => { cartSet(p.id, qty[p.id]); updPrice(p.id); });
+    refreshOrderUI();
+  }
+
+  const items = cartLines();
+  if (!items.length) { showToast('⚠ Carrinho vazio! Escolha um item e toque em "Adicionar ao carrinho".'); return; }
+
   let grand = 0;
   let lines = ['*PEDIDO - Cyber Graphix*', '', '*ITENS:*'];
-  items.forEach(p => {
-    const q = qty[p.id], pr = getPrice(p, q), sub = pr * q;
-    grand += sub;
-    lines.push(`- ${p.full}: ${q} un x ${fmt(pr)} = *${fmt(sub)}*`);
+  items.forEach(l => {
+    grand += l.total;
+    lines.push(`- ${l.p.full}: ${l.qty} un x ${fmt(l.unit)} = *${fmt(l.total)}*`);
   });
   lines.push('', `*TOTAL FINAL: ${fmt(grand)}*`);
-  
+
   lines.push('','_Pedido via Cyber Graphix_');
   // increment pedidos counter
   const cnt = (LS.get('cgx_pedidos') || 0) + 1;
@@ -2007,7 +2230,7 @@ window.addEventListener('scroll', () => {
 // VARIÁVEIS GLOBAIS DO SIMULADOR
 // ═══════════════════════════════════════════════════════
 // simCart: array de itens adicionados pelo cliente
-//   Cada item: { id, name, qty, unitPrice, total }
+//   Cada item: { id, qty }  (nome e preço vêm de PRODUCTS/PRICING)
 // simCartVisible: controla se o painel do carrinho está aberto
 // ═══════════════════════════════════════════════════════
 let simCart        = [];   // itens no carrinho do simulador
@@ -2018,7 +2241,7 @@ let simCartVisible = false; // estado do painel do carrinho
 // Lê qual campo foi preenchido e chama a função correta.
 // Se ambos tiverem valor, prioriza o que foi editado por último.
 function runSimulator() {
-  const qty    = parseFloat(document.getElementById('simQty').value)    || 0;
+  const qty    = Math.floor(parseFloat(document.getElementById('simQty').value)) || 0;  // ↓ só números inteiros
   const budget = parseFloat(document.getElementById('simBudget').value) || 0;
 
   // Se nenhum campo tem valor, esconde a tabela
@@ -2158,12 +2381,23 @@ function getPriceSim(p, qty) {
 //   total     → total em reais (null se inválido)
 //   infoHtml  → HTML da coluna de info (badge ou hint)
 //   disabled  → true se a quantidade está abaixo do mínimo
+//
+// ↓ O checkbox reflete o CARRINHO: fica marcado quando este
+//   produto está no carrinho exatamente com esta quantidade.
+//   Marcar = entra no carrinho · Desmarcar = sai do carrinho.
 function buildSimRow(p, qty, unitPrice, total, infoHtml, disabled) {
   const disAttr  = disabled ? 'disabled' : '';
   const disClass = disabled ? 'disabled' : '';
   const chkId    = `simChk_${p.id}`;
 
-  return `<div class="sim-row ${disClass}" id="simRow_${p.id}">
+  const inCart  = cartQty(p.id);                 // quantidade deste produto no carrinho (0 = fora)
+  const checked = !disabled && inCart === qty;   // marcado só se for a MESMA quantidade
+  // ↓ Linha extra sob o nome: aparece também no celular (as colunas de info somem lá)
+  const cartNote = inCart
+    ? `<span class="sim-cart-note">${checked ? '✓' : '🛒'} no carrinho: ${inCart} un</span>`
+    : '';
+
+  return `<div class="sim-row ${disClass} ${checked ? 'selected' : ''}" id="simRow_${p.id}">
     <!-- Checkbox: desabilitado se produto indisponível na qtd -->
     <div class="sim-col sim-col--check">
       <input type="checkbox" class="sim-check" id="${chkId}"
@@ -2172,13 +2406,14 @@ function buildSimRow(p, qty, unitPrice, total, infoHtml, disabled) {
              data-unit="${unitPrice || 0}"
              data-total="${total || 0}"
              data-name="${p.full}"
-             ${disAttr}
-             onchange="updateSimFooter(); highlightSimRow('${p.id}', this.checked)">
+             ${disAttr} ${checked ? 'checked' : ''}
+             onchange="simToggleRow(this)">
     </div>
     <!-- Nome e tamanho do produto -->
     <div class="sim-col" style="flex-direction:column;align-items:flex-start">
       <span class="sim-prod-name">${p.icon} ${p.name}</span>
       <span class="sim-prod-size">${p.size}</span>
+      ${cartNote}
     </div>
     <!-- Quantidade -->
     <div class="sim-col sim-col--qty">
@@ -2199,19 +2434,10 @@ function buildSimRow(p, qty, unitPrice, total, infoHtml, disabled) {
   </div>`;
 }
 
-// ─── highlightSimRow ─────────────────────────────────
-// Adiciona/remove a classe .selected na linha quando
-// o checkbox é marcado/desmarcado.
-function highlightSimRow(productId, checked) {
-  const row = document.getElementById(`simRow_${productId}`);
-  if (row) row.classList.toggle('selected', checked);
-}
-
 // ─── updateSimFooter ─────────────────────────────────
-// Atualiza o rodapé da tabela com:
-//   - quantos itens estão selecionados
-//   - total somado dos itens selecionados
-// Mostra/esconde o botão "Adicionar ao pedido".
+// Rodapé da tabela do simulador: mostra quantos produtos desta
+// simulação estão marcados (= no carrinho) e o total deles.
+// Botões: "Ver carrinho" e "Enviar simulação".
 function updateSimFooter() {
   const checkboxes = document.querySelectorAll('.sim-check:checked');
   const footer     = document.getElementById('simFooter');
@@ -2222,120 +2448,234 @@ function updateSimFooter() {
     return;
   }
 
-  // Soma o total dos itens selecionados
   let total = 0;
   checkboxes.forEach(chk => { total += parseFloat(chk.dataset.total) || 0; });
 
-  info.textContent = `${checkboxes.length} produto(s) selecionado(s) — Total: ${fmt(total)}`;
+  info.textContent = `🛒 ${checkboxes.length} produto(s) marcado(s) no carrinho — Total: ${fmt(total)}`;
   footer.style.display = 'flex';
 }
 
-// ─── simAddToCart ────────────────────────────────────
-// Lê todos os checkboxes marcados e adiciona ao simCart.
-// Se o produto já estiver no carrinho, substitui.
-// Depois abre o painel do carrinho.
-function simAddToCart() {
-  const checkboxes = document.querySelectorAll('.sim-check:checked');
-  checkboxes.forEach(chk => {
-    const id    = chk.dataset.id;
-    const qty   = parseInt(chk.dataset.qty);
-    const unit  = parseFloat(chk.dataset.unit);
-    const total = parseFloat(chk.dataset.total);
-    const name  = chk.dataset.name;
+// ═══════════════════════════════════════════════════════
+// CARRINHO — É ELE QUE GUARDA O PEDIDO
+// ───────────────────────────────────────────────────────
+// simCart = [{ id, qty }]
+//   Nome e preço NÃO são guardados: vêm de PRODUCTS + PRICING
+//   na hora de mostrar. Assim o valor é sempre o da tabela.
+//
+// REGRA DE SINCRONIA (para o cliente não se perder):
+//   se um produto está no carrinho, a quantidade do card
+//   (módulo 02) é igual à do carrinho — mexeu em um, muda no outro.
+//   Se não está no carrinho, o card é só um "rascunho".
+//
+// Quem mexe no carrinho:
+//   • módulo 01 → marcar/desmarcar o checkbox
+//   • módulo 02 → botão "Adicionar ao carrinho" do card
+//   • carrinho/resumo → botão ✕ em cada item
+//   • módulo 03 → botão "Limpar pedido" (zera tudo)
+// ═══════════════════════════════════════════════════════
 
-    // Remove se já existir (evita duplicata)
-    simCart = simCart.filter(item => item.id !== id);
-    simCart.push({ id, name, qty, unitPrice: unit, total });
+// Quantidade de um produto no carrinho (0 = não está)
+function cartQty(id) {
+  const it = simCart.find(i => i.id === id);
+  return it ? it.qty : 0;
+}
+
+// Linhas do carrinho já com preço calculado
+function cartLines() {
+  return simCart.map(it => {
+    const p  = PRODUCTS.find(x => x.id === it.id);
+    const pr = getPrice(p, it.qty);
+    return { p, id: it.id, qty: it.qty, unit: pr, total: pr * it.qty };
   });
+}
+function cartTotal() { return cartLines().reduce((s, l) => s + l.total, 0); }
 
+// Itens com quantidade escolhida no card, mas FORA do carrinho
+function pendingDrafts() {
+  return PRODUCTS.filter(p => qty[p.id] > 0 && !cartQty(p.id));
+}
+
+// Coloca/atualiza/remove um item (q <= 0 remove). Só mexe na lista.
+function cartSet(id, q) {
+  const i = simCart.findIndex(x => x.id === id);
+  if (q > 0) { if (i >= 0) simCart[i].qty = q; else simCart.push({ id, qty: q }); }
+  else if (i >= 0) simCart.splice(i, 1);
+}
+
+// Define a quantidade mostrada no card (módulo 02)
+function setCardQty(id, v) {
+  qty[id] = v;
+  document.getElementById('q-' + id).value = v;
+  updPrice(id);
+}
+
+// Atualiza TUDO que depende do carrinho: painel, resumo e o simulador
+function refreshOrderUI() {
   renderCart();
-  showCart();
+  updSummary();
+  const res = document.getElementById('simResults');
+  // ↓ refaz a tabela do módulo 01 para os checkboxes acompanharem o carrinho
+  if (res && res.style.display !== 'none') runSimulator();
+}
+
+// Chamado por chg() e setQ() sempre que a quantidade do card muda
+function onCardQtyChanged(id) {
+  if (cartQty(id)) cartSet(id, qty[id]);   // já está no carrinho: acompanha o card (0 = sai)
+  updPrice(id);
+  refreshOrderUI();
+}
+
+// Botão "Adicionar ao carrinho" do card (vira "No carrinho" depois de adicionar)
+function cardCartAction(id) {
+  if (cartQty(id)) { showCart(); return; }          // já está: abre o carrinho
+  const p = PRODUCTS.find(x => x.id === id);
+  if (!qty[id]) { showToast('⚠ Escolha a quantidade primeiro!'); return; }
+  cartSet(id, qty[id]);
+  updPrice(id);
+  refreshOrderUI();
+  bumpFab();
+  showToast(`🛒 ${p.full} (${qty[id]} un) no carrinho!`, true);
+}
+
+// Checkbox do simulador (módulo 01): marcar = entra · desmarcar = sai
+function simToggleRow(chk) {
+  const id = chk.dataset.id;
+  const q  = parseInt(chk.dataset.qty);
+  const p  = PRODUCTS.find(x => x.id === id);
+  if (chk.checked) {
+    cartSet(id, q);
+    setCardQty(id, q);                 // mantém o card (módulo 02) igual ao carrinho
+    refreshOrderUI();
+    bumpFab();
+    showToast(`🛒 ${p.full} (${q} un) no carrinho!`, true);
+  } else {
+    cartSet(id, 0);
+    setCardQty(id, 0);
+    refreshOrderUI();
+    showToast(`🗑 ${p.full} saiu do carrinho`);
+  }
+}
+
+// Botão ✕ (carrinho e resumo): tira o item do pedido e zera o card dele
+function cartRemove(id) {
+  const p = PRODUCTS.find(x => x.id === id);
+  cartSet(id, 0);
+  setCardQty(id, 0);
+  refreshOrderUI();
+  showToast(`🗑 ${p.full} removido`);
+}
+
+// Aviso do resumo: leva os itens "rascunho" para o carrinho
+function addPendingToCart() {
+  const pend = pendingDrafts();
+  if (!pend.length) return;
+  pend.forEach(p => { cartSet(p.id, qty[p.id]); updPrice(p.id); });
+  refreshOrderUI();
+  bumpFab();
+  showToast(`🛒 ${pend.length} item(ns) adicionado(s) ao carrinho!`, true);
 }
 
 // ─── renderCart ──────────────────────────────────────
-// Reconstrói o HTML do painel do carrinho com os itens
-// atuais de simCart.
+// Reconstrói o painel do carrinho, o título e o botão flutuante.
 function renderCart() {
   const el    = document.getElementById('simCartItems');
   const total = document.getElementById('simCartTotal');
-  const fab   = document.getElementById('simCartFab');
   const count = document.getElementById('simCartCount');
+  const ftot  = document.getElementById('simCartFabTotal');
+  const title = document.getElementById('simCartTitle');
+  const lines = cartLines();
 
-  if (simCart.length === 0) {
-    el.innerHTML = `<p style="font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--dim);padding:16px;text-align:center;">Carrinho vazio</p>`;
+  if (!lines.length) {
+    el.innerHTML = `<p class="sim-cart-empty">Carrinho vazio</p>`;
     total.textContent = '';
-    if (fab) { fab.style.display = 'none'; }
+    title.textContent = '🛒 Carrinho';
+    hideCart();                       // fecha o painel e esconde o botão 🛒
     return;
   }
 
   // ↓ Para mudar o visual dos itens do carrinho, edite o template abaixo
-  el.innerHTML = simCart.map(item => `
+  el.innerHTML = lines.map(l => `
     <div class="sim-cart-item">
       <div class="sim-cart-item-info">
-        <div class="sim-cart-item-name">${item.name}</div>
-        <div class="sim-cart-item-detail">${item.qty} un × ${fmt(item.unitPrice)}</div>
+        <div class="sim-cart-item-name">${l.p.icon} ${l.p.full}</div>
+        <div class="sim-cart-item-detail">${l.qty} un × ${fmt(l.unit)}</div>
       </div>
-      <span class="sim-cart-item-price">${fmt(item.total)}</span>
-      <!-- Botão "−" chama simRemoveFromCart com o id do produto -->
-      <button class="sim-cart-remove" onclick="simRemoveFromCart('${item.id}')" title="Remover">−</button>
+      <span class="sim-cart-item-price">${fmt(l.total)}</span>
+      <button class="sim-cart-remove" onclick="cartRemove('${l.id}')" title="Remover do pedido">✕</button>
     </div>
   `).join('');
 
-  const grandTotal = simCart.reduce((s, i) => s + i.total, 0);
-  total.textContent = `Total: ${fmt(grandTotal)}`;
-
-  // Atualiza o badge do FAB
-  if (count) count.textContent = simCart.length;
-  if (fab)   fab.style.display = 'block';
+  const t = cartTotal();
+  total.textContent = `Total: ${fmt(t)}`;
+  title.textContent = `🛒 Carrinho (${lines.length})`;
+  if (count) count.textContent = lines.length;
+  if (ftot)  ftot.textContent  = fmt(t);
+  updFab();
 }
 
-// ─── simRemoveFromCart ───────────────────────────────
-// Remove um item do carrinho pelo id do produto.
-// Recalcula e re-renderiza o carrinho.
-function simRemoveFromCart(id) {
-  simCart = simCart.filter(item => item.id !== id);
-  renderCart();
-
-  // Se carrinho ficou vazio, esconde o painel
-  if (simCart.length === 0) hideCart();
+// ─── showCart / hideCart / toggleCart / updFab ───────
+// O botão flutuante 🛒 aparece quando há itens e o painel está fechado.
+function updFab() {
+  const fab = document.getElementById('simCartFab');
+  if (fab) fab.style.display = (simCart.length > 0 && !simCartVisible) ? 'block' : 'none';
 }
-
-// ─── showCart / hideCart / toggleCart ────────────────
-// Controlam a visibilidade do painel flutuante.
-// O FAB fica visível quando o painel está fechado.
 function showCart() {
+  if (!simCart.length) return;
   const panel = document.getElementById('simCartPanel');
-  const fab   = document.getElementById('simCartFab');
   if (panel) { panel.style.display = 'flex'; simCartVisible = true; }
-  if (fab && simCart.length > 0) fab.style.display = 'none';
+  updFab();
 }
 function hideCart() {
   const panel = document.getElementById('simCartPanel');
-  const fab   = document.getElementById('simCartFab');
   if (panel) { panel.style.display = 'none'; simCartVisible = false; }
-  if (fab && simCart.length > 0) fab.style.display = 'block';
+  updFab();
 }
 function toggleCart() {
   simCartVisible ? hideCart() : showCart();
 }
+// Dá uma "pulada" no 🛒 para o cliente perceber que o item entrou
+function bumpFab() {
+  const fab = document.getElementById('simCartFab');
+  if (!fab) return;
+  fab.classList.remove('bump'); void fab.offsetWidth; fab.classList.add('bump');
+}
 
 // ─── simCartGoToPedido ───────────────────────────────
-// Transfere os itens do carrinho para a calculadora
-// principal (módulo 02), define as quantidades e
-// rola a página até a calculadora.
-// ↓ Depende das funções setQ() e updSummary() da calculadora.
+// Botão "Ver resumo do pedido" do carrinho: fecha o painel
+// e rola até o módulo 03 (o resumo já mostra o carrinho).
 function simCartGoToPedido() {
-  simCart.forEach(item => {
-    // setQ() é a função da calculadora que define quantidade
-    setQ(item.id, item.qty);
-  });
-  updSummary();
   hideCart();
+  const r = document.getElementById('resumo');
+  if (r) r.scrollIntoView({ behavior: 'smooth' });
+}
 
-  // Rola até a calculadora
-  const calc = document.getElementById('resumo');
-  if (calc) calc.scrollIntoView({ behavior: 'smooth' });
-  showToast('✓ ITENS ADICIONADOS AO PEDIDO!', true);
+// ─── limparTudo ──────────────────────────────────────
+// Botão "Limpar pedido" do módulo 03.
+// Zera: carrinho, quantidades dos cards, resumo e simulador.
+// ↓ Para limpar SEM pedir confirmação, apague a linha do confirm().
+function limparTudo() {
+  const temAlgo = simCart.length
+               || PRODUCTS.some(p => qty[p.id] > 0)
+               || document.getElementById('simQty').value !== ''
+               || document.getElementById('simBudget').value !== '';
+  if (!temAlgo) { showToast('Tudo já está zerado.', true); return; }
+  if (!confirm('Limpar tudo?\n\nO carrinho, o resumo, as quantidades e o simulador voltarão a zero.')) return;
+
+  simCart = [];
+  PRODUCTS.forEach(p => setCardQty(p.id, 0));          // zera os cards (e some os botões/hints)
+
+  document.getElementById('simQty').value    = '';     // zera o simulador
+  document.getElementById('simBudget').value = '';
+  document.getElementById('simRows').innerHTML = '';
+  document.getElementById('simResults').style.display = 'none';
+  document.getElementById('simFooter').style.display  = 'none';
+
+  renderCart();                                        // carrinho vazio + fecha painel
+  updSummary();
+
+  const ini = document.getElementById('simulator');    // volta ao começo para um novo pedido
+  if (ini) ini.scrollIntoView({ behavior: 'smooth' });
+  showToast('🧹 Tudo zerado! Pode começar um novo pedido.', true);
 }
 
 
